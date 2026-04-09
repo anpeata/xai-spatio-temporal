@@ -105,3 +105,19 @@ chore (repo): update origin url after repository rename
 - Small obvious change: first line only.
 - Non-obvious or risky change: first line + short body.
 - API/config breaking change: add `BREAKING CHANGE` footer.
+
+## Install Template
+
+This repository includes a reusable commit template at `.gitmessage`.
+
+Set globally (all repositories):
+
+```bash
+git config --global commit.template "/absolute/path/to/this/repo/.gitmessage"
+```
+
+Set locally (this repository only):
+
+```bash
+git config commit.template .gitmessage
+```

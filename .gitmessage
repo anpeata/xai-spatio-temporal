@@ -1,0 +1,10 @@
+type (scope): short imperative summary
+
+# Optional body:
+# - Why this change was needed.
+# - What changed.
+# - Important notes or constraints.
+
+# Optional footer:
+# Refs: #issue
+# BREAKING CHANGE: describe incompatible change

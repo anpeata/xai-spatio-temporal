@@ -1,8 +1,16 @@
 # xai-spatio-temporal
 
-M2 internship preparation repository for LIRMM.
+M2 internship repository (LIRMM) for explainable clustering of spatio-temporal
+picoclimatic data.
 
 Focus: explainable clustering for spatio-temporal picoclimatic data, with reproducible scripts and a stable explanation format.
+
+## Objectives
+
+- Compare multiple clustering families under one fixed protocol
+- Explain cluster structure globally and point-level assignment locally
+- Keep explanation outputs stable even when inputs evolve
+- Provide reproducible scripts and auditable experiment artifacts
 
 ## Repository Layout
 
@@ -10,6 +18,14 @@ Focus: explainable clustering for spatio-temporal picoclimatic data, with reprod
 - `scripts/data/`: synthetic data generation and reduction utilities
 - `scripts/research/`: clustering and XAI experiment pipelines
 - `data/`: lightweight dataset documentation and metadata
+
+## Core Workflow
+
+1. Generate synthetic data into `data/`.
+2. Run clustering baselines and save outputs in `outputs/benchmark/`.
+3. Run surrogate explainability and advanced SHAP/LIME analyses.
+4. Run latent-space clustering (autoencoder + K-Means).
+5. Report results following `docs/EXPERIMENT_PROTOCOL.md`.
 
 ## Quick Start
 
@@ -47,6 +63,18 @@ python scripts/research/deep_representation_clustering.py --data data/window_fea
 
 ```bash
 python scripts/research/lime_shap_explainability_pipeline.py --data data/window_features.csv --outdir outputs/xai_advanced --max-samples 3000
+```
+
+## Commit Convention
+
+- This repository uses: `type (scope): short description`
+- Full policy: `docs/COMMIT_POLICY.md`
+- Reusable template file: `.gitmessage`
+
+Optional global setup:
+
+```bash
+git config --global commit.template "/absolute/path/to/this/repo/.gitmessage"
 ```
 
 ## Notes
