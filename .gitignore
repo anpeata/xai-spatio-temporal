@@ -1,0 +1,20 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+
+# Notebook and editor artifacts
+.ipynb_checkpoints/
+.vscode/
+
+# Generated experiment outputs
+outputs/
+
+# Generated raw data files (metadata and docs stay tracked)
+data/raw_measurements.csv
+data/window_features.csv
