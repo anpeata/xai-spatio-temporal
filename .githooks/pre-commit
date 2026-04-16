@@ -1,0 +1,41 @@
+#!/usr/bin/env sh
+# Block commits that stage files larger than 5 MB.
+
+set -eu
+
+MAX_BYTES=$((5 * 1024 * 1024))
+
+violations_tmp="$(mktemp 2>/dev/null || echo .git/pre-commit-violations.tmp)"
+: > "$violations_tmp"
+
+git diff --cached --name-only --diff-filter=AM | while IFS= read -r path
+ do
+    [ -z "$path" ] && continue
+
+    if ! git ls-files --error-unmatch -- "$path" >/dev/null 2>&1; then
+        continue
+    fi
+
+    blob_info=$(git cat-file -s ":$path" 2>/dev/null || echo "")
+    [ -z "$blob_info" ] && continue
+
+    if [ "$blob_info" -gt "$MAX_BYTES" ]; then
+        printf "%s\t%s\n" "$path" "$blob_info" >> "$violations_tmp"
+    fi
+ done
+
+if [ -s "$violations_tmp" ]; then
+    echo "Commit blocked: staged files larger than 5 MB detected." >&2
+    echo "Limit: 5 MB" >&2
+    echo "" >&2
+    sort -u "$violations_tmp" | while IFS="\t" read -r path bytes
+    do
+        mb=$(awk -v b="$bytes" 'BEGIN { printf "%.2f", b / (1024 * 1024) }')
+        echo " - $path (${mb} MB)" >&2
+    done
+    rm -f "$violations_tmp"
+    exit 1
+fi
+
+rm -f "$violations_tmp"
+exit 0
