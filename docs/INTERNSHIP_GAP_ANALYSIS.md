@@ -52,4 +52,4 @@ It covered about baseline clustering + introductory XAI, but not full research e
 - **Scientific rigor:** materially improved through protocol + reproducible scripts
 - **Multidisciplinary communication:** improved via standardized deliverables and explanation tables
 
-Overall status: **sufficient for serious pre-internship preparation**, provided you execute and document experiments following the protocol.
+Overall status: **sufficient for serious M2 internship execution**, provided you execute and document experiments following the protocol.
