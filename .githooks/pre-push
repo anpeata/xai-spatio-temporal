@@ -1,0 +1,54 @@
+#!/usr/bin/env sh
+# Block pushes that introduce files larger than 5 MB.
+
+set -eu
+
+MAX_BYTES=$((5 * 1024 * 1024))
+ZERO_SHA="0000000000000000000000000000000000000000"
+
+violations_tmp="$(mktemp 2>/dev/null || echo .git/pre-push-violations.tmp)"
+: > "$violations_tmp"
+
+check_range() {
+    range="$1"
+
+    git rev-list --objects "$range" \
+        | git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' \
+        | awk -v limit="$MAX_BYTES" '
+            $1 == "blob" && $3 > limit {
+                path = $4
+                if (path == "") {
+                    path = "(path unavailable)"
+                }
+                printf "%s\t%s\n", path, $3
+            }
+        ' >> "$violations_tmp"
+}
+
+while read -r local_ref local_sha remote_ref remote_sha
+ do
+    # Ignore branch/tag deletions.
+    [ "$local_sha" = "$ZERO_SHA" ] && continue
+
+    if [ "$remote_sha" = "$ZERO_SHA" ]; then
+        check_range "$local_sha"
+    else
+        check_range "$remote_sha..$local_sha"
+    fi
+ done
+
+if [ -s "$violations_tmp" ]; then
+    echo "Push blocked: files larger than 5 MB detected in commits being pushed." >&2
+    echo "Limit: 5 MB" >&2
+    echo "" >&2
+    sort -u "$violations_tmp" | while IFS="\t" read -r path bytes
+    do
+        mb=$(awk -v b="$bytes" 'BEGIN { printf "%.2f", b / (1024 * 1024) }')
+        echo " - $path (${mb} MB)" >&2
+    done
+    rm -f "$violations_tmp"
+    exit 1
+fi
+
+rm -f "$violations_tmp"
+exit 0
