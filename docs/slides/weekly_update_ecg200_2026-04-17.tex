@@ -1,0 +1,165 @@
+% Weekly supervisor update slide deck (Beamer)
+% Compile (example): pdflatex weekly_update_ecg200_2026-04-17.tex
+
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
+\usepackage{listings}
+
+\title[Weekly update]{Weekly progress update: Explainable clustering workflow (ECG200)}
+\subtitle{KMeans + surrogate rules + SHAP (raw vs shapelet-distance features)}
+\author{\textit{(your name)}}
+\institute{M2 Internship (LIRMM) — Explainable clustering}
+\date{17 Apr 2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{This week: what I delivered}
+  \begin{block}{Outcome}
+    End-to-end \textbf{explainable clustering} workflow on ECG200 to validate the approach before porting to picoclimate windows.
+  \end{block}
+  \vspace{0.4em}
+  \begin{itemize}
+    \item Two representations: \textbf{raw time points} vs \textbf{shapelet-distance features}
+    \item Unsupervised $k$ selection: internal metrics + multi-seed stability
+    \item Explanations: surrogate decision tree rules + SHAP attributions
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Implemented workflow (high-level)}
+  \centering
+  \begin{tikzpicture}[
+    node distance=0.95cm and 1.2cm,
+    every node/.style={font=\small},
+    box/.style={draw, rounded corners, align=center, minimum width=3.15cm, minimum height=0.95cm}
+  ]
+    \node[box] (data) {ECG200\\(UCR TSV)};
+    \node[box, right=of data] (features) {Feature views\\Raw / standardized\\or shapelet distances};
+    \node[box, right=of features] (kmeans) {KMeans\\(k selection)};
+
+    % Branches below KMeans
+    \node[box, below=of features] (eval) {Evaluation\\Sil/CH/DB\\Stability (ARI)\\Post-hoc ARI/NMI};
+    \node[box, below=of kmeans] (xai) {Surrogate tree\\+ SHAP};
+    \node[box, below=of xai] (interp) {Interpretation\\plots + summaries};
+
+    \draw[-{Stealth}] (data) -- (features);
+    \draw[-{Stealth}] (features) -- (kmeans);
+    % Route the evaluation arrow around the XAI box
+    \draw[-{Stealth}] (kmeans.south) -- ++(0,-0.25cm) -| (eval.east);
+    \draw[-{Stealth}] (kmeans.south) -- (xai.north);
+    \draw[-{Stealth}] (xai.south) -- (interp.north);
+  \end{tikzpicture}
+
+  \vspace{0.6em}
+  \footnotesize Notebooks: \texttt{kmeans\_ecg200.ipynb} and \texttt{kmeans\_ecg200\_shapelets.ipynb}
+\end{frame}
+
+\begin{frame}{Representation comparison (why two notebooks)}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.49\textwidth}
+    \begin{block}{A) Raw time points (96 dims)}
+      \begin{itemize}
+        \item Input: $x \in \mathbb{R}^{96}$
+        \item Clustering geometry: Euclidean (raw / standardized)
+        \item Explanations: important time indices $t_i$
+      \end{itemize}
+    \end{block}
+
+    \column{0.49\textwidth}
+    \begin{block}{B) Shapelet-distance features ($m$ dims)}
+      \vspace{-0.4em}
+      \[
+        d(x, s)=\min_{t} \lVert x[t:t+L]-s\rVert_2
+      \]
+      \vspace{-0.9em}
+      \begin{itemize}
+        \item Input: $[d(x,s_1),\ldots,d(x,s_m)]$
+        \item Optional: window z-normalization
+        \item Explanations: \emph{pattern present} (distance small)
+      \end{itemize}
+    \end{block}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Unsupervised selection + evaluation (what is reported)}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.54\textwidth}
+    \begin{block}{Unsupervised $k$ choice (no labels)}
+      \begin{itemize}
+        \item Internal: Silhouette, Calinski--Harabasz, Davies--Bouldin
+        \item Stability: 5 seeds \textrightarrow pairwise ARI between runs
+        \item Selection: rank-sum (+ small penalty for large $k$)
+      \end{itemize}
+    \end{block}
+
+    \column{0.44\textwidth}
+    \begin{block}{Post-hoc (labels only for eval)}
+      \begin{itemize}
+        \item ARI / NMI
+        \item majority-mapped accuracy
+      \end{itemize}
+    \end{block}
+  \end{columns}
+
+  \vspace{0.3em}
+  \footnotesize\textbf{Note:} saved notebook output shows a representative selection \texttt{k=3} for the raw-view run.
+\end{frame}
+
+\begin{frame}{Explainability outputs (what supervisors can inspect)}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.56\textwidth}
+    \begin{block}{Surrogate + SHAP}
+      \begin{itemize}
+        \item Train shallow decision tree to predict \textbf{cluster ID}
+        \item Report fidelity: train + 5-fold CV accuracy
+        \item SHAP (TreeExplainer): global feature importance + summary plot
+      \end{itemize}
+    \end{block}
+
+    \column{0.42\textwidth}
+    \begin{block}{Cluster interpretation}
+      \begin{itemize}
+        \item Raw view: time-index features $t_i$
+        \item Shapelet view: top shapelets per cluster
+        \item Functional boxplots (cluster curve summaries)
+      \end{itemize}
+    \end{block}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Key takeaways (so far)}
+  \begin{itemize}
+    \item Workflow implemented end-to-end in both representations (raw and shapelet-distance).
+    \item Shapelets shift explanations from pointwise ($t_i$) to \textbf{pattern-level} ("subsequence appears").
+    \item Multi-seed stability highlights fragile solutions better than single-run metrics.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Next steps + questions (for today’s meeting)}
+  \textbf{Next (1 week)}
+  \begin{itemize}
+    \item Export results (tables/metrics) to CSV/JSON for reproducibility.
+    \item Produce protocol-style per-cluster summaries (fixed template) + explanation stability.
+    \item Port the pipeline from ECG200 to \textbf{picoclimate window features}.
+  \end{itemize}
+
+  \vspace{0.8em}
+  \textbf{Questions for supervisors}
+  \begin{itemize}
+    \item Do you want \emph{notebook demonstration} only, or full protocol-aligned outputs (export + fixed explanation format + stability)?
+    \item Next priority: \emph{port to picoclimate now} vs \emph{expand clustering baselines first}?
+  \end{itemize}
+\end{frame}
+
+\end{document}

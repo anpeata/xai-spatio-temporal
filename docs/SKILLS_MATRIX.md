@@ -16,6 +16,8 @@ Scoring: 0 = missing, 1 = beginner, 2 = working, 3 = strong
 
 ## Priority actions (next 2 weeks)
 
+Progress log: `docs/WEEKLY_PROGRESS.md`
+
 1. Run all three scripts and archive outputs
 2. Produce one 2-page report comparing methods on identical splits
 3. Add stability analysis for SHAP/LIME explanations
