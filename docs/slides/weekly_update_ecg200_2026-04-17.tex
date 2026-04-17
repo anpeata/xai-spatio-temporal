@@ -157,8 +157,8 @@
   \vspace{0.8em}
   \textbf{Questions for supervisors}
   \begin{itemize}
-    \item Do you want \emph{notebook demonstration} only, or full protocol-aligned outputs (export + fixed explanation format + stability)?
-    \item Next priority: \emph{port to picoclimate now} vs \emph{expand clustering baselines first}?
+    \item In ECG200 there are 2 true labels, but internal metrics can select $k\neq 2$ and clusters may not align with labels. Is that acceptable (goal = discover structure), or should we \textbf{fix $k$ to \#classes} for this sanity check?
+    \item When we move to picoclimate windows (no ground truth), should we prefer \textbf{internal+stability selection of $k$} or a \textbf{domain-chosen $k$} for interpretability/comparison?
   \end{itemize}
 \end{frame}
 
