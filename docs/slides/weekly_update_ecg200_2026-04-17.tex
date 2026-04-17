@@ -10,7 +10,7 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{tikz}
-\usetikzlibrary{positioning,arrows.meta}
+\usetikzlibrary{positioning,arrows.meta,fit}
 \usepackage{listings}
 
 \title[Weekly update]{Weekly progress update: Explainable clustering workflow (ECG200)}
@@ -37,28 +37,62 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Workflow (from the task sketch)}
+  \centering
+  \begin{tikzpicture}[
+    node distance=0.8cm and 1.2cm,
+    every node/.style={font=\small},
+    box/.style={draw, rounded corners, align=center, minimum width=2.9cm, minimum height=0.85cm},
+    arr/.style={-{Stealth}, thick}
+  ]
+    \node[box] (data2) {Data};
+
+    \node[box, right=of data2] (ts) {TS};
+    \node[box, below=of ts] (shapelet) {Shapelet};
+
+    % Repo grouping around TS + Shapelet (as in the sketch)
+    \node[draw, rounded corners, inner sep=6pt, fit=(ts)(shapelet), label=above:{\small Repo}] (repo) {};
+
+    \node[box, right=2.2cm of ts] (kmeans2) {KMeans};
+    \node[box, right=of kmeans2] (shap2) {SHAP};
+    \node[box, below=of shap2] (prod2) {Productive};
+
+    \draw[arr] (data2.east) -- (ts.west);
+    \draw[arr] (data2.east) |- (shapelet.west);
+
+    \draw[arr] (ts.east) -- (kmeans2.west);
+    \draw[arr] (shapelet.east) -| (kmeans2.west);
+
+    \draw[arr] (kmeans2.east) -- (shap2.west);
+    \draw[arr] (kmeans2.south) -- (prod2.north);
+  \end{tikzpicture}
+
+  \vspace{0.6em}
+  \footnotesize (Clean re-draw of the original hand sketch)
+\end{frame}
+
 \begin{frame}{Implemented workflow (high-level)}
   \centering
   \begin{tikzpicture}[
     node distance=0.95cm and 1.2cm,
     every node/.style={font=\small},
-    box/.style={draw, rounded corners, align=center, minimum width=3.15cm, minimum height=0.95cm}
+    box/.style={draw, rounded corners, align=center, minimum width=3.15cm, minimum height=0.95cm},
+    arr/.style={-{Stealth}, thick}
   ]
     \node[box] (data) {ECG200\\(UCR TSV)};
     \node[box, right=of data] (features) {Feature views\\Raw / standardized\\or shapelet distances};
     \node[box, right=of features] (kmeans) {KMeans\\(k selection)};
 
     % Branches below KMeans
-    \node[box, below=of features] (eval) {Evaluation\\Sil/CH/DB\\Stability (ARI)\\Post-hoc ARI/NMI};
-    \node[box, below=of kmeans] (xai) {Surrogate tree\\+ SHAP};
+    \node[box, below=of kmeans, xshift=-2.05cm] (eval) {Evaluation\\Sil/CH/DB\\Stability (ARI)\\Post-hoc ARI/NMI};
+    \node[box, below=of kmeans, xshift=2.05cm] (xai) {Surrogate tree\\+ SHAP};
     \node[box, below=of xai] (interp) {Interpretation\\plots + summaries};
 
-    \draw[-{Stealth}] (data) -- (features);
-    \draw[-{Stealth}] (features) -- (kmeans);
-    % Route the evaluation arrow around the XAI box
-    \draw[-{Stealth}] (kmeans.south) -- ++(0,-0.25cm) -| (eval.east);
-    \draw[-{Stealth}] (kmeans.south) -- (xai.north);
-    \draw[-{Stealth}] (xai.south) -- (interp.north);
+    \draw[arr] (data) -- (features);
+    \draw[arr] (features) -- (kmeans);
+    \draw[arr] (kmeans.south west) -- (eval.north east);
+    \draw[arr] (kmeans.south east) -- (xai.north west);
+    \draw[arr] (xai.south) -- (interp.north);
   \end{tikzpicture}
 
   \vspace{0.6em}
