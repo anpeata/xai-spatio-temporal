@@ -37,34 +37,35 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Workflow (from the task sketch)}
+\begin{frame}{Suggested workflow}
   \centering
   \begin{tikzpicture}[
-    node distance=0.8cm and 1.2cm,
+    node distance=0.75cm and 0.9cm,
     every node/.style={font=\small},
-    box/.style={draw, rounded corners, align=center, minimum width=2.9cm, minimum height=0.85cm},
+    box/.style={draw, rounded corners, align=center, minimum width=2.55cm, minimum height=0.90cm},
     arr/.style={-{Stealth}, thick}
   ]
     \node[box] (data2) {Data};
 
-    \node[box, right=of data2] (ts) {TS};
-    \node[box, below=of ts] (shapelet) {Shapelet};
+    \node[box, right=of data2] (ts) {Time series};
+    \node[box, below=of ts] (shapelet) {Shapelet\\{\scriptsize short subsequence}};
+    \node[below=0.12cm of shapelet, font=\scriptsize, align=center] (shapelet_note) {feature: min-window distance};
 
     % Repo grouping around TS + Shapelet (as in the sketch)
-    \node[draw, rounded corners, inner sep=6pt, fit=(ts)(shapelet), label=above:{\small Repo}] (repo) {};
+    \node[draw, rounded corners, inner sep=6pt, fit=(ts)(shapelet)(shapelet_note), label=above:{\small Repo}] (repo) {};
 
-    \node[box, right=2.2cm of ts] (kmeans2) {KMeans};
+    \node[box, right=1.15cm of ts] (kmeans2) {KMeans};
     \node[box, right=of kmeans2] (shap2) {SHAP};
-    \node[box, below=of shap2] (prod2) {Productive};
+    \node[box, below=of shap2] (prod2) {abductive};
 
     \draw[arr] (data2.east) -- (ts.west);
     \draw[arr] (data2.east) |- (shapelet.west);
 
-    \draw[arr] (ts.east) -- (kmeans2.west);
-    \draw[arr] (shapelet.east) -| (kmeans2.west);
+    \draw[arr] (ts.east) -- (kmeans2.north west);
+    \draw[arr] (shapelet.east) -| (kmeans2.south west);
 
     \draw[arr] (kmeans2.east) -- (shap2.west);
-    \draw[arr] (kmeans2.south) -- (prod2.north);
+    \draw[arr] (kmeans2.south east) -- (prod2.west);
   \end{tikzpicture}
 
   \vspace{0.6em}
@@ -74,24 +75,30 @@
 \begin{frame}{Implemented workflow (high-level)}
   \centering
   \begin{tikzpicture}[
-    node distance=0.95cm and 1.2cm,
+    node distance=0.75cm and 0.9cm,
     every node/.style={font=\small},
-    box/.style={draw, rounded corners, align=center, minimum width=3.15cm, minimum height=0.95cm},
+    box/.style={draw, rounded corners, align=center, minimum width=2.55cm, minimum height=0.90cm},
     arr/.style={-{Stealth}, thick}
   ]
     \node[box] (data) {ECG200\\(UCR TSV)};
-    \node[box, right=of data] (features) {Feature views\\Raw / standardized\\or shapelet distances};
-    \node[box, right=of features] (kmeans) {KMeans\\(k selection)};
 
-    % Branches below KMeans
-    \node[box, below=of kmeans, xshift=-2.05cm] (eval) {Evaluation\\Sil/CH/DB\\Stability (ARI)\\Post-hoc ARI/NMI};
-    \node[box, below=of kmeans, xshift=2.05cm] (xai) {Surrogate tree\\+ SHAP};
+    \node[box, right=of data] (ts3) {Time series\\{\scriptsize raw / standardized}};
+    \node[box, below=of ts3] (shape3) {Shapelet\\{\scriptsize distance features}};
+    \node[draw, rounded corners, inner sep=6pt, fit=(ts3)(shape3), label=above:{\small Feature views}] (views3) {};
+
+    \node[box, right=1.15cm of ts3] (kmeans) {KMeans\\{\scriptsize k selection}};
+    \node[box, right=of kmeans] (xai) {Surrogate\\+ SHAP};
+
+    \node[box, below=of kmeans] (eval) {Evaluation\\Sil/CH/DB\\Stability (ARI)\\Post-hoc ARI/NMI};
     \node[box, below=of xai] (interp) {Interpretation\\plots + summaries};
 
-    \draw[arr] (data) -- (features);
-    \draw[arr] (features) -- (kmeans);
-    \draw[arr] (kmeans.south west) -- (eval.north east);
-    \draw[arr] (kmeans.south east) -- (xai.north west);
+    \draw[arr] (data.east) -- (ts3.west);
+    \draw[arr] (data.east) |- (shape3.west);
+    \draw[arr] (ts3.east) -- (kmeans.north west);
+    \draw[arr] (shape3.east) -| (kmeans.south west);
+
+    \draw[arr] (kmeans.east) -- (xai.west);
+    \draw[arr] (kmeans.south) -- (eval.north);
     \draw[arr] (xai.south) -- (interp.north);
   \end{tikzpicture}
 
