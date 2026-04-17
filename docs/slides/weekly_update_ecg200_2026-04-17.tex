@@ -194,12 +194,42 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Benchmark datasets (from literature)}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.49\textwidth}
+    \begin{block}{Large time-series archives}
+      \begin{itemize}
+        \item UCR (univariate) and UEA (multivariate) archives for reproducible baselines
+        \item Useful for: scale, diversity, and statistical validation
+      \end{itemize}
+    \end{block}
+
+    \begin{block}{Synthetic spatio-temporal}
+      \begin{itemize}
+        \item Controlled "moving cluster" simulations (known ground truth dynamics)
+      \end{itemize}
+    \end{block}
+
+    \column{0.51\textwidth}
+    \begin{block}{Real-world spatio-temporal datasets}
+      \begin{itemize}
+        \item Mobility trajectories (e.g., taxis, bike-sharing demand/flows)
+        \item Environmental/health sensing (sensor networks, events in space+time)
+      \end{itemize}
+    \end{block}
+  \end{columns}
+
+  \vspace{0.3em}
+  \footnotesize Goal: choose one public spatio-temporal benchmark (from the literature) as an intermediate validation before picoclimate windows.
+\end{frame}
+
 \begin{frame}{Next steps + questions (for today’s meeting)}
   \textbf{Next (1 week)}
   \begin{itemize}
     \item Export results (tables/metrics) to CSV/JSON for reproducibility.
     \item Produce protocol-style per-cluster summaries (fixed template) + explanation stability.
     \item Scale-up sanity check on a larger UCR dataset (e.g., \textbf{ECG5000}) before moving to picoclimate windows.
+    \item Test on one public \textbf{spatio-temporal} benchmark dataset (selected from the literature).
   \end{itemize}
 
   \vspace{0.8em}
