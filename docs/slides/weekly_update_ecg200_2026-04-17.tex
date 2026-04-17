@@ -13,10 +13,11 @@
 \usetikzlibrary{positioning,arrows.meta,fit}
 \usepackage{listings}
 
-\title[Weekly update]{Weekly progress update: Explainable clustering workflow (ECG200)}
-\subtitle{KMeans + surrogate rules + SHAP (raw vs shapelet-distance features)}
-\author{\textit{(your name)}}
-\institute{M2 Internship (LIRMM) — Explainable clustering}
+\title[Weekly update]
+{Progress update: Explainable clustering}
+% \subtitle{KMeans + surrogate rules + SHAP (raw vs shapelet-distance features)}
+% \author{\textit{(your name)}}
+\institute{LIRMM}
 \date{17 Apr 2026}
 
 \begin{document}
@@ -65,7 +66,7 @@
     \draw[arr] (shapelet.east) -| (kmeans2.south west);
 
     \draw[arr] (kmeans2.east) -- (shap2.west);
-    \draw[arr] (kmeans2.south east) -- (prod2.west);
+    \draw[arr] (kmeans2.south) |- (prod2.west);
   \end{tikzpicture}
 
   \vspace{0.6em}
@@ -142,6 +143,9 @@
         \item Stability: 5 seeds \textrightarrow pairwise ARI between runs
         \item Selection: rank-sum (+ small penalty for large $k$)
       \end{itemize}
+
+      \vspace{0.2em}
+      {\scriptsize Internal indices reflect \textbf{geometric compactness/separation} in the chosen feature space (KMeans: Euclidean; roughly spherical clusters).}
     \end{block}
 
     \column{0.44\textwidth}
@@ -150,6 +154,9 @@
         \item ARI / NMI
         \item majority-mapped accuracy
       \end{itemize}
+
+      \vspace{0.2em}
+      {\scriptsize ARI/NMI compare two partitions; majority accuracy maps clusters$\rightarrow$labels by majority vote.}
     \end{block}
   \end{columns}
 
