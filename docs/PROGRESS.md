@@ -14,8 +14,8 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Insights
 - Failures / issues / risks
 - Implementation details
-- Next (1 week)
-- Questions for supervisors
+- Next
+- Possible questions/concerns
 
 ## Template (copy/paste)
 
@@ -36,10 +36,10 @@ Ordering rule: keep entries in chronological order and append each new update at
 **Implementation details**
 - 
 
-**Next (1 week)**
+**Next**
 - 
 
-**Questions for supervisors**
+**Possible questions/concerns**
 - 
 
 ---
@@ -68,12 +68,12 @@ Ordering rule: keep entries in chronological order and append each new update at
 **Implementation details**
 - Notebooks: `scripts/notebooks/kmeans_ecg200.ipynb`, `scripts/notebooks/kmeans_ecg200_shapelets.ipynb`
 
-**Next (1 week)**
+**Next**
 - Package results into protocol-style per-cluster summaries and exportable tables.
 - Add explanation-stability checks across seeds and feature rankings.
 - Port the same pipeline to the picoclimate dataset or expand clustering baselines.
 
-**Questions for supervisors**
+**Possible questions/concerns**
 - Should deliverable priority be protocol-aligned fixed outputs or notebook demonstration quality?
 - For immediate next step, prefer real picoclimate windows now or additional baseline families first?
 
@@ -86,6 +86,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Merged protocol, internship gap analysis, and skills matrix into `docs/GAP_ANALYSIS.md`.
 - Renamed weekly tracking document to `docs/PROGRESS.md`.
 - Updated root markdown references to the new names.
+- Added ECG5000 extension workflow cells in `scripts/notebooks/exkmc_blobs_experiment.ipynb` (real dataset path, unsupervised k selection, ExKMC + KMeans comparison).
 
 **Insights**
 - A single governance document reduces duplication and improves reporting consistency.
@@ -98,9 +99,40 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Removed superseded docs replaced by consolidated governance content.
 - Preserved prior technical progress history for continuity.
 
-**Next (1 week)**
+**Next**
 - Run protocol-complete benchmark set and log metrics by seed.
 - Add explanation stability summary (feature overlap and fidelity consistency).
 
-**Questions for supervisors**
+**Possible questions/concerns**
 - Should priority be real picoclimate runs now, or broader synthetic method comparisons first?
+
+### 2026-04-21 (Roma taxi dataset onboarding for spatio-temporal benchmarking)
+
+**Experimentations**
+- Inspected CRAWDAD Roma taxi raw assets and extracted the February trace locally.
+- Designed an EDA workflow for scalable parsing and feature construction on large mobility traces.
+
+**Results (numbers, tables, plots)**
+- Confirmed archive structure: one trace file (`taxi_february.txt`).
+- Confirmed raw line format: `DRIVER_ID;TIMESTAMP;POINT(latitude longitude)`.
+- Created dataset note: `data/roma-taxi/README.md`.
+
+**Insights**
+- The dataset is strong for real-world spatio-temporal benchmarking, especially for route/mobility structure discovery.
+- Feature engineering into fixed windows is required before KMeans/ExKMC comparison.
+
+**Failures / issues / risks**
+- No direct task-specific cluster ground truth; external metrics are limited.
+- Full raw trace is large, so chunked/sampled EDA is necessary to keep iteration speed acceptable.
+
+**Implementation details**
+- Added repository pointer in `data/README.md`.
+- Added local-only ignore rules for large raw archive and extracted traces.
+- Added a new EDA notebook for Roma taxi in `scripts/notebooks/`.
+
+**Next**
+- Run the new Roma taxi notebook end-to-end and save summary outputs.
+- Compare KMeans and ExKMC on the same engineered features and report stability across seeds.
+
+**Possible questions/concerns**
+- Should Roma taxi be a secondary benchmark after ECG200/ECG5000 baseline stabilization, or run in parallel from now?

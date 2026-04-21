@@ -62,3 +62,8 @@ data/window_features.csv
 /data/UCRArchive_2018/UWaveGestureLibraryZ/UWaveGestureLibraryZ_TEST.tsv
 /data/UCRArchive_2018/Wafer/Wafer_TEST.tsv
 /data/UCRArchive_2018/Yoga/Yoga_TEST.tsv
+
+# Roma taxi raw archive and extracted traces kept local only
+/data/roma-taxi/taxi_february.tar.gz
+/data/roma-taxi/extracted/
+/data/roma-taxi/roma-taxi-readme.txt

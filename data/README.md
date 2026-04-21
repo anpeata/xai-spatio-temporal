@@ -41,3 +41,16 @@ This folder contains synthetic data regenerated to match the latest internship n
 
 - `csv_fields_explained.json`: detailed dictionary for both CSV files.
 - `metadata.json`: generation assumptions, parameters, and representation guidance.
+
+## Roma Taxi Dataset (CRAWDAD)
+
+The folder `data/roma-taxi/` contains CRAWDAD Roma taxi source artifacts used for real-world spatio-temporal benchmarking.
+
+- Dataset note and citation summary: `data/roma-taxi/README.md`
+- Provider instructions and ethics notice: `data/roma-taxi/roma-taxi-readme.txt`
+
+Recommended use in this repository:
+
+- keep raw archive and extracted traces local-only
+- build sampled or windowed features for clustering workflows
+- evaluate KMeans and ExKMC on identical engineered representations
