@@ -14,10 +14,17 @@ Focus: explainable clustering for spatio-temporal picoclimatic data, with reprod
 
 ## Repository Layout
 
-- `docs/`: protocol and internship-alignment documents
+- `docs/`: consolidated governance and progress tracking documents
 - `scripts/data/`: synthetic data generation and reduction utilities
 - `scripts/research/`: clustering and XAI experiment pipelines
 - `data/`: lightweight dataset documentation and metadata
+
+## Documentation Map
+
+- `docs/GAP_ANALYSIS.md`: protocol, internship gap analysis, skills matrix, and reporting standards.
+- `docs/PROGRESS.md`: dated progress entries (experiments, results, insights, failures, implementation details).
+- `docs/COMMIT_POLICY.md`: commit message format and contribution policy.
+- `docs/SHAPELETS_WORK_NOTES.md`: focused notes for shapelet-related experiments.
 
 ## Core Workflow
 
@@ -25,7 +32,7 @@ Focus: explainable clustering for spatio-temporal picoclimatic data, with reprod
 2. Run clustering baselines and save outputs in `outputs/benchmark/`.
 3. Run surrogate explainability and advanced SHAP/LIME analyses.
 4. Run latent-space clustering (autoencoder + K-Means).
-5. Report results following `docs/EXPERIMENT_PROTOCOL.md`.
+5. Report results following `docs/GAP_ANALYSIS.md` and log updates in `docs/PROGRESS.md`.
 
 ## Quick Start
 
@@ -79,6 +86,6 @@ git config --global commit.template "/absolute/path/to/this/repo/.gitmessage"
 
 ## Notes
 
-- Use `docs/EXPERIMENT_PROTOCOL.md` as the standard for experimental rigor and reporting.
-- Use `docs/SKILLS_MATRIX.md` and `docs/INTERNSHIP_GAP_ANALYSIS.md` to track internship-readiness coverage.
+- Use `docs/GAP_ANALYSIS.md` as the standard for protocol, internship-readiness coverage, and reporting quality.
+- Use `docs/PROGRESS.md` to track insights, failures, experimentations, results, and implementation details.
 - Keep generated outputs under `outputs/` locally unless explicitly needed in version control.
