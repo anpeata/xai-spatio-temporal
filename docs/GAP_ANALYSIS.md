@@ -4,7 +4,7 @@ Last updated: 2026-04-21
 
 This file is the consolidated source of truth for:
 
-- internship readiness gap analysis
+- readiness gap analysis
 - experiment protocol and quality standards
 - skills/knowledge coverage tracking
 - reporting requirements for insights, failures, experimentations, results, and implementation details
@@ -114,41 +114,3 @@ This format must remain unchanged even if temporal or spatial inputs change.
 - Repeat each stochastic setup at least 5 seeds.
 - Report mean plus/minus std for key metrics.
 - Prefer conclusions stable across seeds over single-run best score.
-
-## Skills and Knowledge Matrix
-
-Scoring: 0 = missing, 1 = beginner, 2 = working, 3 = strong
-
-| Requirement | Evidence in repository | Score | Action to reach internship-ready |
-|---|---|---:|---|
-| Classical clustering (K-Means, hierarchical) | notebooks 01, 02 + benchmark script | 3 | Add DBSCAN/GMM/Spectral comparisons in reports |
-| Explainability methods (LIME/SHAP) | notebooks 03, 04 + surrogate_xai_pipeline | 3 | Evaluate explanation stability across seeds/samples |
-| Clustering explanation framing | profile tables + local explanations | 2 | Standardize per-cluster explanation template |
-| Spatio-temporal data handling | synthetic generator with trajectories/windows | 2 | Add temporal/route-split validation |
-| Deep learning (PyTorch/TensorFlow) | deep_representation_clustering.py (PyTorch) | 2 | Extend to contrastive/sequence encoder |
-| Representation-space clustering | latent clustering pipeline | 2 | Compare latent vs raw feature clustering statistically |
-| Scientific rigor and reproducibility | protocol + deterministic seeds + exported outputs | 3 | Keep experiment logs for every run |
-| Documentation quality | README + consolidated governance file | 3 | Maintain progress notes with evidence |
-| Multidisciplinary communication | cluster summaries for non-ML audience | 2 | Add architect-facing visual narratives |
-
-## Mandatory Reporting Scope
-
-Yes, repository reporting should cover all of the following for each significant experiment cycle:
-
-- insights
-- failures
-- experimentations
-- results
-- implementation details
-
-Use:
-
-- `docs/PROGRESS.md` for ongoing updates
-- this file for standards, readiness tracking, and decision criteria
-
-## Priority Actions (Next 2 Weeks)
-
-1. Run and archive outputs for all core scripts and method families
-2. Produce one concise comparison report on identical splits
-3. Add explanation stability analysis across seeds
-4. Prepare a short architect-facing narrative of cluster meaning
