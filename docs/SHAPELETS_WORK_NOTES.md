@@ -38,6 +38,21 @@ A matching abductive section was added to the raw ECG notebook (`kmeans_ecg200.i
 Main output variable:
 - `raw_abductive_by_view`
 
+### 5) Added adaptive shapelet dictionary selection (real-world style)
+The shapelets notebook now follows a practical pipeline instead of using a fixed dictionary size only:
+
+1. Generate many candidate shapelets across multiple lengths.
+2. Rank candidates using usefulness (distance dispersion) and seed-stability.
+3. Prune redundant candidates using correlation thresholding.
+4. Evaluate dictionary sizes (10/25/50/100) with unsupervised quality + stability.
+5. Freeze the selected dictionary size and continue clustering/explanations.
+
+Main output variables:
+- `shapelet_candidate_scores`
+- `shapelet_dictionary_size_eval`
+- `shapelet_dictionary_report`
+- `selected_shapelet_size`
+
 ## Abductive method details
 The abductive implementation is surrogate-tree based.
 
@@ -60,6 +75,7 @@ Outputs include:
 ## Where to review in notebooks
 ### Shapelet notebook
 File: `scripts/notebooks/kmeans_ecg200_shapelets.ipynb`
+- Adaptive dictionary selection is built in the shapelet build cell.
 - Aggregate stats added in Cell 5
 - SHAP + aggregate shapelet stats section in Cells 18-19
 - Abductive explanations for shapelet views in Cells 20-21
