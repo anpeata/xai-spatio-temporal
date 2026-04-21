@@ -5,6 +5,8 @@ Last updated: 2026-04-21
 Use this file for weekly or milestone updates for supervisor meetings.
 Each entry should remain short, factual, and auditable.
 
+Ordering rule: keep entries in chronological order and append each new update at the bottom.
+
 ## Required Sections for Each Entry
 
 - Experimentations
@@ -44,34 +46,6 @@ Each entry should remain short, factual, and auditable.
 
 ## Entries
 
-### 2026-04-21 (Documentation consolidation and tracking alignment)
-
-**Experimentations**
-- Consolidated governance documentation into one source of truth.
-
-**Results (numbers, tables, plots)**
-- Merged protocol, internship gap analysis, and skills matrix into `docs/GAP_ANALYSIS.md`.
-- Renamed weekly tracking document to `docs/PROGRESS.md`.
-- Updated root markdown references to the new names.
-
-**Insights**
-- A single governance document reduces duplication and improves reporting consistency.
-
-**Failures / issues / risks**
-- External notes or bookmarks may still reference old file names.
-- Full multi-method benchmark evidence still needs execution and archiving.
-
-**Implementation details**
-- Removed superseded docs replaced by consolidated governance content.
-- Preserved prior technical progress history below for continuity.
-
-**Next (1 week)**
-- Run protocol-complete benchmark set and log metrics by seed.
-- Add explanation stability summary (feature overlap and fidelity consistency).
-
-**Questions for supervisors**
-- Should priority be real picoclimate runs now, or broader synthetic method comparisons first?
-
 ### 2026-04-17 (ECG200 KMeans and XAI workflow)
 
 **Experimentations**
@@ -102,3 +76,31 @@ Each entry should remain short, factual, and auditable.
 **Questions for supervisors**
 - Should deliverable priority be protocol-aligned fixed outputs or notebook demonstration quality?
 - For immediate next step, prefer real picoclimate windows now or additional baseline families first?
+
+### 2026-04-21 (Documentation consolidation and tracking alignment)
+
+**Experimentations**
+- Consolidated governance documentation into one source of truth.
+
+**Results (numbers, tables, plots)**
+- Merged protocol, internship gap analysis, and skills matrix into `docs/GAP_ANALYSIS.md`.
+- Renamed weekly tracking document to `docs/PROGRESS.md`.
+- Updated root markdown references to the new names.
+
+**Insights**
+- A single governance document reduces duplication and improves reporting consistency.
+
+**Failures / issues / risks**
+- External notes or bookmarks may still reference old file names.
+- Full multi-method benchmark evidence still needs execution and archiving.
+
+**Implementation details**
+- Removed superseded docs replaced by consolidated governance content.
+- Preserved prior technical progress history for continuity.
+
+**Next (1 week)**
+- Run protocol-complete benchmark set and log metrics by seed.
+- Add explanation stability summary (feature overlap and fidelity consistency).
+
+**Questions for supervisors**
+- Should priority be real picoclimate runs now, or broader synthetic method comparisons first?
