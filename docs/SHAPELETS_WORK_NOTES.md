@@ -33,7 +33,7 @@ Main output variable:
 - `abductive_by_view`
 
 ### 4) Added abductive explanations for raw/original approach
-A matching abductive section was added to the raw ECG notebook (`kmeans_ecg200.ipynb`) so both approaches are covered.
+A matching abductive section was added to the raw ECG notebook (`kmeans_test_temporal_ecg200.ipynb`) so both approaches are covered.
 
 Main output variable:
 - `raw_abductive_by_view`
@@ -74,14 +74,14 @@ Outputs include:
 
 ## Where to review in notebooks
 ### Shapelet notebook
-File: `scripts/notebooks/kmeans_ecg200_shapelets.ipynb`
+File: `scripts/notebooks/kmeans_test_temporal_ecg200_shapelets.ipynb`
 - Adaptive dictionary selection is built in the shapelet build cell.
 - Aggregate stats added in Cell 5
 - SHAP + aggregate shapelet stats section in Cells 18-19
 - Abductive explanations for shapelet views in Cells 20-21
 
 ### Raw notebook
-File: `scripts/notebooks/kmeans_ecg200.ipynb`
+File: `scripts/notebooks/kmeans_test_temporal_ecg200.ipynb`
 - Abductive explanations for raw views in Cells 14-15
 
 ## How to run quickly

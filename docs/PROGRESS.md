@@ -66,7 +66,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Real picoclimate transferability still requires validation.
 
 **Implementation details**
-- Notebooks: `scripts/notebooks/kmeans_ecg200.ipynb`, `scripts/notebooks/kmeans_ecg200_shapelets.ipynb`
+- Notebooks: `scripts/notebooks/kmeans_test_temporal_ecg200.ipynb`, `scripts/notebooks/kmeans_test_temporal_ecg200_shapelets.ipynb`
 
 **Next**
 - Package results into protocol-style per-cluster summaries and exportable tables.
