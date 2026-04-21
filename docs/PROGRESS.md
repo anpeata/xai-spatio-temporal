@@ -86,7 +86,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Merged protocol, internship gap analysis, and skills matrix into `docs/GAP_ANALYSIS.md`.
 - Renamed weekly tracking document to `docs/PROGRESS.md`.
 - Updated root markdown references to the new names.
-- Added ECG5000 extension workflow cells in `scripts/notebooks/exkmc_blobs_experiment.ipynb` (real dataset path, unsupervised k selection, ExKMC + KMeans comparison).
+- Added ECG5000 extension workflow cells in `scripts/notebooks/exkmc_blobs_experiment.ipynb` (dataset path, unsupervised k selection, ExKMC + KMeans comparison).
 
 **Insights**
 - A single governance document reduces duplication and improves reporting consistency.
