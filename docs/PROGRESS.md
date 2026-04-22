@@ -1,6 +1,6 @@
 # Progress Log
 
-Last updated: 2026-04-21
+Last updated: 2026-04-22
 
 Use this file for weekly or milestone updates for supervisor meetings.
 Each entry should remain short, factual, and auditable.
@@ -136,3 +136,48 @@ Ordering rule: keep entries in chronological order and append each new update at
 
 **Possible questions/concerns**
 - Should Roma taxi be a secondary benchmark after ECG200/ECG5000 baseline stabilization, or run in parallel from now?
+
+### 2026-04-22 (Roma taxi EDA execution and windowing refinement)
+
+**Experimentations**
+- Executed Roma taxi EDA notebook end-to-end with fast mode tuning.
+- Parsed 21.8 M raw trajectory points from February trace.
+- Engineered 15-minute temporal windows into spatio-temporal feature vectors.
+- Ran unsupervised k selection (Silhouette, Calinski-Harabasz, Davies-Bouldin) across seeds.
+
+**Results (numbers, tables, plots)**
+- Dataset size: 1.498 GB (extracted taxi_february.txt)
+- Rows sampled/processed: 40,000 for EDA preview
+- Window feature table: 74,478 windows × 10 features (lat, lon, time stats, distance, speed, direction)
+- Optimal k selection: k=2 (across multi-seed stability)
+- Cluster size distribution and silhouette summary computed
+- Spatial footprint map: Roma metropolitan area coverage clearly visible
+- Top drivers by activity: driver IDs ranked by point count (1,200+ points for most active)
+
+**Insights**
+- Fast mode (chunked sampling) makes large-scale EDA feasible without exhausting memory.
+- Feature engineering into fixed 15-min windows captures meaningful temporal structure.
+- Silhouette-based k selection favors low k (2–3) for taxi route similarity, suggesting strong bimodal structure (central vs peripheral routes).
+- Driver activity distribution is Zipfian; top 50 drivers represent significant trace density.
+
+**Failures / issues / risks**
+- ExKMC comparison deferred (cell 8 not executed) to avoid overhead on large windowed dataset.
+- Chunk size for final full-run still needs tuning for production use; current fast mode is 40K-row preview.
+- Ground truth for route quality/driver behavior clusters is external; only intrinsic metrics available.
+
+**Implementation details**
+- Fast mode enabled: MAX_ROWS=40000, STRIDE=900 seconds (15 min), KMEANS_N_INIT=3 for quick convergence
+- Multi-seed evaluation: 3 seeds for stability
+- Haversine distance used for spatial feature engineering
+- Filtering: removed rows with invalid coordinates or null timestamps
+
+**Next**
+- Run full-dataset window table construction with production chunk size.
+- Compare KMeans stability across k=2 and k=3 with extended seed list.
+- Optional: apply ExKMC if stability gains justify overhead; else use KMeans baseline.
+- Export cluster summaries and route pattern interpretations.
+
+**Possible questions/concerns**
+- Is k=2 truly optimal or artifact of sampling? Full data k selection recommended before finalizing.
+- Should ExKMC be run despite cost, or defer to after ECG200/ECG5000 benchmarks complete?
+- Route interpretation: should cluster summaries include driver behavior profiles or remain trajectory-focused?
