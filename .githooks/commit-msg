@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+# Enforce commit subject format from docs/COMMIT_POLICY.md.
+
+set -eu
+
+msg_file="$1"
+subject="$(sed -n '1p' "$msg_file" | tr -d '\r')"
+
+# Allow auto-generated merge commits.
+case "$subject" in
+    Merge\ *) exit 0 ;;
+esac
+
+pattern='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore) \([a-z0-9._/-]+\): [a-z].*'
+
+if ! printf '%s\n' "$subject" | grep -Eq "$pattern"; then
+    echo "Commit blocked: subject must match 'type (scope): short imperative summary'." >&2
+    echo "Allowed types: feat, fix, docs, style, refactor, perf, test, build, ci, chore" >&2
+    echo "Example: docs (results): update roma taxi metric summary" >&2
+    echo "Got: $subject" >&2
+    exit 1
+fi
+
+if printf '%s\n' "$subject" | grep -Eq '\.$'; then
+    echo "Commit blocked: subject must not end with a period." >&2
+    echo "Got: $subject" >&2
+    exit 1
+fi
+
+exit 0
