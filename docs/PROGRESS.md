@@ -181,3 +181,10 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Is k=2 truly optimal or artifact of sampling? Full data k selection recommended before finalizing.
 - Should ExKMC be run despite cost, or defer to after ECG200/ECG5000 benchmarks complete?
 - Route interpretation: should cluster summaries include driver behavior profiles or remain trajectory-focused?
+## 2026-04-22
+- Refactored kmeans temporal notebooks by removing dual-view comparisons to focus on single-view workflows.
+- Renamed notebooks to dataset-agnostic names for broader reuse.
+- Fully executed the raw temporal test pipeline on ECG200.
+- Results: k=3, accuracy=78%, surrogate fidelity=94%, top features=t_41 and t_30.
+- Insight: the model favored a 3-cluster temporal structure despite only 2 ground-truth classes.
+- Deferred the shapelet temporal test due to computational cost.
