@@ -185,6 +185,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Limited k-selection complexity via bounded search settings (`K_GRID`, `SEED_LIST`, `KMEANS_N_INIT`) and sampled silhouette evaluation.
 - Executed the ECG5000 extension workflow in `scripts/notebooks/exkmc_blobs_experiment.ipynb` end-to-end (unsupervised k-selection + KMeans vs ExKMC comparison).
 - Re-ran the shapelet clustering notebook explainability path in `scripts/notebooks/kmeans_test_temporal_shapelets.ipynb`, including surrogate and SHAP attribution cells.
+- Added and executed a practical ablation in the shapelet notebook to compare fixed-length (`(20,)`) vs mixed-length (`(10, 15, 20, 25, 30)`) shapelet dictionaries under the same adaptive selection routine.
 
 **Results (numbers, tables, plots)**
 - Dataset file confirmed: `data/roma-taxi/extracted/taxi_february.txt` (1.498 GB).
@@ -202,6 +203,9 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Shapelet pipeline refreshed on ECG200: selected `k=2`, silhouette `0.5260`, mapped accuracy `0.6750`, ARI `0.0617`, NMI `0.0246`.
 - Shapelet surrogate fidelity: train `0.955`, CV `0.93`.
 - SHAP (shapelet surrogate) top features: `s_1 (0.1360)`, `s_5 (0.0532)`, `s_2 (0.0203)`, `s_9 (0.0120)`.
+- Shapelet length-profile check (same candidate budget and scoring):
+	mixed-length `(10,15,20,25,30)` -> selected size `10`, avg composite `1.1503`, avg silhouette `0.6503`, best k `(2,2)`.
+	fixed-length `(20,)` -> selected size `10`, avg composite `1.0697`, avg silhouette `0.5697`, best k `(2,2)`.
 
 **Insights**
 - Current approach is appropriate when priority is quick, stable k-selection instead of exhaustive hyperparameter search.
@@ -209,6 +213,8 @@ Ordering rule: keep entries in chronological order and append each new update at
 - On this run, the bounded normal profile still clearly prefers `k=2`, consistent with earlier low-k tendency.
 - On ECG5000, KMeans and ExKMC are very close at `k=2`; KMeans is slightly stronger on silhouette/ARI/accuracy while ExKMC remains competitive.
 - Shapelet explanations are now validated with fresh SHAP outputs; attribution is concentrated mostly on one dominant shapelet feature (`s_1`) with secondary support from `s_5` and `s_2`.
+- Mixed-length shapelets are preferable here: they capture patterns at multiple temporal scales and produced stronger unsupervised quality than a fixed single-length dictionary.
+- For clustering on shapelet distances, shapelets do not need equal raw lengths; each shapelet contributes one distance feature, so the final feature matrix is already fixed-width by dictionary size.
 
 **Failures / issues / risks**
 - ExKMC section remains skipped in this interactive profile to keep runtime predictable.
@@ -222,6 +228,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 - KMeans selection cell now evaluates on `X_eval` for k search, then fits final model on full `X`.
 - ECG5000 execution notebook: `scripts/notebooks/exkmc_blobs_experiment.ipynb` (cells for dataset load, k-selection, model comparison, PCA view, tree export run).
 - Shapelet notebook updated/executed: `scripts/notebooks/kmeans_test_temporal_shapelets.ipynb` (surrogate, SHAP, and abductive explanation cells refreshed).
+- Notebook now includes a fixed-vs-mixed shapelet-length comparison cell with recommendation output.
 
 **Next**
 - Keep this bounded profile for day-to-day iteration and supervisor demos.
