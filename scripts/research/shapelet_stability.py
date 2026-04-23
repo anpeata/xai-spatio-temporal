@@ -3,14 +3,16 @@ from __future__ import annotations
 import json
 import math
 import os
+import time
+from collections import Counter
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, Iterable, List, Sequence, Tuple
+from typing import Dict, List, Sequence, Tuple
 
 import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
+from sklearn.metrics import adjusted_rand_score, silhouette_score
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
@@ -93,6 +95,57 @@ def pairwise_jaccard(sets: Sequence[set[int]]) -> float:
     return float(np.mean(vals)) if vals else 0.0
 
 
+def search_best_k(
+    x_view: np.ndarray,
+    k_grid: Sequence[int],
+    silhouette_sample_size: int,
+) -> Dict[str, float | int | pd.DataFrame]:
+    rows: List[Dict[str, float | int]] = []
+
+    for k in k_grid:
+        sil_values: List[float] = []
+        labels_by_seed: List[np.ndarray] = []
+
+        for seed in (0, 1, 2):
+            km = KMeans(n_clusters=int(k), random_state=int(seed), n_init=12)
+            labels = km.fit_predict(x_view)
+            labels_by_seed.append(labels)
+            sil = silhouette_score(
+                x_view,
+                labels,
+                sample_size=min(silhouette_sample_size, x_view.shape[0]),
+            )
+            sil_values.append(float(sil))
+
+        pairwise_ari: List[float] = []
+        for i in range(len(labels_by_seed)):
+            for j in range(i + 1, len(labels_by_seed)):
+                pairwise_ari.append(float(adjusted_rand_score(labels_by_seed[i], labels_by_seed[j])))
+
+        stability_ari = float(np.mean(pairwise_ari)) if pairwise_ari else 0.0
+        silhouette_mean = float(np.mean(sil_values))
+        silhouette_std = float(np.std(sil_values, ddof=0))
+        composite_score = silhouette_mean + 0.5 * stability_ari
+
+        rows.append(
+            {
+                "k": int(k),
+                "silhouette": silhouette_mean,
+                "silhouette_std": silhouette_std,
+                "stability_ari": stability_ari,
+                "composite_score": float(composite_score),
+            }
+        )
+
+    table = pd.DataFrame(rows).sort_values(
+        ["composite_score", "silhouette", "stability_ari", "k"],
+        ascending=[False, False, False, True],
+    ).reset_index(drop=True)
+    best = table.iloc[0].to_dict()
+    best["search_table"] = table
+    return best
+
+
 def evaluate_dataset_stability(
     dataset_name: str,
     x_raw: np.ndarray,
@@ -100,6 +153,7 @@ def evaluate_dataset_stability(
     k_grid: Sequence[int],
     config: SpeedHeuristicConfig,
 ) -> Dict[str, float | int | str]:
+    started_at = time.perf_counter()
     rng = np.random.default_rng(42)
 
     x_raw = np.asarray(x_raw, dtype=float)
@@ -115,24 +169,16 @@ def evaluate_dataset_stability(
     scaler = StandardScaler()
     x_eval = scaler.fit_transform(x_eval)
 
-    silhouette_rows: List[Tuple[int, float]] = []
-    for k in k_grid:
-        sil_values: List[float] = []
-        for seed in (0, 1, 2):
-            km = KMeans(n_clusters=int(k), random_state=int(seed), n_init=12)
-            labels = km.fit_predict(x_eval)
-            sil = silhouette_score(
-                x_eval,
-                labels,
-                sample_size=min(config.silhouette_sample_size, x_eval.shape[0]),
-            )
-            sil_values.append(float(sil))
-        silhouette_rows.append((int(k), float(np.mean(sil_values))))
-
-    best_k = int(sorted(silhouette_rows, key=lambda item: item[1], reverse=True)[0][0])
+    raw_search = search_best_k(x_eval, k_grid, config.silhouette_sample_size)
+    raw_best_k = int(raw_search["k"])
+    raw_best_silhouette = float(raw_search["silhouette"])
+    raw_best_stability = float(raw_search["stability_ari"])
 
     top_features_by_seed: List[set[int]] = []
     cv_fidelities: List[float] = []
+    shapelet_best_ks: List[int] = []
+    shapelet_best_silhouettes: List[float] = []
+    shapelet_best_stabilities: List[float] = []
 
     for seed in range(config.n_seeds):
         candidates = extract_random_shapelets(
@@ -149,9 +195,14 @@ def evaluate_dataset_stability(
 
         top_idx = np.argsort(dispersions)[::-1][: config.n_shapelets]
         selected = [candidates[int(i)] for i in top_idx]
-        x_shapelet = compute_shapelet_distances(x_eval, selected)
+        x_shapelet = StandardScaler().fit_transform(compute_shapelet_distances(x_eval, selected))
 
-        km = KMeans(n_clusters=best_k, random_state=seed, n_init=12)
+        shapelet_search = search_best_k(x_shapelet, k_grid, config.silhouette_sample_size)
+        shapelet_best_ks.append(int(shapelet_search["k"]))
+        shapelet_best_silhouettes.append(float(shapelet_search["silhouette"]))
+        shapelet_best_stabilities.append(float(shapelet_search["stability_ari"]))
+
+        km = KMeans(n_clusters=int(shapelet_search["k"]), random_state=seed, n_init=12)
         labels = km.fit_predict(x_shapelet)
 
         surrogate = DecisionTreeClassifier(max_depth=3, min_samples_leaf=8, random_state=seed)
@@ -174,13 +225,27 @@ def evaluate_dataset_stability(
     fid_mean = float(np.mean(cv_fidelities))
     fid_std = float(np.std(cv_fidelities, ddof=0))
     fid_cv = float(fid_std / fid_mean) if fid_mean > 0 else 0.0
+    shapelet_best_silhouette = float(np.mean(shapelet_best_silhouettes)) if shapelet_best_silhouettes else 0.0
+    shapelet_best_stability = float(np.mean(shapelet_best_stabilities)) if shapelet_best_stabilities else 0.0
+    shapelet_best_k = int(Counter(shapelet_best_ks).most_common(1)[0][0]) if shapelet_best_ks else raw_best_k
+    silhouette_delta_pct = float(
+        100.0 * (shapelet_best_silhouette - raw_best_silhouette) / raw_best_silhouette
+    ) if raw_best_silhouette > 0 else 0.0
+    runtime_seconds = float(time.perf_counter() - started_at)
 
     return {
         "dataset": dataset_name,
         "n_samples_raw": int(x_raw.shape[0]),
         "n_samples_eval": int(x_eval.shape[0]),
         "n_features": int(x_raw.shape[1]),
-        "best_k": int(best_k),
+        "raw_best_k": int(raw_best_k),
+        "raw_best_silhouette": raw_best_silhouette,
+        "raw_best_stability_ari": raw_best_stability,
+        "shapelet_best_k": int(shapelet_best_k),
+        "shapelet_best_silhouette": shapelet_best_silhouette,
+        "shapelet_best_stability_ari": shapelet_best_stability,
+        "shapelet_silhouette_delta_pct": silhouette_delta_pct,
+        "best_k": int(raw_best_k),
         "seeds": int(config.n_seeds),
         "fidelity_mean": fid_mean,
         "fidelity_std": fid_std,
@@ -188,6 +253,8 @@ def evaluate_dataset_stability(
         "feature_overlap_ratio": float(overlap_ratio),
         "feature_jaccard_mean": float(jaccard_mean),
         "direction_c_reduction_pct": float(100.0 * (1.0 - x_eval.shape[0] / x_raw.shape[0])),
+        "runtime_seconds": runtime_seconds,
+        "runtime_over_15min": bool(runtime_seconds >= 900.0),
     }
 
 
@@ -241,7 +308,11 @@ def load_roma_temporal(repo_root: Path, nrows: int = 450_000) -> np.ndarray:
         raise ValueError("Roma temporal loader produced zero valid rows after parsing")
 
     df["window_dt"] = df["dt"].dt.floor("15min")
-    grouped = df.groupby("window_dt", as_index=False).size().rename(columns={"size": "n_points"})
+    grouped = (
+        df.groupby(["driver_id", "window_dt"], as_index=False)
+        .size()
+        .rename(columns={"size": "n_points"})
+    )
 
     hour = grouped["window_dt"].dt.hour + grouped["window_dt"].dt.minute / 60.0
     dow = grouped["window_dt"].dt.weekday
@@ -289,7 +360,17 @@ def main() -> None:
     rows: List[Dict[str, float | int | str]] = []
     for name, x_data, lengths, k_grid in datasets:
         print(f"Running stability for {name}: shape={x_data.shape}")
-        rows.append(evaluate_dataset_stability(name, x_data, lengths, k_grid, config))
+        row = evaluate_dataset_stability(name, x_data, lengths, k_grid, config)
+        rows.append(row)
+        print(
+            f"  raw silhouette={row['raw_best_silhouette']:.4f}, "
+            f"shapelet silhouette={row['shapelet_best_silhouette']:.4f}, "
+            f"delta={row['shapelet_silhouette_delta_pct']:.1f}%"
+        )
+        print(
+            f"  runtime={row['runtime_seconds'] / 60.0:.1f} min"
+            + (" [warning: over 15 min]" if row["runtime_over_15min"] else "")
+        )
 
     out_dir = repo_root / "outputs"
     out_dir.mkdir(parents=True, exist_ok=True)

@@ -367,3 +367,41 @@ Ordering rule: keep entries in chronological order and append each new update at
 **Possible questions/concerns**
 - Should the final paper report the bounded-sample metrics explicitly, or present them as an implementation detail?
 - Do we want the stability experiment to be rerun with 10+ seeds before submission, or is 7 sufficient?
+
+### 2026-04-23 (Shapelet rename cleanup and raw-vs-shapelet sanity check)
+
+**Experimentations**
+- Renamed the shapelet notebooks so they sort together with a `shapelets_` prefix.
+- Renamed the stability script to `scripts/research/shapelet_stability.py`.
+- Reran the Roma temporal loader check after switching to driver-level 15-minute windows.
+- Ran a reduced-budget raw-vs-shapelet clustering sanity check across the four datasets.
+
+**Results (numbers, tables, plots)**
+- Roma temporal loader now returns 7,708 driver-window rows from the 450k-row sample.
+- Quick comparison on the reduced budget (`max_eval_samples=900`, `n_seeds=2`) showed mixed results:
+	- picoclimatic synthetic: raw silhouette 0.1895 vs shapelet silhouette 0.2303 (+21.5%)
+	- ECG200: raw silhouette 0.3520 vs shapelet silhouette 0.3279 (-6.8%)
+	- ECG5000: raw silhouette 0.3656 vs shapelet silhouette 0.2458 (-32.8%)
+	- Roma temporal: raw silhouette 0.3896 vs shapelet silhouette 0.4064 (+4.3%)
+
+**Insights**
+- Shapelets improve clustering on the synthetic picoclimatic and Roma temporal runs we checked, but they are not a universal win over raw series.
+- The safe conclusion is dataset-dependent: shapelets help interpretability and can improve clustering quality, but the raw baseline remains competitive on ECG200/ECG5000.
+- Runtime logging in the stability script will make future 15-minute budget checks easier.
+
+**Failures / issues / risks**
+- The full stability sweep is still expensive enough to produce long Windows KMeans runs if the sampling budget is raised too far.
+- The current quick sweep is a sanity check, not a publication-grade final benchmark.
+
+**Implementation details**
+- Updated notebook names to the `shapelets_*.ipynb` convention.
+- Added runtime logging to the stability script.
+- Updated the Roma loader to aggregate by driver and 15-minute window.
+
+**Next**
+- Use the new `shapelet_stability.py` output to refresh the report if a higher-budget run is completed later.
+- Keep the `shapelets_` notebook prefix when creating new shapelet-related notebooks.
+
+**Possible questions/concerns**
+- Should the final paper emphasize interpretability over raw clustering quality, given the mixed raw-vs-shapelet result?
+- Do we want to keep the quick-sweep budget as the default interactive setting? 

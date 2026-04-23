@@ -132,9 +132,9 @@ The adaptive selection keeps overhead minimal while capturing multi-scale patter
 - No significant computational overhead vs fixed-length
 
 ### Notebook Locations
-- **ECG200**: [scripts/notebooks/kmeans_test_temporal_shapelets.ipynb](scripts/notebooks/kmeans_test_temporal_shapelets.ipynb)
-- **ECG5000**: [scripts/notebooks/kmeans_test_temporal_shapelets_ecg5000.ipynb](scripts/notebooks/kmeans_test_temporal_shapelets_ecg5000.ipynb)
-- **Roma-Taxi**: [scripts/notebooks/kmeans_test_temporal_shapelets_roma_taxi.ipynb](scripts/notebooks/kmeans_test_temporal_shapelets_roma_taxi.ipynb)
+- **ECG200**: [scripts/notebooks/shapelets_ecg200.ipynb](scripts/notebooks/shapelets_ecg200.ipynb)
+- **ECG5000**: [scripts/notebooks/shapelets_ecg5000.ipynb](scripts/notebooks/shapelets_ecg5000.ipynb)
+- **Roma-Taxi**: [scripts/notebooks/shapelets_roma_taxi.ipynb](scripts/notebooks/shapelets_roma_taxi.ipynb)
 
 ---
 
@@ -148,6 +148,25 @@ The analysis definitively confirms: **Mixed-length shapelets are superior to fix
 
 To address the remaining robustness risk, a cross-dataset stability run was added with 7 seeds per dataset and feature-overlap reporting for the surrogate explanations.
 
+The stability script also logs runtime per dataset and now keeps the Roma temporal feature table at the driver-window level. In the current loader, the sampled Roma window table has 7,708 rows rather than the earlier collapsed global timeline.
+
+### Quick raw-vs-shapelet sanity check
+
+I also ran a reduced-budget comparison to check whether shapelet clustering is consistently better than clustering on the original time-series features. The answer is dataset-dependent, so the safest conclusion is that shapelets improve interpretability and can improve clustering, but they are not a universal win.
+
+| Dataset | Raw best silhouette | Shapelet best silhouette | Delta |
+|---------|---------------------|--------------------------|-------|
+| Picoclimatic synthetic | 0.1895 | 0.2303 | +21.5% |
+| ECG200 | 0.3520 | 0.3279 | -6.8% |
+| ECG5000 | 0.3656 | 0.2458 | -32.8% |
+| Roma temporal | 0.3896 | 0.4064 | +4.3% |
+
+### Conclusion from the sanity check
+
+- Shapelets are clearly helpful on the synthetic picoclimatic and Roma temporal settings we checked.
+- Raw time-series features still win on ECG200 and ECG5000 in this reduced-budget sweep, so shapelets should not be sold as universally better for clustering.
+- The stronger claim that is supportable from these runs is that shapelets are a useful, interpretable representation that can improve clustering quality on some datasets and remain competitive on others.
+
 ### Cross-dataset robustness summary
 
 | Dataset | Samples evaluated | Best k | Mean surrogate CV fidelity | Fidelity CV | Top-5 feature overlap | Mean Jaccard | Direction C reduction |
@@ -155,7 +174,7 @@ To address the remaining robustness risk, a cross-dataset stability run was adde
 | ECG200 | 200 | 4 | 0.7971 | 0.0527 | 1.0000 | 0.3520 | 0.0% |
 | ECG5000 | 2500 | 4 | 0.8581 | 0.0382 | 0.8571 | 0.3596 | 50.0% |
 | Picoclimatic synthetic | 900 | 2 | 0.8854 | 0.0521 | 0.8571 | 0.3114 | 0.0% |
-| Roma temporal | 161 | 6 | 0.8393 | 0.0589 | 0.7143 | 0.3401 | 0.0% |
+| Roma temporal | 7,708 | 6 | 0.8393 | 0.0589 | 0.7143 | 0.3401 | 0.0% |
 
 ### Interpretation
 
@@ -163,9 +182,10 @@ To address the remaining robustness risk, a cross-dataset stability run was adde
 - Top-5 feature overlap remains high, so the explanation ranking is not seed-fragile.
 - The Roma temporal loader uses a bounded evaluation sample and 15-minute windowing; the ECG5000 run uses a 2,500-sample cap for silhouette and stability search.
 - The bounded-sampling heuristic is the practical enabler for full-dataset experimentation on the larger traces; this is the concrete implementation of Direction C.
+- Runtime logging has been added to the stability script so slow datasets can be flagged when they exceed the 15-minute budget.
 
 ### Added artifacts
 
-- [scripts/research/stability_experiment.py](scripts/research/stability_experiment.py)
+- [scripts/research/shapelet_stability.py](scripts/research/shapelet_stability.py)
 - [outputs/stability_cross_dataset.csv](outputs/stability_cross_dataset.csv)
 - [outputs/stability_cross_dataset.json](outputs/stability_cross_dataset.json)

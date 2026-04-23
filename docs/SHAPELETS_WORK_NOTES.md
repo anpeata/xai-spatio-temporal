@@ -74,7 +74,7 @@ Outputs include:
 
 ## Where to review in notebooks
 ### Shapelet notebook
-File: `scripts/notebooks/kmeans_test_temporal_ecg200_shapelets.ipynb`
+File: `scripts/notebooks/shapelets_ecg200.ipynb`
 - Adaptive dictionary selection is built in the shapelet build cell.
 - Aggregate stats added in Cell 5
 - SHAP + aggregate shapelet stats section in Cells 18-19
