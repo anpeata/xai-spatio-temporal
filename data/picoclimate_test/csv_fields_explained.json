@@ -1,0 +1,74 @@
+{
+  "created_utc": "2026-04-23T12:41:24.121810+00:00",
+  "files": {
+    "raw_measurements.csv": {
+      "description": "One row per location/day/slot. Exactly 4 slots per day.",
+      "primary_key": [
+        "timestamp",
+        "location_id"
+      ],
+      "column_count": 37,
+      "columns": {
+        "timestamp": "UTC timestamp of the slot sample.",
+        "date": "Calendar date.",
+        "day_index": "Offset from simulation start date.",
+        "time_slot": "One of morning/noon/evening/night.",
+        "slot_index": "0..3 slot order within day.",
+        "location_id": "Synthetic location identifier.",
+        "city": "Associated city.",
+        "lat": "Latitude in decimal degrees.",
+        "lon": "Longitude in decimal degrees.",
+        "elevation_m": "Elevation in meters.",
+        "hour": "Hour-of-day feature used by temporal component.",
+        "day_of_year": "Day-of-year feature used by seasonal component.",
+        "missing_block_flag": "1 when a sensor block outage was applied.",
+        "true_regime": "Latent regime label for evaluation.",
+        "air_temp_c": "Near-surface air temperature",
+        "rel_humidity_pct": "Relative humidity",
+        "wind_speed_ms": "Wind speed",
+        "wind_dir_deg": "Wind direction",
+        "pressure_hpa": "Air pressure",
+        "precipitation_mm": "Precipitation amount per slot",
+        "solar_wm2": "Shortwave solar irradiance",
+        "longwave_wm2": "Longwave radiation",
+        "surface_temp_c": "Surface temperature",
+        "soil_moisture_pct": "Top-soil moisture",
+        "ndvi": "Vegetation greenness proxy",
+        "pm25_ugm3": "PM2.5 concentration",
+        "pm10_ugm3": "PM10 concentration",
+        "co2_ppm": "CO2 concentration",
+        "no2_ppb": "NO2 concentration",
+        "o3_ppb": "O3 concentration",
+        "noise_db": "Ambient sound pressure level",
+        "traffic_index": "Traffic intensity proxy",
+        "pedestrian_index": "Pedestrian activity proxy",
+        "sky_view_factor": "Visible sky fraction",
+        "impervious_fraction": "Impervious surface fraction",
+        "water_proximity": "Relative proximity to water body",
+        "heat_index_c": "Apparent temperature proxy"
+      }
+    },
+    "window_features.csv": {
+      "description": "Daily representations for clustering with flat and summarized encodings.",
+      "primary_key": [
+        "date",
+        "location_id"
+      ],
+      "column_count": 167,
+      "patterns": {
+        "<variable>__slot_1..4": "Flattened 4-point daily profile (4 x 23 representation).",
+        "<variable>__mean": "Daily mean over 4 slots.",
+        "<variable>__std": "Daily std over 4 slots.",
+        "<variable>__trend": "Linear trend over slot index 0..3."
+      },
+      "core_columns": {
+        "location_id": "Synthetic location identifier.",
+        "date": "Calendar date.",
+        "city": "Associated city.",
+        "n_points": "Expected to be 4.",
+        "present_fraction": "Observed fraction of non-missing measured cells.",
+        "true_regime": "Majority regime among the 4 slots."
+      }
+    }
+  }
+}

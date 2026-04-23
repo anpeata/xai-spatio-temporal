@@ -1,0 +1,220 @@
+{
+  "created_utc": "2026-04-23T12:41:24.120803+00:00",
+  "generation_notes": {
+    "points_per_day": 4,
+    "measured_variable_count": 23,
+    "model": "X = bias + A_s*s + A_t*t + c*(s1*t1) + eps",
+    "spatial_latent_factors": [
+      "urbanity",
+      "vegetation",
+      "water_proximity"
+    ],
+    "temporal_latent_factors": [
+      "diurnal_temperature",
+      "diurnal_radiation",
+      "seasonal",
+      "weekend"
+    ],
+    "missingness": "cell-level MAR + block outages"
+  },
+  "parameters": {
+    "seed": 42,
+    "n_locations": 12,
+    "days": 30,
+    "cities": [
+      "Nantes"
+    ],
+    "slot_hours": [
+      6,
+      12,
+      18,
+      23
+    ]
+  },
+  "tables": {
+    "raw_measurements.csv": {
+      "rows": 1440,
+      "columns": 37,
+      "primary_key": [
+        "timestamp",
+        "location_id"
+      ]
+    },
+    "window_features.csv": {
+      "rows": 360,
+      "columns": 167,
+      "primary_key": [
+        "date",
+        "location_id"
+      ]
+    }
+  },
+  "measured_variables": [
+    {
+      "name": "air_temp_c",
+      "unit": "degC",
+      "description": "Near-surface air temperature",
+      "min_value": -15.0,
+      "max_value": 50.0
+    },
+    {
+      "name": "rel_humidity_pct",
+      "unit": "pct",
+      "description": "Relative humidity",
+      "min_value": 5.0,
+      "max_value": 100.0
+    },
+    {
+      "name": "wind_speed_ms",
+      "unit": "m_s",
+      "description": "Wind speed",
+      "min_value": 0.0,
+      "max_value": 25.0
+    },
+    {
+      "name": "wind_dir_deg",
+      "unit": "deg",
+      "description": "Wind direction",
+      "min_value": 0.0,
+      "max_value": 360.0
+    },
+    {
+      "name": "pressure_hpa",
+      "unit": "hPa",
+      "description": "Air pressure",
+      "min_value": 960.0,
+      "max_value": 1045.0
+    },
+    {
+      "name": "precipitation_mm",
+      "unit": "mm",
+      "description": "Precipitation amount per slot",
+      "min_value": 0.0,
+      "max_value": 50.0
+    },
+    {
+      "name": "solar_wm2",
+      "unit": "W_m2",
+      "description": "Shortwave solar irradiance",
+      "min_value": 0.0,
+      "max_value": 1200.0
+    },
+    {
+      "name": "longwave_wm2",
+      "unit": "W_m2",
+      "description": "Longwave radiation",
+      "min_value": 200.0,
+      "max_value": 700.0
+    },
+    {
+      "name": "surface_temp_c",
+      "unit": "degC",
+      "description": "Surface temperature",
+      "min_value": -10.0,
+      "max_value": 75.0
+    },
+    {
+      "name": "soil_moisture_pct",
+      "unit": "pct",
+      "description": "Top-soil moisture",
+      "min_value": 1.0,
+      "max_value": 70.0
+    },
+    {
+      "name": "ndvi",
+      "unit": "index",
+      "description": "Vegetation greenness proxy",
+      "min_value": 0.0,
+      "max_value": 1.0
+    },
+    {
+      "name": "pm25_ugm3",
+      "unit": "ug_m3",
+      "description": "PM2.5 concentration",
+      "min_value": 0.0,
+      "max_value": 220.0
+    },
+    {
+      "name": "pm10_ugm3",
+      "unit": "ug_m3",
+      "description": "PM10 concentration",
+      "min_value": 0.0,
+      "max_value": 320.0
+    },
+    {
+      "name": "co2_ppm",
+      "unit": "ppm",
+      "description": "CO2 concentration",
+      "min_value": 350.0,
+      "max_value": 3000.0
+    },
+    {
+      "name": "no2_ppb",
+      "unit": "ppb",
+      "description": "NO2 concentration",
+      "min_value": 0.0,
+      "max_value": 220.0
+    },
+    {
+      "name": "o3_ppb",
+      "unit": "ppb",
+      "description": "O3 concentration",
+      "min_value": 0.0,
+      "max_value": 180.0
+    },
+    {
+      "name": "noise_db",
+      "unit": "dB",
+      "description": "Ambient sound pressure level",
+      "min_value": 20.0,
+      "max_value": 110.0
+    },
+    {
+      "name": "traffic_index",
+      "unit": "index",
+      "description": "Traffic intensity proxy",
+      "min_value": 0.0,
+      "max_value": 1.0
+    },
+    {
+      "name": "pedestrian_index",
+      "unit": "index",
+      "description": "Pedestrian activity proxy",
+      "min_value": 0.0,
+      "max_value": 1.0
+    },
+    {
+      "name": "sky_view_factor",
+      "unit": "index",
+      "description": "Visible sky fraction",
+      "min_value": 0.05,
+      "max_value": 1.0
+    },
+    {
+      "name": "impervious_fraction",
+      "unit": "index",
+      "description": "Impervious surface fraction",
+      "min_value": 0.0,
+      "max_value": 1.0
+    },
+    {
+      "name": "water_proximity",
+      "unit": "index",
+      "description": "Relative proximity to water body",
+      "min_value": 0.0,
+      "max_value": 1.0
+    },
+    {
+      "name": "heat_index_c",
+      "unit": "degC",
+      "description": "Apparent temperature proxy",
+      "min_value": -20.0,
+      "max_value": 65.0
+    }
+  ],
+  "representation_guidance": {
+    "flat_4x23": "Use columns ending in __slot_1..__slot_4 for direct clustering.",
+    "summary": "Use __mean/__std/__trend columns for compact clustering inputs.",
+    "missing_values": "Use imputation that preserves temporal ordering (per-variable, per-location)."
+  }
+}

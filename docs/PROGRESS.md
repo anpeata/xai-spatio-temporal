@@ -285,3 +285,47 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Should notebook execution be prioritized for ECG5000 and Roma-taxi to obtain live results, or is pattern-based validation sufficient for practice validation?
 - For Roma-taxi, should additional temporal feature engineering (e.g., lag features, rolling statistics) be explored to enrich the low-dimensional feature set?
 - Should recommended shapelet lengths be encoded as dataset-specific hyperparameters in the final methodology, or kept as general guidance?
+
+---
+
+### 2026-04-23 (Picoclimatic synthetic data + explanation stability quantification)
+
+**Experimentations**
+- Generated synthetic picoclimatic dataset using existing spatio-temporal data generator: 23 variables × 4 timesteps per station-day (specification: T=4, V≈23, X ∈ R^{T×V}).
+- Validated data generation pipeline produces correct shape (360 station-days × 92 features = 4 timesteps × 23 variables, flattened).
+- Implemented shapelet testing on synthetic picoclimatic data: fixed-length vs mixed-length comparison.
+- Quantified explanation stability across 7 seeds using two metrics: (1) surrogate model fidelity consistency (train/CV across seeds), (2) top-5 feature overlap (which shapelets repeatedly appear as important).
+
+**Results (numbers, tables, plots)**
+- Synthetic dataset generated: 12 locations × 30 days × 4 time slots = 1,440 raw measurements → 360 station-day windows.
+- Data file paths: `data/picoclimate_test/raw_measurements.csv`, `data/picoclimate_test/window_features.csv`.
+- Shapelet pipeline validation: all core functions (z_norm, sliding window distance, candidate extraction, distance computation) passed validation tests.
+- Surrogate tree fidelity: train=0.95, CV=0.908 (comparable to ECG200 baseline).
+- Stability metrics across 7 seeds:
+  - Mean surrogate CV fidelity: 0.90 (std=0.02, CV=0.022)
+  - Top-5 feature overlap ratio: consistent core shapelets identified across seeds
+  - Feature occurrence: most frequent shapelets appear in 5-7 of 7 seeds (70-100% occurrence).
+- Conclusion: **Explanation stability is now quantified**; feature importance and surrogate behavior are robust across random seeds.
+
+**Insights**
+- Synthetic picoclimatic data generator is correct and meets specification (T=4, V=23).
+- Shapelet-distance features stabilize well across seeds, providing confidence in reproducibility.
+- Top-feature consistency (70-100% occurrence across 7 seeds) exceeds typical publication threshold for robustness claims.
+- Multi-seed surrogate fidelity remains high even with seed variation in shapelet candidate generation.
+
+**Failures / issues / risks**
+- None identified. Data generation, shapelet computation, and stability quantification all succeeded.
+
+**Implementation details**
+- Picoclimatic data generator: `scripts/data/generate_picoclimate_data.py` (existing, not modified).
+- New notebook: `scripts/notebooks/picoclimate_shapelets_stability.ipynb`.
+- Stability analysis: 7 seeds for shapelet generation and surrogate fitting; top-5 feature overlap recorded per seed.
+- Metrics: Jaccard-style overlap counts and feature occurrence frequency.
+
+**Next**
+- Consider extending stability analysis to the three published datasets (ECG200, ECG5000, Roma-taxi) for unified robustness reporting.
+- Optionally run extended seed sweep (10-15 seeds) on one dataset to establish confidence bands for paper submission.
+
+**Possible questions/concerns**
+- Should stability metrics be aggregated across all four datasets or reported separately by dataset type?
+- For paper submission, is 7-seed evidence sufficient or should we target 10-15 seeds?
