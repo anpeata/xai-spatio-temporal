@@ -270,7 +270,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 - No ground truth available for Roma-taxi; evaluation relies on unsupervised metrics only.
 
 **Implementation details**
-- Created new notebooks: `kmeans_test_temporal_shapelets_ecg5000.ipynb` and `kmeans_test_temporal_shapelets_roma_taxi.ipynb`.
+- Created new notebooks: `shapelets_ecg5000.ipynb` and `shapelets_roma_taxi.ipynb`.
 - Roma-taxi temporal features extracted from 15-min windows: sin/cos encodings of time-of-day and day-of-week, weekend flag, activity count.
 - Both notebooks use adaptive shapelet dictionary selection with correlation-based pruning (threshold 0.95).
 - Multi-seed evaluation: 3 random seeds per k value, 5-6 k values tested per dictionary size.
@@ -318,7 +318,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 
 **Implementation details**
 - Picoclimatic data generator: `scripts/data/generate_picoclimate_data.py` (existing, not modified).
-- New notebook: `scripts/notebooks/picoclimate_shapelets_stability.ipynb`.
+- New notebook: `scripts/notebooks/shapelets_picoclimate.ipynb`.
 - Stability analysis: 7 seeds for shapelet generation and surrogate fitting; top-5 feature overlap recorded per seed.
 - Metrics: Jaccard-style overlap counts and feature occurrence frequency.
 
@@ -337,7 +337,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 **Experimentations**
 - Re-ran the stability experiment across picoclimatic synthetic, ECG200, ECG5000, and Roma temporal features.
 - Added bounded-sampling heuristics to keep k-selection and surrogate explanation search tractable on larger datasets.
-- Fixed the Roma taxi loader in `stability_experiment.py` so timestamps are parsed correctly as datetimes rather than numeric seconds.
+- Fixed the Roma taxi loader in `shapelet_stability.py` so timestamps are parsed correctly as datetimes rather than numeric seconds.
 
 **Results (numbers, tables, plots)**
 - Cross-dataset stability outputs written to `outputs/stability_cross_dataset.csv` and `outputs/stability_cross_dataset.json`.
@@ -356,7 +356,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Larger datasets still need bounded sampling to keep runtime manageable on Windows + MKL.
 
 **Implementation details**
-- Added `scripts/research/stability_experiment.py`.
+- Added `scripts/research/shapelet_stability.py`.
 - Persisted outputs in `outputs/stability_cross_dataset.csv` and `outputs/stability_cross_dataset.json`.
 - Stability uses 7 seeds, top-5 feature overlap, and pairwise Jaccard.
 
