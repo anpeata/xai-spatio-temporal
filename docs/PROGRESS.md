@@ -329,3 +329,41 @@ Ordering rule: keep entries in chronological order and append each new update at
 **Possible questions/concerns**
 - Should stability metrics be aggregated across all four datasets or reported separately by dataset type?
 - For paper submission, is 7-seed evidence sufficient or should we target 10-15 seeds?
+
+---
+
+### 2026-04-23 (Cross-dataset stability and bounded sampling)
+
+**Experimentations**
+- Re-ran the stability experiment across picoclimatic synthetic, ECG200, ECG5000, and Roma temporal features.
+- Added bounded-sampling heuristics to keep k-selection and surrogate explanation search tractable on larger datasets.
+- Fixed the Roma taxi loader in `stability_experiment.py` so timestamps are parsed correctly as datetimes rather than numeric seconds.
+
+**Results (numbers, tables, plots)**
+- Cross-dataset stability outputs written to `outputs/stability_cross_dataset.csv` and `outputs/stability_cross_dataset.json`.
+- Picoclimatic synthetic: 900 samples evaluated, best k=2, mean surrogate CV fidelity=0.8854, top-5 feature overlap=0.8571, mean Jaccard=0.3114.
+- ECG200: 200 samples evaluated, best k=4, mean surrogate CV fidelity=0.7971, top-5 feature overlap=1.0000, mean Jaccard=0.3520.
+- ECG5000: 2,500 samples evaluated, best k=4, mean surrogate CV fidelity=0.8581, top-5 feature overlap=0.8571, mean Jaccard=0.3596.
+- Roma temporal: 161 samples evaluated, best k=6, mean surrogate CV fidelity=0.8393, top-5 feature overlap=0.7143, mean Jaccard=0.3401.
+
+**Insights**
+- Explanation stability is no longer only asserted qualitatively; it now has a repeatable feature-overlap metric across 7 seeds.
+- The bounded sample cap is the main practical speed heuristic that makes full-dataset experimentation feasible on larger traces.
+- Stability is strongest on ECG200 and picoclimatic synthetic, with Roma temporal still above the robustness threshold.
+
+**Failures / issues / risks**
+- The Roma temporal loader initially returned zero rows because the timestamp column was parsed incorrectly; this was fixed by parsing the raw timestamp strings directly.
+- Larger datasets still need bounded sampling to keep runtime manageable on Windows + MKL.
+
+**Implementation details**
+- Added `scripts/research/stability_experiment.py`.
+- Persisted outputs in `outputs/stability_cross_dataset.csv` and `outputs/stability_cross_dataset.json`.
+- Stability uses 7 seeds, top-5 feature overlap, and pairwise Jaccard.
+
+**Next**
+- If needed, extend the same stability summary into the main paper tables or appendix.
+- Optionally tighten the bounded-sampling settings once final k choices are frozen.
+
+**Possible questions/concerns**
+- Should the final paper report the bounded-sample metrics explicitly, or present them as an implementation detail?
+- Do we want the stability experiment to be rerun with 10+ seeds before submission, or is 7 sufficient?

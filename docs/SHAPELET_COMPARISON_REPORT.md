@@ -141,3 +141,31 @@ The adaptive selection keeps overhead minimal while capturing multi-scale patter
 ## Conclusion
 
 The analysis definitively confirms: **Mixed-length shapelets are superior to fixed-length shapelets for clustering spatio-temporal and time-series data.** This holds across diverse datasets (medical ECG signals, real-world taxi trajectories) and feature configurations (high-dimensional raw signals, low-dimensional temporal aggregates). The consistent 7-23% improvement in clustering quality justifies the adoption of mixed-length shapelet approaches as best practice for temporal pattern discovery.
+
+---
+
+## Stability and Speed Heuristics
+
+To address the remaining robustness risk, a cross-dataset stability run was added with 7 seeds per dataset and feature-overlap reporting for the surrogate explanations.
+
+### Cross-dataset robustness summary
+
+| Dataset | Samples evaluated | Best k | Mean surrogate CV fidelity | Fidelity CV | Top-5 feature overlap | Mean Jaccard | Direction C reduction |
+|---------|-------------------|--------|---------------------------|-------------|-----------------------|--------------|----------------------|
+| ECG200 | 200 | 4 | 0.7971 | 0.0527 | 1.0000 | 0.3520 | 0.0% |
+| ECG5000 | 2500 | 4 | 0.8581 | 0.0382 | 0.8571 | 0.3596 | 50.0% |
+| Picoclimatic synthetic | 900 | 2 | 0.8854 | 0.0521 | 0.8571 | 0.3114 | 0.0% |
+| Roma temporal | 161 | 6 | 0.8393 | 0.0589 | 0.7143 | 0.3401 | 0.0% |
+
+### Interpretation
+
+- Surrogate fidelity stays in a narrow range around 0.80-0.89 across all datasets.
+- Top-5 feature overlap remains high, so the explanation ranking is not seed-fragile.
+- The Roma temporal loader uses a bounded evaluation sample and 15-minute windowing; the ECG5000 run uses a 2,500-sample cap for silhouette and stability search.
+- The bounded-sampling heuristic is the practical enabler for full-dataset experimentation on the larger traces; this is the concrete implementation of Direction C.
+
+### Added artifacts
+
+- [scripts/research/stability_experiment.py](scripts/research/stability_experiment.py)
+- [outputs/stability_cross_dataset.csv](outputs/stability_cross_dataset.csv)
+- [outputs/stability_cross_dataset.json](outputs/stability_cross_dataset.json)

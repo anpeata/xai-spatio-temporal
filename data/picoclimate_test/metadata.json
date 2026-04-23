@@ -1,5 +1,5 @@
 {
-  "created_utc": "2026-04-23T12:41:24.120803+00:00",
+  "created_utc": "2026-04-23T13:56:42.152406+00:00",
   "generation_notes": {
     "points_per_day": 4,
     "measured_variable_count": 23,
@@ -19,8 +19,8 @@
   },
   "parameters": {
     "seed": 42,
-    "n_locations": 12,
-    "days": 30,
+    "n_locations": 20,
+    "days": 45,
     "cities": [
       "Nantes"
     ],
@@ -33,7 +33,7 @@
   },
   "tables": {
     "raw_measurements.csv": {
-      "rows": 1440,
+      "rows": 3600,
       "columns": 37,
       "primary_key": [
         "timestamp",
@@ -41,7 +41,7 @@
       ]
     },
     "window_features.csv": {
-      "rows": 360,
+      "rows": 900,
       "columns": 167,
       "primary_key": [
         "date",
