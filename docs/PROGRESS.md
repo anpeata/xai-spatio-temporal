@@ -177,12 +177,13 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Should ExKMC be run despite cost, or defer to after ECG200/ECG5000 benchmarks complete?
 - Route interpretation: should cluster summaries include driver behavior profiles or remain trajectory-focused?
 
-### 2026-04-23 (Roma taxi EDA runtime-bounded normal run)
+### 2026-04-23 (Roma taxi runtime tuning and ECG5000 ExKMC execution)
 
 **Experimentations**
 - Kept the Roma taxi notebook in normal mode (`FAST_MODE=False`) and introduced bounded k-selection controls for interactive runtime.
 - Ran the full EDA pipeline through loading, feature engineering, and KMeans k-selection.
 - Limited k-selection complexity via bounded search settings (`K_GRID`, `SEED_LIST`, `KMEANS_N_INIT`) and sampled silhouette evaluation.
+- Executed the ECG5000 extension workflow in `scripts/notebooks/exkmc_blobs_experiment.ipynb` end-to-end (unsupervised k-selection + KMeans vs ExKMC comparison).
 
 **Results (numbers, tables, plots)**
 - Dataset file confirmed: `data/roma-taxi/extracted/taxi_february.txt` (1.498 GB).
@@ -192,26 +193,36 @@ Ordering rule: keep entries in chronological order and append each new update at
 - K-selection evaluation scope: 84,999 / 84,999 windows, silhouette sample size 40,000.
 - k-selection summary (silhouette mean): `k=2 (0.5173)`, `k=5 (0.2418)`, `k=4 (0.2343)`, `k=3 (0.2339)`, `k=6 (0.2105)`.
 - Selected `k=2`; cluster counts: `80632` and `4367`.
+- ECG5000 dataset execution: 5,000 samples x 140 time points; classes `[1, 2, 3, 4, 5]`.
+- ECG5000 unsupervised k-selection chose `k=2` (composite `0.8321`, silhouette `0.3321`, stability ARI `1.0000`).
+- ECG5000 model comparison at `k=2`:
+	KMeans -> silhouette `0.3321`, CH `1919.62`, DB `1.3959`, ARI `0.7725`, NMI `0.6486`, mapped accuracy `0.9032`.
+	ExKMC -> silhouette `0.3262`, CH `1857.58`, DB `1.4163`, ARI `0.7652`, NMI `0.6505`, mapped accuracy `0.9010`.
 
 **Insights**
 - Current approach is appropriate when priority is quick, stable k-selection instead of exhaustive hyperparameter search.
 - Silhouette computation is the dominant runtime cost in the notebook; bounded sampling materially reduces wall-clock time.
 - On this run, the bounded normal profile still clearly prefers `k=2`, consistent with earlier low-k tendency.
+- On ECG5000, KMeans and ExKMC are very close at `k=2`; KMeans is slightly stronger on silhouette/ARI/accuracy while ExKMC remains competitive.
 
 **Failures / issues / risks**
 - ExKMC section remains skipped in this interactive profile to keep runtime predictable.
 - k-selection is now speed-biased (bounded and sampled), so final publication-grade runs may still require broader sweeps.
+- Graphviz system `dot` is still unavailable in this environment, so tree plot rendering is skipped although training and predictions succeed.
 
 **Implementation details**
 - Notebook updated: `scripts/notebooks/eda_roma_taxi.ipynb`.
 - Added/used runtime controls: `K_SELECTION_MAX_WINDOWS=120000`, `SILHOUETTE_SAMPLE_SIZE=40000`.
 - KMeans selection cell now evaluates on `X_eval` for k search, then fits final model on full `X`.
+- ECG5000 execution notebook: `scripts/notebooks/exkmc_blobs_experiment.ipynb` (cells for dataset load, k-selection, model comparison, PCA view, tree export run).
 
 **Next**
 - Keep this bounded profile for day-to-day iteration and supervisor demos.
 - For final reporting, run one extended sweep (more seeds and broader `K_GRID`) and compare against this bounded baseline.
 - Optionally run ExKMC on sampled windows after k-selection is fixed.
+- If interpretation artifacts are required, install Graphviz binaries and regenerate `.gv.png` tree renders for ECG5000/roma outputs.
 
 **Possible questions/concerns**
 - Should final reported `k` come from bounded interactive search or an extended offline sweep?
 - Is current minority-cluster size (4367 windows) acceptable for downstream interpretation, or should we inspect alternative `k` values for balance?
+- For ECG5000 reporting, should we prioritize slightly better KMeans fit metrics or ExKMC rule-structure interpretability as the main narrative?
