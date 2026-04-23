@@ -1,6 +1,6 @@
 # Progress Log
 
-Last updated: 2026-04-22
+Last updated: 2026-04-23
 
 Use this file for weekly or milestone updates for supervisor meetings.
 Each entry should remain short, factual, and auditable.
@@ -176,3 +176,42 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Is k=2 truly optimal or artifact of sampling? Full data k selection recommended before finalizing.
 - Should ExKMC be run despite cost, or defer to after ECG200/ECG5000 benchmarks complete?
 - Route interpretation: should cluster summaries include driver behavior profiles or remain trajectory-focused?
+
+### 2026-04-23 (Roma taxi EDA runtime-bounded normal run)
+
+**Experimentations**
+- Kept the Roma taxi notebook in normal mode (`FAST_MODE=False`) and introduced bounded k-selection controls for interactive runtime.
+- Ran the full EDA pipeline through loading, feature engineering, and KMeans k-selection.
+- Limited k-selection complexity via bounded search settings (`K_GRID`, `SEED_LIST`, `KMEANS_N_INIT`) and sampled silhouette evaluation.
+
+**Results (numbers, tables, plots)**
+- Dataset file confirmed: `data/roma-taxi/extracted/taxi_february.txt` (1.498 GB).
+- Sampling run config executed: `MAX_ROWS=350000`, `STRIDE=20`, `PLOT_SAMPLE_SIZE=50000`.
+- Sample shape: 350,000 rows, 310 drivers.
+- Window feature table shape: 84,999 windows x 10 columns.
+- K-selection evaluation scope: 84,999 / 84,999 windows, silhouette sample size 40,000.
+- k-selection summary (silhouette mean): `k=2 (0.5173)`, `k=5 (0.2418)`, `k=4 (0.2343)`, `k=3 (0.2339)`, `k=6 (0.2105)`.
+- Selected `k=2`; cluster counts: `80632` and `4367`.
+
+**Insights**
+- Current approach is appropriate when priority is quick, stable k-selection instead of exhaustive hyperparameter search.
+- Silhouette computation is the dominant runtime cost in the notebook; bounded sampling materially reduces wall-clock time.
+- On this run, the bounded normal profile still clearly prefers `k=2`, consistent with earlier low-k tendency.
+
+**Failures / issues / risks**
+- ExKMC section remains skipped in this interactive profile to keep runtime predictable.
+- k-selection is now speed-biased (bounded and sampled), so final publication-grade runs may still require broader sweeps.
+
+**Implementation details**
+- Notebook updated: `scripts/notebooks/eda_roma_taxi.ipynb`.
+- Added/used runtime controls: `K_SELECTION_MAX_WINDOWS=120000`, `SILHOUETTE_SAMPLE_SIZE=40000`.
+- KMeans selection cell now evaluates on `X_eval` for k search, then fits final model on full `X`.
+
+**Next**
+- Keep this bounded profile for day-to-day iteration and supervisor demos.
+- For final reporting, run one extended sweep (more seeds and broader `K_GRID`) and compare against this bounded baseline.
+- Optionally run ExKMC on sampled windows after k-selection is fixed.
+
+**Possible questions/concerns**
+- Should final reported `k` come from bounded interactive search or an extended offline sweep?
+- Is current minority-cluster size (4367 windows) acceptable for downstream interpretation, or should we inspect alternative `k` values for balance?
