@@ -184,6 +184,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Ran the full EDA pipeline through loading, feature engineering, and KMeans k-selection.
 - Limited k-selection complexity via bounded search settings (`K_GRID`, `SEED_LIST`, `KMEANS_N_INIT`) and sampled silhouette evaluation.
 - Executed the ECG5000 extension workflow in `scripts/notebooks/exkmc_blobs_experiment.ipynb` end-to-end (unsupervised k-selection + KMeans vs ExKMC comparison).
+- Re-ran the shapelet clustering notebook explainability path in `scripts/notebooks/kmeans_test_temporal_shapelets.ipynb`, including surrogate and SHAP attribution cells.
 
 **Results (numbers, tables, plots)**
 - Dataset file confirmed: `data/roma-taxi/extracted/taxi_february.txt` (1.498 GB).
@@ -198,23 +199,29 @@ Ordering rule: keep entries in chronological order and append each new update at
 - ECG5000 model comparison at `k=2`:
 	KMeans -> silhouette `0.3321`, CH `1919.62`, DB `1.3959`, ARI `0.7725`, NMI `0.6486`, mapped accuracy `0.9032`.
 	ExKMC -> silhouette `0.3262`, CH `1857.58`, DB `1.4163`, ARI `0.7652`, NMI `0.6505`, mapped accuracy `0.9010`.
+- Shapelet pipeline refreshed on ECG200: selected `k=2`, silhouette `0.5260`, mapped accuracy `0.6750`, ARI `0.0617`, NMI `0.0246`.
+- Shapelet surrogate fidelity: train `0.955`, CV `0.93`.
+- SHAP (shapelet surrogate) top features: `s_1 (0.1360)`, `s_5 (0.0532)`, `s_2 (0.0203)`, `s_9 (0.0120)`.
 
 **Insights**
 - Current approach is appropriate when priority is quick, stable k-selection instead of exhaustive hyperparameter search.
 - Silhouette computation is the dominant runtime cost in the notebook; bounded sampling materially reduces wall-clock time.
 - On this run, the bounded normal profile still clearly prefers `k=2`, consistent with earlier low-k tendency.
 - On ECG5000, KMeans and ExKMC are very close at `k=2`; KMeans is slightly stronger on silhouette/ARI/accuracy while ExKMC remains competitive.
+- Shapelet explanations are now validated with fresh SHAP outputs; attribution is concentrated mostly on one dominant shapelet feature (`s_1`) with secondary support from `s_5` and `s_2`.
 
 **Failures / issues / risks**
 - ExKMC section remains skipped in this interactive profile to keep runtime predictable.
 - k-selection is now speed-biased (bounded and sampled), so final publication-grade runs may still require broader sweeps.
 - Graphviz system `dot` is still unavailable in this environment, so tree plot rendering is skipped although training and predictions succeed.
+- One stale multi-view abductive cell in the shapelet notebook failed initially (`surrogates_by_view` not defined) and was fixed to single-view logic.
 
 **Implementation details**
 - Notebook updated: `scripts/notebooks/eda_roma_taxi.ipynb`.
 - Added/used runtime controls: `K_SELECTION_MAX_WINDOWS=120000`, `SILHOUETTE_SAMPLE_SIZE=40000`.
 - KMeans selection cell now evaluates on `X_eval` for k search, then fits final model on full `X`.
 - ECG5000 execution notebook: `scripts/notebooks/exkmc_blobs_experiment.ipynb` (cells for dataset load, k-selection, model comparison, PCA view, tree export run).
+- Shapelet notebook updated/executed: `scripts/notebooks/kmeans_test_temporal_shapelets.ipynb` (surrogate, SHAP, and abductive explanation cells refreshed).
 
 **Next**
 - Keep this bounded profile for day-to-day iteration and supervisor demos.
