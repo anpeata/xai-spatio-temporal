@@ -1,0 +1,847 @@
+%%%%%%%% ICML 2025 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+
+\documentclass{article}
+
+% Recommended, but optional, packages for figures and better typesetting:
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{booktabs} % for professional tables
+% \usepackage{array}
+
+% hyperref makes hyperlinks in the resulting PDF.
+\usepackage{hyperref}
+
+\usepackage{capt-of}
+
+% Attempt to make hyperref and algorithmic work together better:
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Use the following line for the initial blind version submitted for review:
+\usepackage[accepted]{icml2025}
+% \icmlDisableLineNumbers
+
+% For theorems and such
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+
+% if you use cleveref..
+\usepackage[capitalize,noabbrev]{cleveref}
+
+\usepackage{subcaption} % in preamble
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% THEOREMS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\usepackage[textsize=tiny]{todonotes}
+
+\icmltitlerunning{Explainable Clustering for Spatio-Temporal Sensor Data}
+
+\begin{document}
+
+\twocolumn[
+\icmltitle{Literature Review:\\
+``Explainable Clustering for Spatio-Temporal Sensor Data''}
+
+\begin{icmlauthorlist}
+\icmlauthor{An Pham}{equal}
+\end{icmlauthorlist}
+
+\icmlaffiliation{inst1}{Faculty of Science and Technology, Université Jean Monnet,
+Saint-Étienne, France}
+
+\icmlcorrespondingauthor{An Pham}{binh-an.pham@lirmm.fr; binh-an.pham@umontpellier.fr}
+
+\icmlkeywords{Explainable Clustering, Spatio-Temporal Data, Interpretable Machine Learning,
+Representation Learning, SHAP, LIME, ICML}
+
+\vskip 0.3in
+]
+
+\printAffiliationsAndNotice{}
+
+\begin{abstract}
+Clustering spatio-temporal sensor data in a way that is simultaneously
+accurate and interpretable requires co-designing three interdependent
+components: the \emph{data representation}, the \emph{clustering strategy},
+and the \emph{explanation strategy}. This review organises the literature
+around these three core axes and examines how choices made at each axis
+propagate to---and constrain---the others. I show that representation
+determines both clustering quality and the very possibility of meaningful
+explanation; that clustering strategies range from partitioning and
+density-based methods to joint-optimisation frameworks that treat
+explainability as a first-class objective; and that explanation strategies span post-hoc attribution (SHAP, LIME) and intrinsic, ante-hoc designs. I further analyse the key trade-offs (raw data vs.\ engineered features; global vs.\ local explanations; performance vs.\ interpretability), identify the fundamental alignment gap between sequentially optimised pipeline stages, and enumerate open research
+problems specific to the spatio-temporal, autocorrelated, and potentially incomplete sensor setting of the PICOPATT project.
+\end{abstract}
+
+% ============================================================
+\section{Introduction and Problem Setting}
+\label{sec:intro}
+% ============================================================
+
+Clustering sensor data from environmental monitoring systems poses a
+distinctive set of challenges that standard clustering theory does not
+fully address. In the PICOPATT context, each spatial station records
+approximately~23 meteorological variables at four time steps per day,
+yielding a multivariate time series with strong spatio-temporal
+dependencies. The raw observation for a single station on a single day
+can be written as $\mathbf{X} \in \mathbb{R}^{T \times V}$, where $T=4$
+and $V \approx 23$, before any temporal aggregation or feature engineering.
+
+Two structural properties immediately complicate both clustering and
+explanation. First, consecutive observations are \emph{not} independent:
+sensor readings exhibit strong positive autocorrelation, violating the
+i.i.d.\ assumption underpinning most clustering
+theory~\cite{hamdi_spatiotemporal_2022}. Second, data may be \emph{incomplete}: sensor
+failures or maintenance windows create irregular gaps that must be handled
+prior to or within the clustering pipeline.
+
+A further difficulty is \emph{terminological ambiguity}: ``faithful to
+what?''---to the reference partition produced by a black-box algorithm,
+to the underlying physical phenomenon, or to the end user's
+decision-making process---is a question the literature answers
+inconsistently~\cite{portugal_framework_2024}. I adopt the position that faithfulness
+should ultimately refer to the \emph{real-world phenomenon}, not merely
+to the output of a surrogate model.
+
+The central research question is therefore:
+\begin{quote}
+  \emph{How do I align representation, clustering, and explanation so
+  that the resulting descriptions are meaningful, faithful, and
+  human-intelligible in a spatio-temporal sensor context?}
+\end{quote}
+This question moves the problem from a \emph{post-hoc task} (explaining
+a result that has already been generated) to a \emph{systemic design
+challenge} (ensuring the entire pipeline is coherent). The remainder of
+this review addresses this challenge by decomposing it into three
+interlocking axes.
+
+% ============================================================
+\section{Three-Axis Taxonomy}
+\label{sec:taxonomy}
+% ============================================================
+
+Following and extending recent surveys~\cite{hu_interpretable_2025, portugal_framework_2024,hwang_xclusters_2023},
+I organise the literature into three axes that correspond to where
+decisions about representation, clustering, and interpretability are made.
+
+\paragraph{Axis~A --- Data Representation.}
+How are raw sensor signals encoded before any clustering is applied?
+The choice between raw time series, hand-crafted statistical features,
+and learned embeddings directly determines both the clustering quality
+and the interpretability of downstream explanations.
+
+\paragraph{Axis~B --- Clustering Strategy.}
+Given a feature space, which algorithm is used to partition it?
+Options range from classic partitioning (k-means), density-based
+(DBSCAN/HDBSCAN), and graph/spectral methods, to decision-tree approaches
+and modern joint-optimisation frameworks that simultaneously minimise
+cluster distortion and explanation complexity.
+
+\paragraph{Axis~C --- Explanation Strategy.}
+Once a partition exists, how is it explained? Post-hoc attribution
+methods (SHAP, LIME) operate on an already-fitted model, while
+intrinsic, ante-hoc approaches embed interpretability into the model's
+design from the outset. Hybrid strategies combine both.
+
+The key insight is that \textbf{representation determines both clustering
+quality and explainability simultaneously}: it defines the feature space
+in which clusters are formed \emph{and} the vocabulary in which
+explanations are expressed. Table~\ref{tab:litreview} maps principal works
+to these three axes.
+
+% ============================================================
+\section{Axis A: Data Representation}
+\label{sec:representation}
+% ============================================================
+
+Representation is often underestimated or treated as a preprocessing
+detail, yet it is the axis on which the entire pipeline rests. For a
+station-level observation $\mathbf{X} \in \mathbb{R}^{T \times V}$, the
+encoding $\phi : \mathbf{X} \mapsto \mathbb{R}^d$ shapes what the
+clustering algorithm can learn and what the explanation can express.
+
+\subsection{Raw Time Series}
+
+Using raw, unprocessed multivariate sequences preserves the maximum
+amount of information and avoids the subjective choices inherent in
+feature engineering~\cite{alvarez-garcia_comprehensive_2024}. However, raw representations are high-dimensional
+and difficult to explain: a cluster assignment grounded in a 92-entry
+matrix ($4 \times 23$) cannot easily be expressed in terms that a
+meteorologist would find actionable.
+
+\subsection{Aggregated and Engineered Features}
+
+Statistical summaries---mean, variance, min/max per variable per
+day---are directly interpretable as sensor-level quantities and
+constitute the simplest form of dimensionality reduction. Shapelet-based
+methods extract recurring sub-sequences that serve as interpretable
+cluster descriptors~\cite{ye_time_2009}. \textsc{Time2Feat}~\cite{bonifati_time2feat_2022}
+produces aggregate descriptors that are designed to be both informative
+and human-readable.
+
+The core design question is: \emph{what specific transformation is
+applied, and does the resulting feature connect back to
+domain-meaningful quantities?} Transparency at this stage is a
+prerequisite for downstream interpretability.
+
+\subsection{Feature Engineering Methodologies in Practice}
+\label{subsec:feat_methods}
+
+The literature presents four representative methodologies for encoding
+data and explaining the resulting clusters, each making distinct choices
+about how features are constructed and how explanations are derived.
+
+\paragraph{Clust-learn ~\cite{alvarez-garcia_comprehensive_2024}.}
+This framework handles mixed-type data by treating numerical and
+categorical variables separately. Numerical variables are first
+standardised (zero mean, unit variance) to prevent scale-driven
+dominance, then compressed via \textbf{Sparse PCA} (SPCA)---a variant
+of PCA that adds an $L_1$ penalty so each extracted component is a
+sparse linear combination of only a few original variables. Categorical
+variables are handled via \textbf{Multiple Correspondence Analysis}
+(MCA). The optimal number of components is selected by the elbow method
+applied to cumulative explained variance and inertia.
+For explanation, cluster assignments are recast as pseudo-labels for a
+classification task: an XGBoost classifier is trained on those labels and Tree SHAP values~\cite{lundberg_unified_2017, lundberg_local_2020} are extracted to deliver both local, instance-level explanations and global cluster-level feature importance.
+
+\paragraph{Industrial Sensor Prognostics ~\cite{cohen_shapley-based_2024}.}
+Applied to multivariate time-series from 18 synchronised aerospace
+sensors, this approach manually extracts seven statistical time-domain
+features per signal: mean, standard deviation, minimum, first quartile,
+median, third quartile, and maximum. Auxiliary variables (cycle number,
+flight duration) augment the feature set to 129 dimensions per cycle;
+all features are then min-max normalised. The explanation layer combines
+two tools: a \textbf{SHAP permutation explainer} for continuous feature
+attributions, and \textbf{SkopeRules} to generate linguistic
+``if-then'' decision rules characterising each failure cluster in terms
+of the original sensor values. This pairing of attribution and rule
+extraction illustrates the hybrid strategy described in
+Section~\ref{sec:explanation}.
+
+\paragraph{Interpretable Time-Series Representations
+(Time2Feat \& Shapelets).}
+\textsc{Time2Feat}~\cite{bonifati_time2feat_2022} encodes multivariate time series by
+extracting both \emph{intra-signal} (per-variable statistics, trend
+coefficients) and \emph{inter-signal} (cross-correlation, lag) features,
+then applies Principal Feature Analysis or user-guided annotation to
+select a compact, human-interpretable subset.
+Shapelet-based methods~\cite{ye_time_2009} take a complementary route:
+data are projected onto a \emph{similarity space} defined by short,
+representative subsequences (shapelets), and the explainer---the
+\textbf{Shapelet Cluster Explanation (SCE)} module of
+CDPS~\cite{elamouri_constrained_2023}---outputs the specific waveform patterns most
+descriptive of each cluster, enabling visual inspection by domain experts.
+Both approaches anchor explanations in waveform-level quantities that
+are directly meaningful to sensor operators.
+
+\paragraph{TELL: Direct Neural Interpretable Clustering ~\cite{peng_xai_2022}.}
+Instead of manual feature engineering, \textbf{TELL} (inTerpretable
+nEuraL cLustering) uses a convolutional autoencoder to learn
+discriminative features directly from raw data. The traditional $k$-means
+objective is recast as a neural layer, so cluster centres $\Omega$ and
+feature representations are jointly optimised via batch-wise stochastic
+gradient descent. Interpretability is \emph{intrinsic}: the weights of
+the cluster layer correspond exactly to the cluster centroids $\Omega$,
+and an attention mechanism weights the contribution of each input
+data point relative to those centres---no post-hoc surrogate is
+required. TELL therefore occupies the intersection of Axis~A (learned
+representation) and Axis~C (ante-hoc explanation).
+
+\subsection{Learned Embeddings}
+
+Deep or self-supervised encoders can capture complex non-linear patterns
+invisible to hand-crafted features, yielding superior clustering
+quality~\cite{aljalbout_clustering_2018}. The cost is an \emph{interpretability
+gap}: explanations act on the transformed space~$\phi(\mathbf{X})$, not
+on raw sensor readings. The chain
+\[
+  \mathbf{X} \;\xrightarrow{\phi}\; \phi(\mathbf{X})
+  \;\xrightarrow{\text{cluster}}\; c
+  \;\xrightarrow{\text{explain}}\; \text{rules}
+\]
+must itself be transparent: does an explanation of $\phi(\mathbf{X})$
+translate back to a meaningful statement about~$\mathbf{X}$?
+
+\subsection{Impact on Clustering Quality and Explainability}
+
+\paragraph{Clustering quality.}
+The \textbf{curse of dimensionality}~\cite{goos_surprising_2001} means that
+distance functions lose discriminative power in high-dimensional spaces.
+\textbf{Data vagueness}---two sensor trajectories that are geometrically
+close in feature space yet represent physically distinct phenomena (e.g.,
+an intensifying vs.\ dissipating temperature anomaly)---further
+challenges quality. Latent space methods can mitigate both effects but
+at the cost of interpretability~\cite{oord_neural_2018}.
+
+\paragraph{Explainability.}
+The \textbf{interpretability gap}~\cite{schlegel_towards_2025} widens when
+features are computed by complex encoders. Research suggests selecting
+or extracting \emph{interpretable features} that are (i)~informative
+enough for accurate grouping and (ii)~grounded in the original sensor
+units for human comprehension~\cite{hu_interpretable_2025}. This is the
+alignment problem at the representation level.
+
+% ============================================================
+\section{Axis B: Clustering Strategy}
+\label{sec:clustering}
+% ============================================================
+
+\subsection{Classic Partitioning and Density-Based Methods}
+
+\textbf{K-means} assigns each observation to its nearest centroid,
+yielding cluster centers expressible as feature means---directly
+human-readable when features are interpretable. \textbf{DBSCAN},
+\textbf{HDBSCAN}, \textbf{ST-DBSCAN}~\cite{birant_st-dbscan_2007}, and \textbf{MDST-DBSCAN}~\cite{choi_mdst-dbscan_2021} form clusters from density-connected regions, naturally
+handling noise and irregular cluster shapes common in meteorological data, but produce cluster labels without a simple parametric description.
+\textbf{Spectral and graph-based} methods exploit the geometry of
+pairwise similarity graphs, which can encode spatial adjacency between
+sensor stations, but again produce implicit cluster descriptions.
+
+\subsection{Decision-Tree and Rule-Based Approaches}
+
+Decision-tree-based strategies are the most prominent line of work for
+explainable clustering, as they produce compact rules that are directly
+interpretable as sensor-level threshold conditions.
+
+\paragraph{Axis-aligned threshold trees.}
+The \textbf{IMM} algorithm~\cite{dasgupta_explainable_nodate} fits a binary decision
+tree with exactly~$k$ leaves to a reference $k$-clustering, minimising
+misassignment at each leaf. \textbf{ExKMC}~\cite{frost_exkmc_2020} generalises
+IMM by allowing $k'>k$ leaves, with the \emph{price of explainability}
+\[
+  \Delta(k,k') = \mathrm{cost}(T_{k'}) - \mathrm{cost}(C_k)
+\]
+quantifying the degradation in cluster quality incurred by the
+explainable approximation. For $V \approx 23$ variables, axis-aligned
+rules of the form ``temperature $> \theta$'' are physically meaningful
+but fail to capture variable correlations.
+
+\paragraph{Oblique and sparse linear trees.}
+\textbf{TAO}~\cite{gabidolla_optimal_2022} solves the non-convex problem of fitting
+oblique trees---where each split is a sparse linear combination
+$\mathbf{w}^\top\phi(\mathbf{X}) > b$---by alternating between
+optimising tree structure and node parameters. In a spatio-temporal
+context, $\mathbf{w}$ can encode linear combinations across spatial
+stations \emph{and} temporal lags, yielding semantically richer rules
+at the cost of cognitive complexity.
+
+\paragraph{Hypercubic approximations.}
+\textbf{ExACT}~\cite{sabbatini_exact_nodate} partitions the feature space into
+axis-aligned hypercubes, yielding interval-based rules
+($\theta_{\rm lo} \le x_j \le \theta_{\rm hi}$) directly translatable
+to sensor threshold alerts.
+
+\subsection{Deep Clustering}
+
+Deep clustering methods jointly optimise a neural encoder and a
+clustering objective, achieving state-of-the-art partitions on complex
+data~\cite{aljalbout_clustering_2018}. However, as discussed in
+Section~\ref{sec:representation}, they compound the interpretability gap:
+the resulting partition is a product of millions of gradient-based
+micro-decisions, none of which is individually inspectable.
+
+\subsection{Joint-Optimisation Frameworks}
+
+The most principled response to the quality--interpretability
+tension is to optimise both objectives simultaneously.
+
+\textbf{XClusters}~\cite{hwang_xclusters_2023} treats explainability as a first-class
+citizen:
+\[
+  \min_{\mathcal{C},\,T} \;\;
+  \underbrace{\mathrm{distortion}(\mathcal{C})}_{\text{cluster quality}}
+  + \lambda \cdot \underbrace{|T|}_{\text{tree complexity}},
+\]
+alternating between improving cluster assignment~$\mathcal{C}$ given the
+explaining tree~$T$, and improving~$T$ given~$\mathcal{C}$.
+The hyperparameter~$\lambda$ explicitly controls the tradeoff; in the
+sensor context, it can be calibrated to bound the tree depth at a
+domain-readable limit~$d_{\max}$.
+
+\textbf{Algorithm-agnostic pipelines} such as Clust-learn and
+MAACLI~\cite{portugal_framework_2024} provide a guided sequential pipeline---
+Preprocessing~$\to$ Dimensionality Reduction~$\to$ Clustering~$\to$
+Explanation---remaining agnostic to the specific algorithm at each stage.
+The known limitation is that sequential optimisation does not enforce
+\emph{alignment} between stages: the reduction chosen in step~2 may
+discard features that would have been useful in the explanation produced in step~4. This sacrifice of joint optimisation for modularity is an active research area.
+% ~\cite{TODO_joint_opt}.
+
+\paragraph{The problem with complexity.}
+Research shows that forcing a structure to be understandable increases
+the within-cluster sum of squared errors compared to an unrestricted
+optimal clustering~\cite{dasgupta_explainable_nodate,frost_exkmc_2020}. In high-stakes domains
+(e.g., safety-critical sensor monitoring), a decision that cannot be
+justified is often unusable even if it is statistically accurate; the
+domain context therefore determines which side of the tradeoff to
+prioritise~\cite{schlegel_towards_2025}.
+
+% ============================================================
+\section{Axis C: Explanation Strategy}
+\label{sec:explanation}
+% ============================================================
+
+The fundamental tension in explanation is between \textbf{faithfulness}
+(how accurately the explanation reflects the model) and \textbf{simplicity}
+(how easy it is for a human to understand).
+
+\subsection{Post-Hoc Explanations}
+
+Post-hoc methods treat the cluster assignments from a complex algorithm
+as pseudo-labels and then approximate those assignments with an
+interpretable surrogate.
+
+\paragraph{SHAP.}
+\textbf{SHAP (SHapley Additive exPlanations)}~\cite{lundberg_unified_2017} assigns
+to each feature~$j$ a contribution~$\phi_j$ satisfying axioms of
+efficiency, symmetry, and linearity. \textbf{SHAP-C}~\cite{cohen_shapley-based_2024}
+applies this to clustering by using the distance to the assigned centroid
+as the value function:
+\[
+  g(\mathbf{z}) = \phi_0 + \textstyle\sum_{j=1}^d \phi_j z_j
+  \approx -\|\phi(\mathbf{X}) - \boldsymbol{\mu}_c\|^2.
+\]
+A particularly interesting direction clusters instances directly in the
+\textbf{SHAP explanation space}~\cite{hwang_xclusters_2023}: two sensor records are
+grouped not because their raw values are similar, but because the model
+assigns them similar Shapley values---i.e., they are grouped for the
+\emph{same reasons}. This surfaces distinct archetypes of explanatory
+behaviour.
+
+\paragraph{LIME.}
+\textbf{LIME}~\cite{ribeiro_why_2016-1} fits a sparse linear model in a
+perturbed neighbourhood of each instance. It has known \emph{instability}
+issues: small perturbations or changes in the sampling distribution can
+yield substantially different explanations~\cite{alvarez-garcia_comprehensive_2024}. This
+instability is especially problematic for autocorrelated sensor data,
+where the local neighbourhood is not well-defined in the i.i.d.\ sense.
+SHAP is therefore generally preferred for its stronger theoretical
+guarantees, though it incurs higher computational cost.
+
+\subsection{Intrinsic (Ante-Hoc) Strategies}
+
+Interpretability built into the model design itself---no surrogate
+needed. Table~\ref{tab:antehoc} summarises the main approaches.
+
+\begin{table}[h]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{2.3cm}p{3.8cm}}
+\toprule
+\textbf{Method} & \textbf{Why it is interpretable} \\
+\midrule
+K-means & Cluster centers are readable feature means \\
+Decision tree clustering & Splits give explicit if-then rules \\
+Prototype-based & Representative points explain each cluster \\
+Sparse clustering & Algorithm selects which features matter \\
+Fuzzy clustering & Membership degrees show partial belonging \\
+\bottomrule
+\end{tabular}
+\caption{Ante-hoc clustering strategies and their interpretability mechanism.}
+\label{tab:antehoc}
+\vspace{-1.2em}
+\end{table}
+
+\subsection{Hybrid Strategies}
+
+Hybrid approaches combine an expressive model (for quality) with a
+lightweight ante-hoc component (for local transparency). Joint
+optimisation frameworks such as XClusters~\cite{hwang_xclusters_2023} and
+ExKMC~\cite{frost_exkmc_2020} fall into this category: they retain a
+complex clustering objective while optimising an explanatory tree
+alongside it.
+
+If you prioritise \textbf{faithfulness}, you often end up with complex
+models where explanations are only approximate; if you prioritise
+\textbf{simplicity}, you gain transparency but may sacrifice the model's
+ability to capture complex patterns in raw sensor data.
+
+% ============================================================
+\section{Spatio-Temporal Specific Challenges}
+\label{sec:spatiotemporal}
+% ============================================================
+
+Standard clustering assumes data points are i.i.d., but spatio-temporal
+sensor data breaks this assumption in several ways.
+
+\subsection{Autocorrelation and Non-Stationarity}
+
+Sensor readings at time~$t$ are strongly correlated with readings at
+time~$t{-}1$. For a univariate signal~$x_t$, the autocorrelation at
+lag~$\ell$ is
+\[
+  \rho(\ell) = \frac{\mathrm{Cov}(x_t, x_{t-\ell})}{\mathrm{Var}(x_t)}.
+\]
+High~$\rho(\ell)$ for small~$\ell$ inflates effective sample size
+estimates and invalidates the i.i.d.\ assumption~\cite{hamdi_spatiotemporal_2022}.
+\textbf{Temporal focusing}---restricting distance computations to a
+sliding time window---partially mitigates this. Non-stationarity (seasonal
+distributional shift) further complicates global clustering models and
+the stability of explanations over time~\cite{schlegel_towards_2025}.
+
+\subsection{Temporal Evolution and Cluster Dynamics}
+
+Standard clustering treats the dataset as a static snapshot, but sensor
+streams are \emph{dynamic}. The literature identifies up to~14 types of
+cluster transitions---birth, death, merge, split, expansion,
+contraction---and proposes representing them as an \textbf{evolution
+graph}~\cite{hamdi_spatiotemporal_2022}: nodes are cluster states at each time step;
+directed edges encode transitions. For the PICOPATT dataset, this graph
+has one node per cluster per quarter-day interval. Explaining \emph{why}
+a cluster splits or merges (in terms of which variables drove the
+transition) is an open problem not addressed by static explanation
+methods.
+
+\subsection{Missing Data and Irregular Sampling}
+
+With~92 entries per station-day ($4 \times 23$), sensor malfunctions
+introduce missing values. Common strategies---mean/median imputation,
+low-rank matrix completion, spatial-neighbour imputation---each alter the
+downstream feature distribution and hence cluster assignments, yet this
+dependency is rarely made explicit in explanations.
+
+\subsection{Semantic Ambiguity and the Right Unit of Clustering}
+
+Two sensor trajectories may be geometrically close in feature space yet
+represent physically distinct phenomena (e.g., a temperature sensor
+``intensifying'' vs.\ one ``dissipating''). Standard distance-based
+clustering assigns them to the same cluster, yet their physical
+interpretation is opposite. Explanation methods operating purely on
+feature values inherit this ambiguity~\cite{portugal_framework_2024}.
+
+A related open question is: \emph{what is the right unit of clustering?}
+Trajectories? Fixed time windows? Event episodes?~\cite{kisilevich_spatio-temporal_nodate}
+The choice of temporal granularity determines what patterns are visible
+and what explanations are possible.
+
+% ============================================================
+\section{The Alignment Problem: Joint Optimisation}
+\label{sec:alignment}
+% ============================================================
+
+The core insight motivating joint optimisation is that the sequential
+pipeline (represent $\to$ cluster $\to$ explain) introduces a fundamental
+\textbf{alignment gap}: each stage is optimised independently, so the
+representation may discard features useful for explanation, and the
+explanation may be faithful to the clustering but not to the phenomenon.
+
+\paragraph{The dominant paradigm and its limitation.}
+The majority of explainable clustering works---including the influential
+IMM~\cite{dasgupta_explainable_nodate} and ExKMC~\cite{frost_exkmc_2020}
+frameworks---assume a \emph{fixed reference clustering}: the partition is
+produced first by an unrestricted algorithm (e.g., $k$-means), and a
+decision tree is then fitted to approximate it as a post-hoc step.
+This design choice is convenient but structurally flawed: the clustering
+algorithm has no incentive to produce a partition that is easy to explain,
+because it is optimised without any knowledge that an explanation will
+be required. The explainer is therefore forced into an inherently lossy
+approximation of a partition that was never designed with interpretability
+in mind.
+
+\paragraph{From sequential fitting to co-adaptation.}
+XClusters~\cite{hwang_xclusters_2023} directly addresses this by requiring the
+clustering and the explaining tree to \emph{co-adapt}: neither is fixed
+while the other is optimised. 
+Formally, it minimises
+% $\min_{\mathcal{C},\,T} D(\mathcal{C}, T) + \lambda\,N(\mathcal{C}, T)$, where $D$ measures cluster distortion and $N$ penalises tree complexity, 
+$\min_{\mathcal{C},\,T} distortion(\mathcal{C}) + \lambda \cdot |T|$, where $distortion(C)$ measures cluster quality and $|T|$ penalises tree complexity, 
+and the two are alternated until convergence.
+Gabidolla \& Carreira-Perpi\~n\'an~\cite{gabidolla_optimal_2022} take the same
+co-adaptation idea further by fitting sparse \emph{oblique} trees jointly
+with the cluster assignments, so that the tree parameters and the
+partition boundaries adapt to each other simultaneously.
+The shared insight across both works is that explainability must be a
+\emph{design constraint} on the clustering, not an afterthought applied
+to its output.
+
+\paragraph{Extension to the spatio-temporal setting.}
+The objective proposed here extends this accuracy--interpretability
+framework by adding two regularisers that are absent from all existing
+joint-optimisation methods: a \textbf{temporal coherence} penalty
+$\mathcal{L}_\mathrm{tc}$ that discourages rapid cluster switching across
+consecutive time steps, and a \textbf{spatial homogeneity} penalty
+$\mathcal{L}_\mathrm{sh}$ that encourages geographically adjacent stations
+to share cluster assignments. For the specific case of picoclimatic sensor
+data, a fully aligned joint objective would balance:
+\begin{enumerate}
+  \item \textbf{Temporal coherence} ($\mathcal{L}_\mathrm{tc}$): clusters
+    should be stable across consecutive time steps.
+  \item \textbf{Spatial homogeneity} ($\mathcal{L}_\mathrm{sh}$): nearby
+    stations should tend to share clusters.
+  \item \textbf{Explanation simplicity} ($|T|$): rules should involve few
+    variables and thresholds.
+  \item \textbf{Representational interpretability}: features used in rules
+    should map back to sensor-level quantities.
+\end{enumerate}
+Formally, letting $\mathcal{L}_\mathrm{tc}$ and $\mathcal{L}_\mathrm{sh}$
+denote the temporal and spatial penalty terms respectively:
+\[
+\begin{aligned}
+  \min_{\mathcal{C},\,T}\;
+    &\mathrm{distortion}(\mathcal{C})
+     + \lambda_1\,\mathcal{L}_\mathrm{tc}(\mathcal{C}) \\
+    &\quad+\;\lambda_2\,\mathcal{L}_\mathrm{sh}(\mathcal{C})
+     + \lambda_3\,|T|.
+\end{aligned}
+\]
+Current methods address at most two of these four objectives jointly;
+to date, no published work optimises all four
+simultaneously~\cite{portugal_framework_2024,hwang_xclusters_2023}.
+
+\paragraph{Explaining the optimizer.}
+In gradient-based clustering (deep k-means, differentiable clustering
+losses), the final partition is the product of a sequence of micro-decisions
+(assignment updates, centroid moves, gradient steps). SHAP values of the
+final model reflect the cumulative effect of these micro-decisions but
+do not reveal \emph{which} gradient steps were most consequential.
+Connecting explanation methods to the optimiser via influence functions or
+implicit differentiation is a promising but largely unexplored direction.
+
+
+% ============================================================
+\section{Trade-offs and Design Choices}
+\label{sec:tradeoffs}
+% ============================================================
+
+Practitioners face several fundamental trade-offs whose resolution must
+be guided by domain requirements.
+
+% \paragraph{Raw data vs.\ engineered features.}
+
+% \begin{table}[h]
+% \centering
+% \footnotesize
+% \setlength{\tabcolsep}{4pt}
+% \begin{tabular}{p{3cm}p{3cm}}
+% \toprule
+% \textbf{Raw time series} & \textbf{Engineered features} \\
+% \midrule
+% \checkmark\ Preserves full information & \checkmark\ Directly interpretable \\
+% $\times$\ Hard to explain & $\times$\ May lose temporal structure \\
+% \bottomrule
+% \end{tabular}
+% \caption{Raw vs.\ engineered feature trade-off.}
+% \label{tab:raw_vs_feat}
+% \vspace{-1.2em}
+% \end{table}
+
+\noindent\textbf{Raw data vs.\ engineered features.}\par
+\vspace{0.35em}
+
+\noindent\begin{minipage}{\columnwidth}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{3cm}p{3cm}}
+\toprule
+\textbf{Raw time series} & \textbf{Engineered features} \\
+\midrule
+\checkmark\ Preserves full information & \checkmark\ Directly interpretable \\
+$\times$\ Hard to explain & $\times$\ May lose temporal structure \\
+\bottomrule
+\end{tabular}
+\captionof{table}{Raw vs.\ engineered feature trade-off.}
+\label{tab:raw_vs_feat}
+\end{minipage}
+
+\paragraph{Spatial vs.\ temporal importance.}
+Are clusters driven more by station location, by temporal patterns, or
+by both? This determines whether the feature encoding should emphasise
+spatial adjacency (graph-based features), temporal dynamics (shapelets,
+lag correlations), or multivariate cross-variable patterns.
+
+\paragraph{Global vs.\ local explanations.}
+Global (cluster-level) explanations describe the average behaviour of a
+cluster; local (instance-level) explanations describe why a specific
+observation was assigned to its cluster. SHAP naturally provides local
+explanations that can be aggregated globally; decision trees provide
+global rules but can be queried at the instance level by traversal.
+
+\paragraph{Performance vs.\ interpretability.}
+While deep learning can provide superior groupings, it often fails to
+provide the human-intelligible justifications required for onboard sensor
+monitoring or safety-critical tasks. In high-stakes domains, a
+statistically accurate decision that cannot be justified is often
+unusable. The domain context must therefore determine which objective to
+prioritise, and the chosen axis must be documented and justified as part
+of the system design~\cite{schlegel_towards_2025}.
+
+% ============================================================
+\section{Research Gaps and Open Problems}
+\label{sec:gaps}
+% ============================================================
+
+\paragraph{Research gap.}
+Current methods do not provide a \emph{consistent, structured explanation}
+of clusters that integrates spatial, temporal, and sensor dimensions.
+Existing explanations are: (i)~inconsistent across methods; (ii)~not
+comparable across pipelines; and (iii)~not domain-aligned to the
+vocabulary of the end user (e.g., meteorologist). Future methods should
+be model-agnostic, scalable, and compatible with multiple clustering
+approaches.
+
+\paragraph{Stable explanations in non-stationary streams.}
+How do I maintain stable, trustworthy explanations when the data
+distribution shifts over time (seasonal effects, sensor
+drift)?~\cite{schlegel_towards_2025} Streaming explanation methods that
+update incrementally---rather than recomputing from scratch---are needed.
+
+\paragraph{Faithfulness to the real case.}
+``Faithful'' is used inconsistently: fidelity to model output, to the
+training distribution, or to the underlying physical phenomenon. For
+sensor data with a known generative process, faithfulness to the physical
+phenomenon is the ultimate standard but is the hardest to operationalise.
+
+\paragraph{Engineered features and their explainability.}
+When features are computed by complex encoders
+(e.g., Time2Feat~\cite{bonifati_time2feat_2022}), the explanation acts on the
+transformed space, not on raw sensor readings. Tracing explanations back
+through the transformation chain to sensor-level statements is an open
+challenge.
+
+\paragraph{Out-of-sample mapping and computational scalability.}
+Most interpretable clustering methods define explanations only for
+training-set instances. Mapping new, unseen sensor readings to existing
+clusters and generating explanations for them without retraining remains
+an underexplored practical problem, especially under real-time
+monitoring requirements.
+
+\paragraph{Summary of key references.}
+Table~\ref{tab:litreview} maps the principal works surveyed to the three
+axes and to relevant challenges in the PICOPATT setting.
+
+\begin{table}[h]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{2.6cm} p{1.6cm} p{3.4cm}}
+\toprule
+\textbf{Reference} & \textbf{Axis} & \textbf{Contribution} \\
+\midrule
+\citet{dasgupta_explainable_nodate} & B (tree) & IMM; price of explainability \\
+\citet{frost_exkmc_2020} & B (tree) & ExKMC; $k' > k$ leaves \\
+\citet{gabidolla_optimal_2022} & B (tree) & TAO; sparse linear splits \\
+\citet{sabbatini_exact_nodate} & B (tree) & ExACT; interval rules \\
+\citet{lundberg_unified_2017} & C (post-hoc) & SHAP; Shapley values \\
+\citet{cohen_shapley-based_2024} & C (post-hoc) & SHAP-C; centroid distance \\
+\citet{ribeiro_why_2016-1} & C (post-hoc) & LIME; local surrogates \\
+\citet{alvarez-garcia_comprehensive_2024} & A+C & Clust-learn; SPCA + Tree SHAP \\
+\citet{hu_interpretable_2025} & A+B+C (survey) & Interpretable Clustering: A Survey \\
+\citet{hwang_xclusters_2023} & B+C (joint) & XClusters; co-adapt. optim. \\
+\citet{hwang_xclusters_2023} & C (SHAP) & Clustering in SHAP space \\
+\citet{hamdi_spatiotemporal_2022} & ST & Evolution graphs; autocorrelation \\
+\citet{portugal_framework_2024} & A+B+C & Pipeline taxonomy; MAACLI \\
+\citet{bonifati_time2feat_2022} & A & Time2Feat; TS features \\
+\citet{ye_time_2009} & A & Shapelet-based features \\
+\citet{cohen_shapley-based_2024} & A+C & Statistical features; SkopeRules \\
+\citet{elamouri_constrained_2023} & A+C & Shapelet cluster explanation \\
+\citet{peng_xai_2022} & A+C (ante-hoc) & Neural clustering; attention weights \\
+\bottomrule
+\end{tabular}
+\caption{Key references mapped to the three axes (A=Representation, B=Clustering, C=Explanation, ST=Spatio-Temporal).}
+\label{tab:litreview}
+\vspace{-1.5em}
+\end{table}
+
+% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% ============================================================
+
+This review has organised the literature on explainable clustering around
+three core axes---data representation, clustering strategy, and
+explanation strategy---and examined each axis in the context of
+spatio-temporal picoclimatic sensor data.
+
+The key takeaway is that representation is the load-bearing axis: it
+determines both the clustering quality and the very vocabulary in which
+explanations can be expressed. Sequential pipelines that optimise each
+axis independently accumulate an alignment gap; joint-optimisation
+frameworks (XClusters~\cite{hwang_xclusters_2023}, ExKMC~\cite{frost_exkmc_2020}) begin to
+close this gap but have not yet been adapted to the full spatio-temporal
+setting.
+
+Open problems include: (i)~maintaining stable explanations in
+non-stationary sensor streams; (ii)~defining and operationalising
+faithfulness to the physical phenomenon rather than to the model;
+(iii)~disambiguating semantically ambiguous trajectories through
+explanation; (iv)~tracing engineered-feature explanations back to
+raw sensor units; and (v)~connecting explanation methods to the
+optimisation dynamics that produce the partition.
+Addressing these challenges---under the unified framing of aligning
+representation, clustering, and explanation---is the central goal of the
+PICOPATT project.
+
+%-------------------------------------------------------------------
+% CITATION NOTES FOR MISSING REFERENCES
+%-------------------------------------------------------------------
+% The following \cite keys are used in the text but require .bib entries:
+%
+%   \cite{TODO_deep_clustering}  -- a deep clustering survey/paper
+%                                   (e.g., Min et al. 2018, arXiv:1801.07648)
+%   \cite{TODO_curse_dim}        -- curse of dimensionality in clustering
+%                                   (e.g., Aggarwal et al. 2001, VLDB)
+%   \cite{TODO_latent_space}     -- latent space clustering quality
+%                                   (e.g., van den Oord et al. VQ-VAE)
+%   \cite{TODO_nonstationary}    -- non-stationary / streaming XAI
+%                                   (arXiv: 2507.20840)
+%   \cite{TODO_alignment}        -- interpretable feature alignment
+%                                   (arXiv: 2409.00743)
+%   \cite{TODO_joint_opt}        -- joint optimisation / hot topic papers
+%   \cite{TODO_kimana}           -- unit of clustering in trajectories
+%                                   (KiMaNa10 reference)
+%   \cite{TODO_tell}             -- TELL: inTerpretable nEuraL cLustering
+%-------------------------------------------------------------------
+
+\nocite{alvarez-garcia_comprehensive_2024,
+        zeghina_deep_2024,
+        % ribeiro_why_2016,
+        peng_xai_2022,
+        wang_deep_2019,
+        frost_exkmc_2020,
+        cohen_shapley-based_2024,
+        hu_interpretable_2026,
+        schlegel_towards_2025,
+        lin_shap-based_2025,
+        argov_spex_2025,
+        de_oliveira_explainable_2025,
+        hamdi_spatiotemporal_2022,
+        ribeiro_anchors_2018,
+        hwang_xclusters_2023,
+        portugal_framework_2024,
+        cakmak_spatio-temporal_2021,
+        gabidolla_optimal_2022,
+        salih_perspective_2025,
+        birant_st-dbscan_2007,
+        shi_spatiotemporal_2019,
+        choi_mdst-dbscan_2021,
+        kisilevich_spatio-temporal_nodate,
+        dasgupta_explainable_nodate,
+        lundberg_local_2020,
+        paparrizos_time-series_2025,
+        sabbatini_exact_nodate,
+        ribeiro_why_2016-1,
+        lundberg_unified_2017,
+        elamouri_constrained_2023,
+        ye_time_2009,
+        bonifati_time2feat_2022}
+
+\bibliography{example_paper}
+\bibliographystyle{icml2025}
+
+\end{document}
