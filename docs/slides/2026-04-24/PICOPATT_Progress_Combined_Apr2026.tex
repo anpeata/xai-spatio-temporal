@@ -111,7 +111,7 @@
 \end{tikzpicture}
 \vspace{1.1cm}
 {\color{white}\huge\bfseries PICOPATT Internship}\\[5pt]
-{\color{cteal}\large\itshape Combined Progress Review --- April 2026}\\[8pt]
+{\color{cteal}\large\itshape Progress Review --- April 2026}\\[8pt]
 {\color{caccent}\small Explainable Clustering for Spatio-Temporal Picoclimatic Data}\\[0.6cm]
 {\color{cmid}\rule{4.5cm}{0.8pt}}\\[5pt]
 {\color{caccent}\footnotesize\textbf{An Pham}\quad|\quad LIRMM--ADVANSE\quad|\quad Supervisors: Luc \& Reda}
@@ -149,26 +149,7 @@
 
 % ── SLIDE 3 ──────────────────────────────────────────────────────────────────
 \begin{frame}{Internship Arc: March $\to$ August 2026}
-\begin{tikzpicture}[scale=0.82]
-  \node[fill=cmid!15,draw=cmid,inner sep=3pt,rounded corners=2pt,
-        text=cmid,font=\bfseries\scriptsize,minimum width=4.5cm] at (2.3,0.3)
-    {Phase 1 --- Literature Review + Writing};
-  \node[fill=cteal!15,draw=cteal,inner sep=3pt,rounded corners=2pt,
-        text=cbg2,font=\bfseries\scriptsize,minimum width=5.5cm] at (9.1,0.3)
-    {Phase 2 --- Implementation + Deep Methods};
-  \draw[cmid,line width=2pt](0,-0.5)--(13,-0.5);
-  \foreach \x/\d/\s in {
-    0/{Mar 9}/{Kickoff\\Lit review},
-    3/{Mar 20}/{Data structure\\Writing started},
-    6/{Apr 9}/{Pipeline\\architecture drawn},
-    9/{Apr 17--23}/{Implementation\\sprint \checkmark},
-    12.5/{Apr 24}/{\textbf{TODAY}\\Phase 2 decision}}{
-    \fill[cteal](\x,-0.5)circle(4pt);
-    \node[above=3pt,align=center,font=\bfseries\tiny,text=ctext]at(\x,-0.5){\d};
-    \node[below=3pt,align=center,font=\tiny,text=cmuted]at(\x,-0.5){\s};}
-\end{tikzpicture}
-\vspace{0.15cm}
-\begin{columns}[T]
+\begin{columns}[T,onlytextwidth]
   \column{0.48\textwidth}
   \begin{tcolorbox}[enhanced,boxrule=1pt,arc=2pt,colback=clight,colframe=cmid,
       title=Lit Review Output,fonttitle=\bfseries\small\color{white},
@@ -177,7 +158,7 @@
     \footnotesize\begin{itemize}\setlength\itemsep{1pt}
       \item 3-axis taxonomy (Representation/Clustering/Explanation)
       \item Novel 4-term joint objective proposed
-      \item 5-page \LaTeX{} draft \checkmark
+      \item Literature review draft \checkmark
     \end{itemize}
   \end{tcolorbox}
   \column{0.48\textwidth}
@@ -192,12 +173,26 @@
     \end{itemize}
   \end{tcolorbox}
 \end{columns}
+\vspace{0.25cm}
+\begin{tcolorbox}[enhanced,boxrule=1pt,arc=2pt,colback=cdark!4,colframe=cdark,
+    title=Timeline Snapshot,fonttitle=\bfseries\small\color{white},
+    attach boxed title to top left={yshift=-2pt,xshift=4pt},
+    boxed title style={colback=cdark,arc=2pt,boxrule=0pt},top=4pt,bottom=4pt]
+  \footnotesize
+  \begin{tabular}{@{}p{2.2cm}p{2.8cm}p{2.8cm}@{}}
+    \textbf{Mar 9} & Kickoff & Literature review starts \\
+    \textbf{Mar 20} & Data structure & Writing started \\
+    \textbf{Apr 9} & Pipeline architecture & Shapelet / clustering path drawn \\
+    \textbf{Apr 17--23} & Implementation sprint & New baselines benchmarked \\
+    \textbf{Apr 24} & \textbf{Phase 2 direction} & Next-stage method choice \\
+  \end{tabular}
+\end{tcolorbox}
 \end{frame}
 
 % ── SLIDE 4 ──────────────────────────────────────────────────────────────────
 \begin{frame}{Current Pipeline Architecture}
 \vspace{2pt}
-\pipelayer{cdark}{DATA}{23 vars $\times$ 4 timesteps/day\quad(PICOPATT sensor data)}
+\pipelayer{cdark}{DATA}{$\sim$23 vars $\times$ 4 timesteps/day\quad(PICOPATT sensor data)}
 \vspace{1pt}{\centering\tiny\color{cmuted}$\downarrow$\par}\vspace{0pt}
 \pipelayer{cmid}{REPRESENTATION}{Raw time series\quad|\quad Shapelet distances\quad(mixed-length: 10--30, adaptive dictionary)}
 \vspace{1pt}{\centering\tiny\color{cmuted}$\downarrow$\par}\vspace{0pt}
@@ -243,7 +238,7 @@ ECG5000 (140 pts)&0.5920&0.6845&\textcolor{cteal}{+15.6\%}\\
     \item SHAP + Abductive explanations implemented
     \item Surrogate fidelity: train $0.955$ / CV $0.93$
     \item Mixed-length shapelets outperform fixed (+17.6\%)
-    \item Explanation stability: 7 seeds, Jaccard metric
+    \item Explanation stability: 7 seeds, Jaccard top-feature overlap metric
     \item Synthetic picoclimatic data generator validated
     \item HDBSCAN spatial baseline added
     \item Autoencoder + KMeans baseline confirmed runnable
@@ -253,7 +248,7 @@ ECG5000 (140 pts)&0.5920&0.6845&\textcolor{cteal}{+15.6\%}\\
   \vspace{3pt}\footnotesize
   \begin{itemize}\setlength\itemsep{1pt}
     \item Real PICOPATT sensor data (not yet available)
-    \item Explanation in raw sensor units (°C, \%, m/s) --- not $s_1$/$t_{41}$
+    \item Explanation in raw sensor units (degrees Celsius, \%, m/s) --- not $s_1$/$t_{41}$
     \item Explanation output format frozen as contract
     \item Deep method: autoencoder pipeline with richer XAI
     \item Spatial density baseline for picoclimatic windows
