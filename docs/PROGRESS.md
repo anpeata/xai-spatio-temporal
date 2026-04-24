@@ -497,3 +497,26 @@ Ordering rule: keep entries in chronological order and append each new update at
 - `shapelet_stability.py` now defaults to `n_seeds=6` for the current reporting cycle.
 - The deck and the progress notes should now use the same 6-seed phrasing.
 
+### 2026-04-24 (Archived rerun batch and dated figure store)
+
+**Experimentations**
+- Reran the research scripts for the picoclimate slide figures and archived the outputs under `outputs/2026-04-24/`.
+- Executed the notebook set from `scripts/notebooks/` with headless nbconvert and stored the executed notebooks under `outputs/2026-04-24/notebooks/`.
+- Copied the slide figure assets into `outputs/2026-04-24/figures/` so the dated archive now contains the presentation images.
+
+**Results (numbers, tables, plots)**
+- `shapelet_stability.py`: 7,158.9 s, success, archived at `outputs/2026-04-24/shapelet_stability/`.
+- `deep_representation_clustering.py`: 26.0 s, success, archived at `outputs/2026-04-24/deep_representation_clustering/`.
+- `benchmark_clustering_pipeline.py`: 13.4 s, success, archived at `outputs/2026-04-24/benchmark_clustering_pipeline/`.
+- `lime_shap_explainability_pipeline.py`: 47.2 s, success, archived at `outputs/2026-04-24/lime_shap_explainability_pipeline/`.
+- `surrogate_xai_pipeline.py`: 165.3 s, success, archived at `outputs/2026-04-24/surrogate_xai_pipeline/`.
+- Longest notebook pass was `shapelets_roma_taxi.ipynb` at 2,249.0 s; the other notebook executions completed successfully and their executed copies were stored under `outputs/2026-04-24/notebooks/`.
+
+**Insights**
+- The Roma taxi notebook is the dominant runtime cost in the current batch, so future iterations should keep it on a separate lane if turnaround matters.
+- The dated archive now covers both the generated figures and the executed notebook artifacts, which makes the slide evidence easier to reproduce later.
+
+**Implementation details**
+- Timing logs were written to `outputs/timings/2026-04-24-*.csv` and `outputs/timings/2026-04-24-*.json`.
+- The slide figures now live in `outputs/2026-04-24/figures/` alongside the dated research outputs.
+
