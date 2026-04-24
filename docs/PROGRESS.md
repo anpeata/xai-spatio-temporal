@@ -405,3 +405,40 @@ Ordering rule: keep entries in chronological order and append each new update at
 **Possible questions/concerns**
 - Should the final paper emphasize interpretability over raw clustering quality, given the mixed raw-vs-shapelet result?
 - Do we want to keep the quick-sweep budget as the default interactive setting? 
+
+### 2026-04-24 (Phase-2 scope: validated evidence vs missing methods)
+
+**Experimentations**
+- Re-checked the current evidence base against the research questions: surrogate fidelity, SHAP concentration, explanation stability, deep representation baselines, and spatial clustering comparators.
+- Cross-read the governance notes and lit review to separate validated work from still-planned extensions.
+
+**Results (numbers, tables, plots)**
+- Shapelet surrogate evidence already exists in the work: ECG200 shapelet surrogate fidelity is `train=0.955`, `CV=0.93`, and SHAP is concentrated on `s_1 (0.1360)` with secondary support from `s_5` and `s_2`.
+- Explanation stability is now quantified in the cross-dataset run with 7 seeds and feature-overlap reporting.
+
+**Insights**
+- The current pipeline already supports a faithful-surrogate narrative for the shapelet layer, but the explanation language still needs to be frozen into a single sensor-facing template.
+- The repository still lacks an implemented deep representation baseline such as autoencoder + KMeans.
+- Spatial clustering comparators are still missing for picoclimatic windows, so the benchmark set remains KMeans/ExKMC-centric.
+- For the PICOPATT story, the research problem is now clearer: stable, sensor-readable cluster explanations across changing time-window formats.
+
+**Failures / issues / risks**
+- Explanation format is not yet frozen across all methods.
+- Deep learning is still a documented gap rather than an executed benchmark.
+- Spatial density baselines for picoclimatic data have not yet been run.
+
+**Implementation details**
+- ExKMC remains the main interpretable tree baseline in the current stack.
+- A lightweight autoencoder + KMeans baseline is the most direct representation-space extension if a neural comparator is needed next.
+- For spatial picoclimatic comparisons, HDBSCAN is the most pragmatic first density-based method to add, followed by ST-DBSCAN or MDST-DBSCAN if stronger spatio-temporal alignment is needed.
+- If a new algorithmic contribution is required, a simplified ExKMC-style joint objective is a more coherent extension than jumping directly to a full neural clustering stack.
+
+**Next**
+- Freeze the explanation output format now so all future methods emit the same sensor-readable cluster summary.
+- Add an autoencoder + KMeans baseline as the first deep representation comparator.
+- Add at least one spatial density baseline for picoclimatic windows, starting with HDBSCAN.
+- Decide whether the paper should be framed as a methods paper on the XAI pipeline or as an application paper on PICOPATT results.
+
+**Possible questions/concerns**
+- Should ExKMC stay the primary explainable clustering baseline, or should XClusters be explored as the joint-optimization comparator?
+- Is the immediate priority to broaden the benchmark matrix, or to formalize the final explanation format before more methods are added?
