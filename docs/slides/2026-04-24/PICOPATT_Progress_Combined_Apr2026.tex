@@ -3,6 +3,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{booktabs}
 \usepackage{colortbl}
+\usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{positioning}
@@ -94,7 +95,7 @@
 }
 
 \title{\textbf{PICOPATT Internship}}
-\subtitle{Combined Progress Review --- April 2026}
+\subtitle{Progress Review --- April 2026}
 \author{An Pham}
 \institute{LIRMM--ADVANSE, Universit\'e de Montpellier}
 \date{April 24, 2026}
@@ -106,8 +107,8 @@
 \begin{frame}[plain]
 \begin{tikzpicture}[remember picture,overlay]
   \fill[cteal](current page.north west)rectangle([xshift=6pt]current page.south west);
-  \node[fill=cteal,text=cdark,font=\bfseries\small,rounded corners=3pt,inner sep=7pt]
-    at ([xshift=-3cm,yshift=1.2cm]current page.south east){Phase 2 Begins};
+  % \node[fill=cteal,text=cdark,font=\bfseries\small,rounded corners=3pt,inner sep=7pt]
+  %   at ([xshift=-3cm,yshift=1.2cm]current page.south east){Phase 2 Begins};
 \end{tikzpicture}
 \vspace{1.1cm}
 {\color{white}\huge\bfseries PICOPATT Internship}\\[5pt]
@@ -129,7 +130,7 @@
     \begin{itemize}\setlength\itemsep{2pt}
       \item Keep explanations in raw sensor units: temperature, humidity, wind speed.
       \item Map indices like $s_1$ or $t_{41}$ back to physical traits.
-      \item Measure stability with Jaccard overlap of top SHAP features across 5+ seeds.
+      \item Measure stability with Jaccard overlap of top SHAP features across 6 seeds.
       \item Expand beyond KMeans / ExKMC to autoencoder and spatial baselines.
     \end{itemize}
   \end{tcolorbox}
@@ -139,7 +140,7 @@
       attach boxed title to top left={yshift=-2pt,xshift=4pt},
       boxed title style={colback=cteal,arc=2pt,boxrule=0pt},top=4pt,bottom=4pt]
     \centering
-    {\color{ctext}\bfseries\large 1--2 papers}\\[4pt]
+    {\color{ctext}\bfseries\large 1--2 manuscripts}\\[4pt]
     {\color{cmuted}\footnotesize by early August}\\[8pt]
     {\color{cmid}\rule{0.7\linewidth}{0.8pt}}\\[8pt]
     {\color{cmuted}\footnotesize methods + application}
@@ -156,9 +157,9 @@
       attach boxed title to top left={yshift=-2pt,xshift=4pt},
       boxed title style={colback=cmid,arc=2pt,boxrule=0pt},top=3pt,bottom=3pt]
     \footnotesize\begin{itemize}\setlength\itemsep{1pt}
-      \item 3-axis taxonomy (Representation/Clustering/Explanation)
+      \item 3-axis taxonomy (representation / clustering / explanation)
       \item Novel 4-term joint objective proposed
-      \item Literature review draft \checkmark
+      \item Review draft complete
     \end{itemize}
   \end{tcolorbox}
   \column{0.48\textwidth}
@@ -166,27 +167,27 @@
       title=Implementation Sprint Output,fonttitle=\bfseries\small\color{white},
       attach boxed title to top left={yshift=-2pt,xshift=4pt},
       boxed title style={colback=cbg2,arc=2pt,boxrule=0pt},top=3pt,bottom=3pt]
-    \footnotesize\begin{itemize}\setlength\itemsep{1pt}
-      \item Full pipeline running on 4 datasets
-      \item SHAP + Abductive + ExKMC benchmarked
-      \item Explanation stability quantified
+    \scriptsize\begin{itemize}\setlength\itemsep{1pt}
+      \item Full pipeline running on 4 proxy datasets
+      \item SHAP, Abductive, and ExKMC benchmarked
+      \item Explanation stability via top-5 SHAP overlap
     \end{itemize}
   \end{tcolorbox}
 \end{columns}
 \vspace{0.25cm}
-\begin{tcolorbox}[enhanced,boxrule=1pt,arc=2pt,colback=cdark!4,colframe=cdark,
-    title=Timeline Snapshot,fonttitle=\bfseries\small\color{white},
-    attach boxed title to top left={yshift=-2pt,xshift=4pt},
-    boxed title style={colback=cdark,arc=2pt,boxrule=0pt},top=4pt,bottom=4pt]
-  \footnotesize
-  \begin{tabular}{@{}p{2.2cm}p{2.8cm}p{2.8cm}@{}}
-    \textbf{Mar 9} & Kickoff & Literature review starts \\
-    \textbf{Mar 20} & Data structure & Writing started \\
-    \textbf{Apr 9} & Pipeline architecture & Shapelet / clustering path drawn \\
-    \textbf{Apr 17--23} & Implementation sprint & New baselines benchmarked \\
-    \textbf{Apr 24} & \textbf{Phase 2 direction} & Next-stage method choice \\
-  \end{tabular}
-\end{tcolorbox}
+% \begin{tcolorbox}[enhanced,boxrule=1pt,arc=2pt,colback=cdark!4,colframe=cdark,
+%     title=Timeline Snapshot,fonttitle=\bfseries\small\color{white},
+%     attach boxed title to top left={yshift=-2pt,xshift=4pt},
+%     boxed title style={colback=cdark,arc=2pt,boxrule=0pt},top=4pt,bottom=4pt]
+%   \scriptsize\setlength{\tabcolsep}{4pt}
+%   \begin{tabular}{@{}p{1.7cm}p{2.3cm}p{3.0cm}@{}}
+%     \textbf{Mar 9} & Kickoff & Review starts \\
+%     \textbf{Mar 20} & Data structure & Writing begins \\
+%     \textbf{Apr 9} & Pipeline architecture & Shapelet / clustering path set \\
+%     \textbf{Apr 17--23} & Implementation sprint & Baselines benchmarked \\
+%     \textbf{Apr 24} & \textbf{Phase 2 direction} & Next-stage method choice \\
+%   \end{tabular}
+% \end{tcolorbox}
 \end{frame}
 
 % ── SLIDE 4 ──────────────────────────────────────────────────────────────────
@@ -200,9 +201,9 @@
 \vspace{1pt}{\centering\tiny\color{cmuted}$\downarrow$\par}\vspace{0pt}
 \pipelayer{cteal}{EXPLANATION}{SHAP (feature attribution)\quad|\quad Abductive (minimal edits)\quad Surrogate fidelity: train $0.955$ / CV $0.93$}
 \vspace{1pt}{\centering\tiny\color{cmuted}$\downarrow$\par}\vspace{0pt}
-\pipelayerlight{PRESENTATION}{Sensor-readable cluster summary $\to$ urban planners/architects\quad[Luc's domain --- format to be frozen]}
+\pipelayerlight{PRESENTATION}{Sensor-readable cluster summary $\to$ urban planners/architects\quad[format to be frozen]}
 \vspace{5pt}
-{\scriptsize\itshape\color{cmuted}From April 9 whiteboard $\to$ now fully implemented over a 2-week sprint.}
+{\scriptsize\itshape\color{cmuted}From whiteboard $\to$ now fully implemented over a 2-week sprint.}
 \end{frame}
 
 % ── SLIDE 5 ──────────────────────────────────────────────────────────────────
@@ -210,8 +211,8 @@
 \begin{columns}[T]
   \column{0.24\textwidth}\statcard{0.95/0.93}{Surrogate fidelity\\ (train / CV)}{Defends explanation\\ faithfulness}
   \column{0.24\textwidth}\statcard{+17.6\%}{Silhouette gain\\ mixed vs fixed shapelets}{Consistent across\\ all 3 datasets}
-  \column{0.24\textwidth}\statcard{7 seeds}{Explanation stability\\ quantified}{Top-5 feature overlap\\ 70--100\% across seeds}
-  \column{0.24\textwidth}\statcard{4 datasets}{Pipeline validated\\ on proxy benchmarks}{ECG200, ECG5000,\\ Roma taxi, Synth.\ pico}
+   \column{0.24\textwidth}\statcard{6 seeds}{Explanation stability\\ quantified}{Top-5 feature overlap\\ 70--100\% across seeds}
+  \column{0.24\textwidth}\statcard{3 ablation datasets}{Cross-dataset\\ ablation table}{ECG200, ECG5000,\\ Roma taxi}
 \end{columns}
 \vspace{0.25cm}
 {\footnotesize\bfseries\color{ctext}Mixed vs Fixed Shapelet Length --- Cross-Dataset Ablation}\\[3pt]
@@ -220,8 +221,8 @@
 \rowcolor{cmid}
 \color{white}\textbf{Dataset}&\color{white}\textbf{Fixed sil.}&\color{white}\textbf{Mixed sil.}&\color{white}\textbf{Gain}\\
 \rowcolor{clight}ECG200 (96 pts)&0.5697&0.6503&\textcolor{cteal}{+14.1\%}\\
-ECG5000 (140 pts)&0.5920&0.6845&\textcolor{cteal}{+15.6\%}\\
-\rowcolor{clight}Roma taxi (8 feats)&0.5545&0.6820&\textcolor{cteal}{+23.0\%}\\
+ECG5000 (140 time points)&0.5920&0.6845&\textcolor{cteal}{+15.6\%}\\
+\rowcolor{clight}Roma taxi (8 engineered features)&0.5545&0.6820&\textcolor{cteal}{+23.0\%}\\
 \textbf{Average}&&&\textcolor{cteal}{\textbf{+17.6\%}}\\
 \end{tabular}
 \end{frame}
@@ -238,7 +239,7 @@ ECG5000 (140 pts)&0.5920&0.6845&\textcolor{cteal}{+15.6\%}\\
     \item SHAP + Abductive explanations implemented
     \item Surrogate fidelity: train $0.955$ / CV $0.93$
     \item Mixed-length shapelets outperform fixed (+17.6\%)
-    \item Explanation stability: 7 seeds, Jaccard top-feature overlap metric
+    \item Explanation stability: 6 seeds, Jaccard top-feature overlap metric
     \item Synthetic picoclimatic data generator validated
     \item HDBSCAN spatial baseline added
     \item Autoencoder + KMeans baseline confirmed runnable
@@ -281,13 +282,13 @@ The explanation says:\space
     {\color{caccent}\footnotesize Explanation must not change when window size or feature format changes.}
   \end{tcolorbox}
   \column{0.32\textwidth}
-  \begin{tcolorbox}[enhanced,boxrule=1.2pt,arc=2pt,colback=cdark!80,colframe=cmid,top=4pt,bottom=4pt,left=4pt,right=4pt]
-    {\color{cmid}\bfseries\small Sensor Language}\\[2pt]
+  \begin{tcolorbox}[enhanced,boxrule=1.2pt,arc=2pt,colback=cdark!80,colframe=cwarn,top=4pt,bottom=4pt,left=4pt,right=4pt]
+    {\color{cwarn}\bfseries\small Sensor Language}\\[2pt]
     {\color{caccent}\footnotesize $s_1 \to$ ``Humidity Variance''\\$t_{41} \to$ ``Temperature at 10\,PM''}
   \end{tcolorbox}
   \column{0.32\textwidth}
-  \begin{tcolorbox}[enhanced,boxrule=1.2pt,arc=2pt,colback=cdark!80,colframe=cwarn,top=4pt,bottom=4pt,left=4pt,right=4pt]
-    {\color{cwarn}\bfseries\small Alignment Gap}\\[2pt]
+  \begin{tcolorbox}[enhanced,boxrule=1.2pt,arc=2pt,colback=cdark!80,colframe=cteal,top=4pt,bottom=4pt,left=4pt,right=4pt]
+    {\color{cteal}\bfseries\small Alignment Gap}\\[2pt]
     {\color{caccent}\footnotesize Sequential pipelines break alignment. Joint optimisation is the target.}
   \end{tcolorbox}
 \end{columns}
@@ -300,37 +301,36 @@ The explanation says:\space
   \begin{tcolorbox}[enhanced,boxrule=1pt,arc=2pt,colback=clight,colframe=cmid,
       title=Direction A --- Neural Representation,
       fonttitle=\bfseries\small\color{white},
-      attach boxed title to top left={yshift=-2pt,xshift=4pt},
+      attach boxed title to top left={yshift=-2pt,xshift=-1pt},
       boxed title style={colback=cmid,arc=2pt,boxrule=0pt},top=4pt,bottom=4pt]
-    \footnotesize\begin{itemize}\setlength\itemsep{2pt}
+    \scriptsize\begin{itemize}\setlength\itemsep{1pt}
       \item Autoencoder $\to$ latent space $\to$ KMeans
-      \item TELL-style joint neural clustering (ante-hoc)
+      \item TELL-style joint neural clustering
       \item Interpretability gap: explain $\phi(X)$ vs $X$
       \item \textbf{Paper: methods paper on XAI pipeline}
     \end{itemize}
-    \vspace{2pt}{\itshape\scriptsize\color{cmuted}Higher complexity $\cdot$ Luc's CNN vision from Apr 9}
+    \vspace{1pt}{\itshape\scriptsize\color{cmuted}Higher complexity $\cdot$ CNN vision}
   \end{tcolorbox}
   \column{0.47\textwidth}
   \begin{tcolorbox}[enhanced,boxrule=1pt,arc=2pt,colback=clight,colframe=cbg2,
       title=Direction B --- Statistical Aggregation,
       fonttitle=\bfseries\small\color{white},
-      attach boxed title to top left={yshift=-2pt,xshift=4pt},
+      attach boxed title to top left={yshift=-2pt,xshift=-1pt},
       boxed title style={colback=cbg2,arc=2pt,boxrule=0pt},top=4pt,bottom=4pt]
-    \footnotesize\begin{itemize}\setlength\itemsep{2pt}
+    \scriptsize\begin{itemize}\setlength\itemsep{1pt}
       \item Mean, Var, Quartiles per variable (Time2Feat)
       \item Directly in sensor units $\to$ no mapping needed
       \item Clean baseline for stable explanation format
       \item \textbf{Paper: application paper on PICOPATT}
     \end{itemize}
-    \vspace{2pt}{\itshape\scriptsize\color{cmuted}Simpler $\cdot$ Reda's natural first comparator}
+    \vspace{1pt}{\itshape\scriptsize\color{cmuted}Simpler $\cdot$ natural first comparator}
   \end{tcolorbox}
 \end{columns}
 \vspace{0.35cm}
 \begin{tcolorbox}[enhanced,boxrule=1.5pt,arc=2pt,colback=cwarn!10,colframe=cwarn,top=4pt,bottom=4pt,left=5pt,right=5pt]
-\footnotesize
-\textcolor{cwarn}{\bfseries My Proposal (Hybrid):}
-Establish B as clean sensor-unit baseline $\to$ add A as complex comparator.
-\textcolor{cmuted}{\itshape Contribution = performance-vs-interpretability tradeoff analysis --- a documented gap in current literature.}
+\small
+\textcolor{cwarn}{\bfseries Proposal (Hybrid):} B as the clean sensor-unit baseline $\to$ A as the comparator.
+\textcolor{cmuted}{\itshape Shared comparison target: performance vs interpretability, with one frozen explanation format.}
 \end{tcolorbox}
 \end{frame}
 
@@ -338,21 +338,21 @@ Establish B as clean sensor-unit baseline $\to$ add A as complex comparator.
 \begin{frame}{Decision Points for Today's Meeting}
 \begin{columns}[T]
   \column{0.48\textwidth}
-  \deccard{cmid}{01\quad When does real PICOPATT data arrive?}{%
-    Should we pivot to real sensor data now, or complete the proxy benchmark first?
-    Risk: going too early loses methodological generality.}
+  \deccard{cmid}{01\quad Real PICOPATT data?}{%
+    A pivot to real sensor data should be made only after the proxy benchmark is complete.
+    Premature transition would reduce methodological generality.}
   \vspace{5pt}
-  \deccard{cbg2}{02\quad Which paper angle?}{%
-    Methods paper (XAI pipeline + shapelet ablation) vs Application paper
-    (PICOPATT urban planning results)? This determines the timeline for August.}
+  \deccard{cbg2}{02\quad Paper angle?}{%
+    A methods paper (XAI pipeline + shapelet ablation) or an application paper
+    (PICOPATT urban-planning results) should be selected for the August timeline.}
   \column{0.48\textwidth}
-  \deccard{cteal}{03\quad Freeze the explanation format now?}{%
-    Should we lock the sensor-readable output schema before adding more methods?
-    Freezing constrains design choices but prevents format drift.}
+  \deccard{cteal}{03\quad Freeze the format?}{%
+    The sensor-readable output schema should be locked before more methods are added.
+    Design choices are constrained, but format drift is prevented.}
   \vspace{5pt}
-  \deccard{cwarn}{04\quad ExKMC vs XClusters for joint optimisation?}{%
-    Stay with ExKMC as the primary explainable baseline, or prototype XClusters
-    (co-adaptive clustering + tree)? XClusters more novel; ExKMC already working.}
+  \deccard{cwarn}{04\quad ExKMC or XClusters?}{%
+    ExKMC should remain the primary explainable baseline, or XClusters can be prototyped
+    (co-adaptive clustering + tree). XClusters is more novel; ExKMC is already working.}
 \end{columns}
 \end{frame}
 
@@ -376,10 +376,10 @@ Establish B as clean sensor-unit baseline $\to$ add A as complex comparator.
     font=\bfseries\tiny,align=center] (h5) at (8.6,0) {W9--10\\Jun 20--Jul 3};
   \node[draw=cmuted,fill=cmuted,text=white,rounded corners=2pt,
     minimum width=2.05cm,minimum height=0.5cm,
-    font=\bfseries\tiny,align=center] (h6) at (10.75,0) {W11+\\Jul--Aug};
+    font=\bfseries\tiny,align=center] (h6) at (10.75,0) {W11--15\\Jul--Aug};
   \node[draw=cmid,fill=clight,text=ctext,rounded corners=2pt,
     minimum width=2.05cm,minimum height=3.1cm,
-    font=\tiny,align=left,inner sep=4pt,text width=1.9cm,below=0.05cm of h1]{Real picoclimate data\\[2pt]Freeze explanation format\\[2pt]Add GMM + HDBSCAN};
+    font=\tiny,align=left,inner sep=4pt,text width=1.9cm,below=0.05cm of h1]{Real picoclimate data\\[2pt]Freeze explanation format\\[2pt]Add GMM + spatial baseline validation};
   \node[draw=cbg2,fill=clight,text=ctext,rounded corners=2pt,
     minimum width=2.05cm,minimum height=3.1cm,
     font=\tiny,align=left,inner sep=4pt,text width=1.9cm,below=0.05cm of h2]{Statistical aggregation (B)\\[2pt]Time2Feat sensor-unit features\\[2pt]Stability across methods};
@@ -397,13 +397,13 @@ Establish B as clean sensor-unit baseline $\to$ add A as complex comparator.
     font=\tiny,align=left,inner sep=4pt,text width=1.9cm,below=0.05cm of h6]{Revision,\\feedback\\[2pt]Internship report\\[2pt]Paper submission};
 \end{tikzpicture}
 \vspace{3pt}
-\centering{\itshape\scriptsize\color{cmuted}$\sim$10 weeks remaining $\cdot$ 1--2 papers target}
+% \centering{\itshape\scriptsize\color{cmuted}$\sim$15 weeks remaining\\$\cdot$ 1--2 manuscripts target}
 \end{frame}
 
 % ── SLIDE 11 ────────────────────────────────────────────────────────────────
 \begin{frame}{Scope Reminder}
 \begin{block}{Current data status}
-  I still do not have the real PICOPATT data. The picoclimate work in the repository is a simulated test fixture used for validation only.
+  The real PICOPATT data is still unavailable for the current context. The picoclimate work in the repository is a simulated test fixture used for validation only.
 \end{block}
 \vspace{0.5em}
 \begin{itemize}
@@ -420,7 +420,7 @@ Establish B as clean sensor-unit baseline $\to$ add A as complex comparator.
   \begin{block}{Validated in code}
     \begin{itemize}
       \item Shapelet notebooks renamed and aligned under \texttt{shapelets\_}
-      \item Cross-dataset stability run completed with 7 seeds
+      \item Cross-dataset stability run completed with 6 seeds
       \item HDBSCAN added to the picoclimate benchmark script
       \item Autoencoder + KMeans baseline already available and runnable
     \end{itemize}
@@ -442,12 +442,12 @@ Establish B as clean sensor-unit baseline $\to$ add A as complex comparator.
 \begin{columns}[T,onlytextwidth]
   \column{0.58\textwidth}
   \centering
-  \figureplaceholder{0.92\linewidth}{2.4cm}
+  \includegraphics[width=0.96\linewidth]{figures/stability_summary.png}
   \column{0.38\textwidth}
   \begin{block}{What this slide should show}
     \begin{itemize}
       \item Surrogate CV fidelity band
-      \item Top-5 SHAP overlap across 7 seeds
+      \item Top-5 SHAP overlap across 6 seeds
       \item The main robustness evidence
     \end{itemize}
   \end{block}
@@ -463,7 +463,7 @@ Establish B as clean sensor-unit baseline $\to$ add A as complex comparator.
 \begin{columns}[T,onlytextwidth]
   \column{0.58\textwidth}
   \centering
-  \figureplaceholder{0.92\linewidth}{2.4cm}
+  \includegraphics[width=0.96\linewidth]{figures/deep_representation_comparison.png}
   \column{0.38\textwidth}
   \begin{block}{Interpretation}
     \begin{itemize}
@@ -480,7 +480,7 @@ Establish B as clean sensor-unit baseline $\to$ add A as complex comparator.
 \begin{columns}[T,onlytextwidth]
   \column{0.58\textwidth}
   \centering
-  \figureplaceholder{0.92\linewidth}{2.4cm}
+  \includegraphics[width=0.96\linewidth]{figures/benchmark_silhouette.png}
   \column{0.38\textwidth}
   \begin{block}{Interpretation}
     \begin{itemize}

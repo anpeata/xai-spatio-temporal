@@ -347,7 +347,7 @@ def main() -> None:
         silhouette_sample_size=1200,
         n_candidates=80,
         n_shapelets=12,
-        n_seeds=7,
+        n_seeds=6,
     )
 
     datasets: List[Tuple[str, np.ndarray, Sequence[int], Sequence[int]]] = [

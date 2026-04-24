@@ -475,3 +475,25 @@ Ordering rule: keep entries in chronological order and append each new update at
 **Possible questions/concerns**
 - Should the new HDBSCAN baseline be kept as a script-only benchmark, or promoted into a notebook for meeting demos?
 - Do we want the autoencoder baseline to stay as a lightweight comparison, or should it be expanded into a more explicit representation-learning track?
+
+### 2026-04-24 (Six-seed cross-dataset stability refresh)
+
+**Experimentations**
+- Re-ran `scripts/research/shapelet_stability.py` with the benchmark default changed to 6 seeds.
+- Regenerated the cross-dataset summary in `outputs/stability_cross_dataset.csv` and `outputs/stability_cross_dataset.json`.
+
+**Results (numbers, tables, plots)**
+- Picoclimatic synthetic: raw silhouette `0.1908`, shapelet silhouette `0.1789`, delta `-6.3%`, fidelity mean `0.8296`, feature-overlap ratio `0.6667`, mean Jaccard `0.2413`.
+- ECG200: raw silhouette `0.3520`, shapelet silhouette `0.3330`, delta `-5.4%`, fidelity mean `0.9258`, feature-overlap ratio `0.8333`, mean Jaccard `0.4021`.
+- ECG5000: raw silhouette `0.3646`, shapelet silhouette `0.3415`, delta `-6.3%`, fidelity mean `0.9310`, feature-overlap ratio `1.0000`, mean Jaccard `0.3558`.
+- Roma temporal: raw silhouette `0.4534`, shapelet silhouette `0.4485`, delta `-1.1%`, fidelity mean `0.9363`, feature-overlap ratio `0.8333`, mean Jaccard `0.3122`.
+
+**Insights**
+- The 6-seed sweep confirms that the explanation-stability story remains repeatable under the updated benchmark setting.
+- ECG200 still gives the strongest feature-overlap signal, while Roma temporal remains the closest to the raw baseline in silhouette terms.
+- All four datasets completed well under the 15-minute warning threshold in this run.
+
+**Implementation details**
+- `shapelet_stability.py` now defaults to `n_seeds=6` for the current reporting cycle.
+- The deck and the progress notes should now use the same 6-seed phrasing.
+
