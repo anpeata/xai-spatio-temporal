@@ -1,0 +1,367 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{amsmath}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+
+\definecolor{cdark}{HTML}{0D2137}
+\definecolor{cmid}{HTML}{065A82}
+\definecolor{cteal}{HTML}{02C39A}
+\definecolor{clight}{HTML}{E8F4F8}
+\definecolor{ctext}{HTML}{1A2E40}
+\definecolor{cmuted}{HTML}{607D8B}
+\definecolor{cwarn}{HTML}{F4A261}
+\definecolor{cgap}{HTML}{E63946}
+\definecolor{caccent}{HTML}{A0BFD0}
+\definecolor{cbg2}{HTML}{028090}
+
+\usetheme{default}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\usefonttheme{professionalfonts}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+\setbeamercolor{frametitle}{fg=cdark,bg=white}
+\setbeamercolor{normal text}{fg=ctext}
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{item}{fg=cteal}
+
+\addtobeamertemplate{frametitle}{}{%
+  \vspace{-4pt}\textcolor{cteal}{\hrule height 1.5pt}\vspace{3pt}}
+
+\setbeamertemplate{footline}{%
+  \leavevmode\hbox{%
+    \begin{beamercolorbox}[wd=0.65\paperwidth,ht=2.2ex,dp=1ex,leftskip=4pt]{normal text}%
+      \tiny\color{cmuted}An Pham \textbar{} LIRMM--ADVANSE \textbar{} Luc \& Reda%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.35\paperwidth,ht=2.2ex,dp=1ex,rightskip=4pt,right]{normal text}%
+      \tiny\color{cmuted}\insertframenumber/\inserttotalframenumber%
+    \end{beamercolorbox}}}
+
+\setbeamertemplate{itemize item}{\color{cteal}\textbullet}
+\setbeamertemplate{itemize subitem}{\color{cmid}--}
+\setlength{\leftmargini}{1em}
+
+% ── HELPERS ──────────────────────────────────────────────────────────────────
+\newcommand{\headerbar}[2]{%
+  \noindent\colorbox{#1}{\color{white}\bfseries\small%
+    \makebox[\dimexpr\linewidth-2\fboxsep][c]{#2}}\par}
+
+\newcommand{\statcard}[3]{%
+  \begin{tcolorbox}[enhanced,boxrule=1pt,arc=2pt,
+      colback=clight,colframe=cmid,
+      top=3pt,bottom=3pt,left=3pt,right=3pt]
+    \centering
+    {\color{cmid}\large\bfseries #1}\\[1pt]
+    {\color{ctext}\bfseries\tiny #2}\\[1pt]
+    {\color{cmuted}\tiny #3}
+  \end{tcolorbox}}
+
+\newcommand{\deccard}[3]{%
+  \begin{tcolorbox}[enhanced,boxrule=1.2pt,arc=2pt,
+      colback=clight,colframe=#1,
+      top=4pt,bottom=4pt,left=4pt,right=4pt]
+    {\color{#1}\bfseries\small #2}\\[3pt]
+    {\color{cmuted}\footnotesize #3}
+  \end{tcolorbox}}
+
+\newcommand{\pipelayer}[3]{%
+  \noindent\colorbox{#1}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+    \vspace{2pt}{\color{white!50!#1}\tiny\bfseries #2}\\[-2pt]
+    {\color{white}\footnotesize #3}\vspace{2pt}}}\par}
+
+\newcommand{\pipelayerlight}[2]{%
+  \noindent\colorbox{clight}{\parbox{\dimexpr\linewidth-2\fboxsep}{%
+    \vspace{2pt}{\color{cmuted}\tiny\bfseries #1}\\[-2pt]
+    {\color{ctext}\footnotesize #2}\vspace{2pt}}}\par}
+
+\title{\textbf{PICOPATT Internship}}
+\subtitle{Progress Review --- April 2026}
+\author{An Pham}
+\institute{LIRMM--ADVANSE, Universit\'e de Montpellier}
+\date{April 24, 2026}
+
+\begin{document}
+
+% ── SLIDE 1 ──────────────────────────────────────────────────────────────────
+{\setbeamercolor{background canvas}{bg=cdark}
+\begin{frame}[plain]
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[cteal](current page.north west)rectangle([xshift=6pt]current page.south west);
+  \node[fill=cteal,text=cdark,font=\bfseries\small,rounded corners=3pt,inner sep=7pt]
+    at ([xshift=-3cm,yshift=1.2cm]current page.south east){Phase 2 Begins};
+\end{tikzpicture}
+\vspace{1.2cm}
+{\color{white}\huge\bfseries PICOPATT Internship}\\[5pt]
+{\color{cteal}\large\itshape Progress Review --- April 2026}\\[8pt]
+{\color{caccent}\small Explainable Clustering for Spatio-Temporal Picoclimatic Data}\\[0.6cm]
+{\color{cmid}\rule{4.5cm}{0.8pt}}\\[5pt]
+{\color{caccent}\footnotesize\textbf{An Pham}\quad|\quad LIRMM--ADVANSE\quad|\quad Supervisors: Luc \& Reda}
+\end{frame}}
+
+% ── SLIDE 2 ──────────────────────────────────────────────────────────────────
+\begin{frame}{Internship Arc: March $\to$ August 2026}
+\begin{tikzpicture}[scale=0.82]
+  \node[fill=cmid!15,draw=cmid,inner sep=3pt,rounded corners=2pt,
+        text=cmid,font=\bfseries\scriptsize,minimum width=4.5cm] at (2.3,0.3)
+    {Phase 1 --- Literature Review + Writing};
+  \node[fill=cteal!15,draw=cteal,inner sep=3pt,rounded corners=2pt,
+        text=cbg2,font=\bfseries\scriptsize,minimum width=5.5cm] at (9.1,0.3)
+    {Phase 2 --- Implementation + Deep Methods};
+  \draw[cmid,line width=2pt](0,-0.5)--(13,-0.5);
+  \foreach \x/\d/\s in {
+    0/{Mar 9}/{Kickoff\\Lit review},
+    3/{Mar 20}/{Data structure\\Writing started},
+    6/{Apr 9}/{Pipeline\\architecture drawn},
+    9/{Apr 17--23}/{Implementation\\sprint \checkmark},
+    12.5/{Apr 24}/{\textbf{TODAY}\\Phase 2 decision}}{
+    \fill[cteal](\x,-0.5)circle(4pt);
+    \node[above=3pt,align=center,font=\bfseries\tiny,text=ctext]at(\x,-0.5){\d};
+    \node[below=3pt,align=center,font=\tiny,text=cmuted]at(\x,-0.5){\s};}
+\end{tikzpicture}
+\vspace{0.15cm}
+\begin{columns}[T]
+  \column{0.48\textwidth}
+  \begin{tcolorbox}[enhanced,boxrule=1pt,arc=2pt,colback=clight,colframe=cmid,
+      title=Lit Review Output,fonttitle=\bfseries\small\color{white},
+      attach boxed title to top left={yshift=-2pt,xshift=4pt},
+      boxed title style={colback=cmid,arc=2pt,boxrule=0pt},top=3pt,bottom=3pt]
+    \footnotesize\begin{itemize}\setlength\itemsep{1pt}
+      \item 3-axis taxonomy (Representation/Clustering/Explanation)
+      \item Novel 4-term joint objective proposed
+      \item 5-page \LaTeX{} draft \checkmark
+    \end{itemize}
+  \end{tcolorbox}
+  \column{0.48\textwidth}
+  \begin{tcolorbox}[enhanced,boxrule=1pt,arc=2pt,colback=clight,colframe=cbg2,
+      title=Implementation Sprint Output,fonttitle=\bfseries\small\color{white},
+      attach boxed title to top left={yshift=-2pt,xshift=4pt},
+      boxed title style={colback=cbg2,arc=2pt,boxrule=0pt},top=3pt,bottom=3pt]
+    \footnotesize\begin{itemize}\setlength\itemsep{1pt}
+      \item Full pipeline running on 4 datasets
+      \item SHAP + Abductive + ExKMC benchmarked
+      \item Explanation stability quantified
+    \end{itemize}
+  \end{tcolorbox}
+\end{columns}
+\end{frame}
+
+% ── SLIDE 3 ──────────────────────────────────────────────────────────────────
+\begin{frame}{Current Pipeline Architecture}
+\vspace{2pt}
+\pipelayer{cdark}{DATA}{23 vars $\times$ 4 timesteps/day\quad(PICOPATT sensor data)}
+\vspace{1pt}{\centering\tiny\color{cmuted}$\downarrow$\par}\vspace{0pt}
+\pipelayer{cmid}{REPRESENTATION}{Raw time series\quad|\quad Shapelet distances\quad(mixed-length: 10--30, adaptive dictionary)}
+\vspace{1pt}{\centering\tiny\color{cmuted}$\downarrow$\par}\vspace{0pt}
+\pipelayer{cbg2}{CLUSTERING}{KMeans\quad|\quad ExKMC (interpretable tree output)}
+\vspace{1pt}{\centering\tiny\color{cmuted}$\downarrow$\par}\vspace{0pt}
+\pipelayer{cteal}{EXPLANATION}{SHAP (feature attribution)\quad|\quad Abductive (minimal edits)\quad Surrogate fidelity: train $0.955$ / CV $0.93$}
+\vspace{1pt}{\centering\tiny\color{cmuted}$\downarrow$\par}\vspace{0pt}
+\pipelayerlight{PRESENTATION}{Sensor-readable cluster summary $\to$ urban planners/architects\quad[Luc's domain --- format to be frozen]}
+\vspace{5pt}
+{\scriptsize\itshape\color{cmuted}From April 9 whiteboard $\to$ now fully implemented over a 2-week sprint.}
+\end{frame}
+
+% ── SLIDE 4 ──────────────────────────────────────────────────────────────────
+\begin{frame}{Key Results from the Implementation Sprint}
+\begin{columns}[T]
+  \column{0.24\textwidth}\statcard{0.95/0.93}{Surrogate fidelity\\ (train / CV)}{Defends explanation\\ faithfulness}
+  \column{0.24\textwidth}\statcard{+17.6\%}{Silhouette gain\\ mixed vs fixed shapelets}{Consistent across\\ all 3 datasets}
+  \column{0.24\textwidth}\statcard{7 seeds}{Explanation stability\\ quantified}{Top-5 feature overlap\\ 70--100\% across seeds}
+  \column{0.24\textwidth}\statcard{4 datasets}{Pipeline validated\\ on proxy benchmarks}{ECG200, ECG5000,\\ Roma taxi, Synth.\ pico}
+\end{columns}
+\vspace{0.25cm}
+{\footnotesize\bfseries\color{ctext}Mixed vs Fixed Shapelet Length --- Cross-Dataset Ablation}\\[3pt]
+\footnotesize\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lrrr}
+\rowcolor{cmid}
+\color{white}\textbf{Dataset}&\color{white}\textbf{Fixed sil.}&\color{white}\textbf{Mixed sil.}&\color{white}\textbf{Gain}\\
+\rowcolor{clight}ECG200 (96 pts)&0.5697&0.6503&\textcolor{cteal}{+14.1\%}\\
+ECG5000 (140 pts)&0.5920&0.6845&\textcolor{cteal}{+15.6\%}\\
+\rowcolor{clight}Roma taxi (8 feats)&0.5545&0.6820&\textcolor{cteal}{+23.0\%}\\
+\textbf{Average}&&&\textcolor{cteal}{\textbf{+17.6\%}}\\
+\end{tabular}
+\end{frame}
+
+% ── SLIDE 5 ──────────────────────────────────────────────────────────────────
+\begin{frame}{Current Status: Validated vs Still Needed}
+\begin{columns}[T]
+  \column{0.48\textwidth}
+  \headerbar{cteal!80!black}{\checkmark\quad Validated}
+  \vspace{3pt}\footnotesize
+  \begin{itemize}\setlength\itemsep{1pt}
+    \item End-to-end pipeline on 4 proxy datasets
+    \item KMeans + ExKMC both running \& comparable
+    \item SHAP + Abductive explanations implemented
+    \item Surrogate fidelity: train $0.955$ / CV $0.93$
+    \item Mixed-length shapelets outperform fixed (+17.6\%)
+    \item Explanation stability: 7 seeds, Jaccard metric
+    \item Synthetic picoclimatic data generator validated
+    \item HDBSCAN spatial baseline added
+    \item Autoencoder + KMeans baseline confirmed runnable
+  \end{itemize}
+  \column{0.48\textwidth}
+  \headerbar{cwarn}{!\quad Still Needed}
+  \vspace{3pt}\footnotesize
+  \begin{itemize}\setlength\itemsep{1pt}
+    \item Real PICOPATT sensor data (not yet available)
+    \item Explanation in raw sensor units (°C, \%, m/s) --- not $s_1$/$t_{41}$
+    \item Explanation output format frozen as contract
+    \item Deep method: autoencoder pipeline with richer XAI
+    \item Spatial density baseline for picoclimatic windows
+    \item Extended seed sweep ($\geq$10 seeds) for paper claims
+    \item Paper direction confirmed: methods vs application
+  \end{itemize}
+\end{columns}
+\end{frame}
+
+% ── SLIDE 6 ──────────────────────────────────────────────────────────────────
+{\setbeamercolor{background canvas}{bg=cdark}
+\setbeamercolor{frametitle}{fg=white,bg=cdark}
+\begin{frame}{The Core Research Problem}
+\addtobeamertemplate{frametitle}{}{%
+  \vspace{-4pt}\textcolor{cteal}{\hrule height 1.5pt}\vspace{3pt}}
+\begin{tcolorbox}[enhanced,boxrule=1.5pt,arc=3pt,
+    colback=cdark!80,colframe=cteal,top=5pt,bottom=5pt,left=6pt,right=6pt]
+\small\color{caccent}
+An urban planner selects a spatial region and time window.
+The system clusters the picoclimatic windows.
+The explanation says:\space
+\textcolor{cteal}{\bfseries``Cluster 2 = high humidity variance + low wind speed in building canyons.''}
+\space This narrative is identical whether they pick a 1-hour or 6-hour window.
+\end{tcolorbox}
+\vspace{0.35cm}
+\begin{columns}[T]
+  \column{0.32\textwidth}
+  \begin{tcolorbox}[enhanced,boxrule=1.2pt,arc=2pt,colback=cdark!80,colframe=cteal,top=4pt,bottom=4pt,left=4pt,right=4pt]
+    {\color{cteal}\bfseries\small Stable Format}\\[2pt]
+    {\color{caccent}\footnotesize Explanation must not change when window size or feature format changes.}
+  \end{tcolorbox}
+  \column{0.32\textwidth}
+  \begin{tcolorbox}[enhanced,boxrule=1.2pt,arc=2pt,colback=cdark!80,colframe=cmid,top=4pt,bottom=4pt,left=4pt,right=4pt]
+    {\color{cmid}\bfseries\small Sensor Language}\\[2pt]
+    {\color{caccent}\footnotesize $s_1 \to$ ``Humidity Variance''\\$t_{41} \to$ ``Temperature at 10\,PM''}
+  \end{tcolorbox}
+  \column{0.32\textwidth}
+  \begin{tcolorbox}[enhanced,boxrule=1.2pt,arc=2pt,colback=cdark!80,colframe=cwarn,top=4pt,bottom=4pt,left=4pt,right=4pt]
+    {\color{cwarn}\bfseries\small Alignment Gap}\\[2pt]
+    {\color{caccent}\footnotesize Sequential pipelines break alignment. Joint optimisation is the target.}
+  \end{tcolorbox}
+\end{columns}
+\end{frame}}
+
+% ── SLIDE 7 ──────────────────────────────────────────────────────────────────
+\begin{frame}{Proposed Directions --- Phase 2}
+\begin{columns}[T]
+  \column{0.47\textwidth}
+  \begin{tcolorbox}[enhanced,boxrule=1pt,arc=2pt,colback=clight,colframe=cmid,
+      title=Direction A --- Neural Representation,
+      fonttitle=\bfseries\small\color{white},
+      attach boxed title to top left={yshift=-2pt,xshift=4pt},
+      boxed title style={colback=cmid,arc=2pt,boxrule=0pt},top=4pt,bottom=4pt]
+    \footnotesize\begin{itemize}\setlength\itemsep{2pt}
+      \item Autoencoder $\to$ latent space $\to$ KMeans
+      \item TELL-style joint neural clustering (ante-hoc)
+      \item Interpretability gap: explain $\phi(X)$ vs $X$
+      \item \textbf{Paper: methods paper on XAI pipeline}
+    \end{itemize}
+    \vspace{2pt}{\itshape\scriptsize\color{cmuted}Higher complexity $\cdot$ Luc's CNN vision from Apr 9}
+  \end{tcolorbox}
+  \column{0.47\textwidth}
+  \begin{tcolorbox}[enhanced,boxrule=1pt,arc=2pt,colback=clight,colframe=cbg2,
+      title=Direction B --- Statistical Aggregation,
+      fonttitle=\bfseries\small\color{white},
+      attach boxed title to top left={yshift=-2pt,xshift=4pt},
+      boxed title style={colback=cbg2,arc=2pt,boxrule=0pt},top=4pt,bottom=4pt]
+    \footnotesize\begin{itemize}\setlength\itemsep{2pt}
+      \item Mean, Var, Quartiles per variable (Time2Feat)
+      \item Directly in sensor units $\to$ no mapping needed
+      \item Clean baseline for stable explanation format
+      \item \textbf{Paper: application paper on PICOPATT}
+    \end{itemize}
+    \vspace{2pt}{\itshape\scriptsize\color{cmuted}Simpler $\cdot$ Reda's natural first comparator}
+  \end{tcolorbox}
+\end{columns}
+\vspace{0.35cm}
+\begin{tcolorbox}[enhanced,boxrule=1.5pt,arc=2pt,colback=cwarn!10,colframe=cwarn,top=4pt,bottom=4pt,left=5pt,right=5pt]
+\footnotesize
+\textcolor{cwarn}{\bfseries My Proposal (Hybrid):}
+Establish B as clean sensor-unit baseline $\to$ add A as complex comparator.
+\textcolor{cmuted}{\itshape Contribution = performance-vs-interpretability tradeoff analysis --- a documented gap in current literature.}
+\end{tcolorbox}
+\end{frame}
+
+% ── SLIDE 8 ──────────────────────────────────────────────────────────────────
+\begin{frame}{Decision Points for Today's Meeting}
+\begin{columns}[T]
+  \column{0.48\textwidth}
+  \deccard{cmid}{01\quad When does real PICOPATT data arrive?}{%
+    Should we pivot to real sensor data now, or complete the proxy benchmark first?
+    Risk: going too early loses methodological generality.}
+  \vspace{5pt}
+  \deccard{cbg2}{02\quad Which paper angle?}{%
+    Methods paper (XAI pipeline + shapelet ablation) vs Application paper
+    (PICOPATT urban planning results)? This determines the timeline for August.}
+  \column{0.48\textwidth}
+  \deccard{cteal}{03\quad Freeze the explanation format now?}{%
+    Should we lock the sensor-readable output schema before adding more methods?
+    Freezing constrains design choices but prevents format drift.}
+  \vspace{5pt}
+  \deccard{cwarn}{04\quad ExKMC vs XClusters for joint optimisation?}{%
+    Stay with ExKMC as the primary explainable baseline, or prototype XClusters
+    (co-adaptive clustering + tree)? XClusters more novel; ExKMC already working.}
+\end{columns}
+\end{frame}
+
+% ── SLIDE 9 ──────────────────────────────────────────────────────────────────
+\begin{frame}{Proposed Timeline to August 2026}
+\begin{tikzpicture}
+  \node[draw=cmid,fill=cmid,text=white,rounded corners=2pt,
+    minimum width=2.05cm,minimum height=0.5cm,
+    font=\bfseries\tiny,align=center] (h1) at (0,0) {W1--2\\Apr 25--May 8};
+  \node[draw=cbg2,fill=cbg2,text=white,rounded corners=2pt,
+    minimum width=2.05cm,minimum height=0.5cm,
+    font=\bfseries\tiny,align=center] (h2) at (2.15,0) {W3--4\\May 9--22};
+  \node[draw=cbg2,fill=cbg2,text=white,rounded corners=2pt,
+    minimum width=2.05cm,minimum height=0.5cm,
+    font=\bfseries\tiny,align=center] (h3) at (4.3,0) {W5--6\\May 23--Jun 5};
+  \node[draw=cwarn,fill=cwarn,text=white,rounded corners=2pt,
+    minimum width=2.05cm,minimum height=0.5cm,
+    font=\bfseries\tiny,align=center] (h4) at (6.45,0) {W7--8\\Jun 6--19};
+  \node[draw=cgap,fill=cgap,text=white,rounded corners=2pt,
+    minimum width=2.05cm,minimum height=0.5cm,
+    font=\bfseries\tiny,align=center] (h5) at (8.6,0) {W9--10\\Jun 20--Jul 3};
+  \node[draw=cmuted,fill=cmuted,text=white,rounded corners=2pt,
+    minimum width=2.05cm,minimum height=0.5cm,
+    font=\bfseries\tiny,align=center] (h6) at (10.75,0) {W11+\\Jul--Aug};
+  \node[draw=cmid,fill=clight,text=ctext,rounded corners=2pt,
+    minimum width=2.05cm,minimum height=3.1cm,
+    font=\tiny,align=left,inner sep=4pt,text width=1.9cm,below=0.05cm of h1]{Real picoclimate data\\[2pt]Freeze explanation format\\[2pt]Add GMM + HDBSCAN};
+  \node[draw=cbg2,fill=clight,text=ctext,rounded corners=2pt,
+    minimum width=2.05cm,minimum height=3.1cm,
+    font=\tiny,align=left,inner sep=4pt,text width=1.9cm,below=0.05cm of h2]{Statistical aggregation (B)\\[2pt]Time2Feat sensor-unit features\\[2pt]Stability across methods};
+  \node[draw=cbg2,fill=clight,text=ctext,rounded corners=2pt,
+    minimum width=2.05cm,minimum height=3.1cm,
+    font=\tiny,align=left,inner sep=4pt,text width=1.9cm,below=0.05cm of h3]{Autoencoder + KMeans (A)\\[2pt]Interpretability gap analysis\\[2pt]Latent vs raw unit comparison};
+  \node[draw=cwarn,fill=clight,text=ctext,rounded corners=2pt,
+    minimum width=2.05cm,minimum height=3.1cm,
+    font=\tiny,align=left,inner sep=4pt,text width=1.9cm,below=0.05cm of h4]{Joint objective prototype\\(ExKMC + spatial regulariser)\\[2pt]Cross-method XAI table};
+  \node[draw=cgap,fill=clight,text=ctext,rounded corners=2pt,
+    minimum width=2.05cm,minimum height=3.1cm,
+    font=\tiny,align=left,inner sep=4pt,text width=1.9cm,below=0.05cm of h5]{Paper draft:\\methods + results\\[2pt]Figures finalised\\[2pt]Supervisor review};
+  \node[draw=cmuted,fill=clight,text=ctext,rounded corners=2pt,
+    minimum width=2.05cm,minimum height=3.1cm,
+    font=\tiny,align=left,inner sep=4pt,text width=1.9cm,below=0.05cm of h6]{Revision,\\feedback\\[2pt]Internship report\\[2pt]Paper submission};
+\end{tikzpicture}
+\vspace{3pt}
+\centering{\itshape\scriptsize\color{cmuted}$\sim$10 weeks remaining $\cdot$ 1--2 papers target}
+\end{frame}
+
+\end{document}
