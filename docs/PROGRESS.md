@@ -63,7 +63,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 
 **Failures / issues / risks**
 - Explanation stability across seeds is not yet fully quantified.
-- Real picoclimate transferability still requires validation.
+- Simulated picoclimate transferability still requires validation once real PICOPATT data is available later.
 
 **Implementation details**
 - Notebooks: `scripts/notebooks/kmeans_test_temporal.ipynb`, `scripts/notebooks/kmeans_test_temporal_shapelets.ipynb`
@@ -71,11 +71,11 @@ Ordering rule: keep entries in chronological order and append each new update at
 **Next**
 - Package results into protocol-style per-cluster summaries and exportable tables.
 - Add explanation-stability checks across seeds and feature rankings.
-- Port the same pipeline to the picoclimate dataset or expand clustering baselines.
+- Port the same pipeline to the simulated picoclimate test fixture or expand clustering baselines.
 
 **Possible questions/concerns**
 - Should deliverable priority be protocol-aligned fixed outputs or notebook demonstration quality?
-- For immediate next step, prefer real picoclimate windows now or additional baseline families first?
+- For immediate next step, prefer the simulated picoclimate test fixture now or additional baseline families first?
 
 ### 2026-04-21 (Documentation consolidation and Roma taxi onboarding)
 
@@ -118,7 +118,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Compare KMeans and ExKMC on the same engineered features and report stability across seeds.
 
 **Possible questions/concerns**
-- Should priority be real picoclimate runs now, or broader synthetic method comparisons first?
+- Should priority be simulated picoclimate runs now, or broader synthetic method comparisons first?
 - Should Roma taxi be a secondary benchmark after ECG200/ECG5000 baseline stabilization, or run in parallel from now?
 
 ### 2026-04-22 (Roma taxi EDA and temporal KMeans refactor)
