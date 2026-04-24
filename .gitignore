@@ -15,6 +15,19 @@ venv/
 # Generated experiment outputs
 outputs/
 
+# Slide build artifacts
+docs/slides/**/*.aux
+docs/slides/**/*.log
+docs/slides/**/*.nav
+docs/slides/**/*.out
+docs/slides/**/*.snm
+docs/slides/**/*.toc
+docs/slides/**/*.xdv
+docs/slides/~$*.pptx
+
+# Local TeX tool cache
+.tools/
+
 # Generated raw data files (metadata and docs stay tracked)
 data/raw_measurements.csv
 data/window_features.csv
