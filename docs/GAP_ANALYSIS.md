@@ -27,6 +27,7 @@ This file replaces previous separate documentation and centralizes all governanc
 - Synthetic data generator approximating mobile urban sensing
 - Reproducible research scripts in `scripts/research/`
 - Documentation and outputs structure already in place
+- Executable baselines already present for `KMeans`, `ExKMC`, `autoencoder + KMeans`, and a picoclimate benchmark script that now includes `HDBSCAN`
 
 ## Critical Gaps Identified
 
@@ -98,6 +99,7 @@ For each cluster, always produce:
 5. Confidence note: surrogate fidelity and caveats
 
 This format must remain unchanged even if temporal or spatial inputs change.
+Treat this as a reporting contract, not a suggestion. Any new method must emit the same cluster summary structure before it is considered ready.
 
 ### Reporting template (per experiment)
 

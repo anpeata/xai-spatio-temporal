@@ -442,3 +442,36 @@ Ordering rule: keep entries in chronological order and append each new update at
 **Possible questions/concerns**
 - Should ExKMC stay the primary explainable clustering baseline, or should XClusters be explored as the joint-optimization comparator?
 - Is the immediate priority to broaden the benchmark matrix, or to formalize the final explanation format before more methods are added?
+
+### 2026-04-24 (Spatial baseline and deep representation validation)
+
+**Experimentations**
+- Added `HDBSCAN` to the picoclimate clustering benchmark script so the spatial baseline set now covers a density-based method beyond plain DBSCAN.
+- Ran the picoclimate benchmark script on `data/picoclimate_test/window_features.csv` to validate the new HDBSCAN path.
+- Ran the autoencoder latent + KMeans script on the same picoclimate fixture to confirm the deep representation baseline is executable.
+
+**Results (numbers, tables, plots)**
+- Benchmark script completed successfully on the picoclimate fixture; HDBSCAN ran with non-trivial noise handling while the partitioning methods produced consistent internal scores.
+- Autoencoder latent clustering completed successfully and improved the latent-space silhouette versus the raw feature baseline on the same fixture.
+
+**Insights**
+- The autoencoder baseline already existed in the repository, so the deep-learning branch is now a runnable baseline rather than a gap in implementation.
+- HDBSCAN is now the first spatial density comparator available in the picoclimate benchmark script, which broadens the benchmark matrix beyond KMeans/ExKMC.
+- The explanation-format requirement should be treated as a contract for future methods, not as an optional reporting style.
+
+**Failures / issues / risks**
+- The broader notebook set was not re-executed in this pass because no notebook files changed; the validation was done on the affected research scripts.
+- `docs/reports/lit_rev.tex` remains present as an untracked documentation artifact and should be reviewed separately if it is meant to be versioned.
+
+**Implementation details**
+- Updated `scripts/research/benchmark_clustering_pipeline.py` to include `HDBSCAN` plus its tuning arguments.
+- Updated `docs/GAP_ANALYSIS.md` to state that the explanation output format is a reporting contract and to enumerate the already-available baselines.
+
+**Next**
+- Freeze the sensor-readable explanation summary into a shared output schema for future methods.
+- Decide whether the next method addition should be a spatial notebook built around HDBSCAN or a deeper autoencoder-based pipeline with richer explanations.
+- If the paper moves toward a methods contribution, prototype the simplified ExKMC-style spatial regularizer next.
+
+**Possible questions/concerns**
+- Should the new HDBSCAN baseline be kept as a script-only benchmark, or promoted into a notebook for meeting demos?
+- Do we want the autoencoder baseline to stay as a lightweight comparison, or should it be expanded into a more explicit representation-learning track?

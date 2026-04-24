@@ -7,7 +7,7 @@ from typing import Dict, List
 
 import numpy as np
 import pandas as pd
-from sklearn.cluster import AgglomerativeClustering, DBSCAN, KMeans, SpectralClustering
+from sklearn.cluster import AgglomerativeClustering, DBSCAN, HDBSCAN, KMeans, SpectralClustering
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import (
     adjusted_rand_score,
@@ -26,6 +26,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--data", type=str, required=True, help="Path to window_features.csv")
     parser.add_argument("--outdir", type=str, required=True, help="Output directory")
     parser.add_argument("--k", type=int, default=6, help="Target number of clusters where relevant")
+    parser.add_argument("--hdbscan-min-cluster-size", type=int, default=15, help="Minimum cluster size for HDBSCAN")
+    parser.add_argument("--hdbscan-min-samples", type=int, default=10, help="Minimum samples for HDBSCAN")
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
     return parser.parse_args()
 
@@ -79,7 +81,13 @@ def safe_external_metrics(y_true: pd.Series | None, labels: np.ndarray) -> Dict[
     }
 
 
-def run_methods(X: np.ndarray, k: int, seed: int) -> Dict[str, np.ndarray]:
+def run_methods(
+    X: np.ndarray,
+    k: int,
+    seed: int,
+    hdbscan_min_cluster_size: int,
+    hdbscan_min_samples: int,
+) -> Dict[str, np.ndarray]:
     outputs: Dict[str, np.ndarray] = {}
 
     outputs["kmeans"] = KMeans(n_clusters=k, n_init=20, random_state=seed).fit_predict(X)
@@ -98,6 +106,11 @@ def run_methods(X: np.ndarray, k: int, seed: int) -> Dict[str, np.ndarray]:
 
     outputs["dbscan"] = DBSCAN(eps=0.9, min_samples=15).fit_predict(X)
 
+    outputs["hdbscan"] = HDBSCAN(
+        min_cluster_size=int(hdbscan_min_cluster_size),
+        min_samples=int(hdbscan_min_samples),
+    ).fit_predict(X)
+
     return outputs
 
 
@@ -110,7 +123,13 @@ def main() -> None:
     df = pd.read_csv(data_path)
     X, feature_cols, y_true = prepare_features(df)
 
-    method_labels = run_methods(X, k=args.k, seed=args.seed)
+    method_labels = run_methods(
+        X,
+        k=args.k,
+        seed=args.seed,
+        hdbscan_min_cluster_size=args.hdbscan_min_cluster_size,
+        hdbscan_min_samples=args.hdbscan_min_samples,
+    )
 
     rows: List[Dict[str, float | str | int]] = []
     labels_df = pd.DataFrame(index=df.index)
@@ -139,6 +158,8 @@ def main() -> None:
         "n_features": int(X.shape[1]),
         "feature_count": len(feature_cols),
         "has_true_regime": bool(y_true is not None),
+        "hdbscan_min_cluster_size": int(args.hdbscan_min_cluster_size),
+        "hdbscan_min_samples": int(args.hdbscan_min_samples),
         "best_by_silhouette": results.iloc[0].to_dict() if len(results) else None,
     }
     (outdir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
