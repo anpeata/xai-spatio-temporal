@@ -42,7 +42,7 @@
     \begin{beamercolorbox}[wd=0.65\paperwidth,ht=2.2ex,dp=1ex,leftskip=4pt]{normal text}%
       \tiny\color{cmuted}An Pham \textbar{} LIRMM--ADVANSE \textbar{} Luc \& Reda%
     \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=0.35\paperwidth,ht=2.2ex,dp=1ex,rightskip=4pt,right]{normal text}%
+    \begin{beamercolorbox}[wd=0.35\paperwidth,ht=2.2ex,dp=1ex,rightskip=14pt,right]{normal text}%
       \tiny\color{cmuted}\insertframenumber/\inserttotalframenumber%
     \end{beamercolorbox}}}
 
@@ -418,13 +418,16 @@ The explanation says:\space
 \begin{columns}[T,onlytextwidth]
   \column{0.52\textwidth}
   \begin{block}{Validated in code}
-    \begin{itemize}
+    {\scriptsize
+    \begin{itemize}\setlength\itemsep{1pt}
       \item Shapelet notebooks renamed and aligned under \texttt{shapelets\_}
       \item Cross-dataset stability run completed with 6 seeds
       \item Raw-vs-shapelet sanity check completed: mixed results by dataset
       \item HDBSCAN added to the picoclimate benchmark script
-      \item Autoencoder + KMeans baseline already available and runnable
+      \item Autoencoder + KMeans baseline rerun: silhouette 0.218 $\to$ 0.360 (test\_deep)
+      \item Runtime audit added under \texttt{outputs/timings}: stability 14.3 min (quick) vs 119.3 min (full)
     \end{itemize}
+    }
   \end{block}
 
   \column{0.45\textwidth}
@@ -449,6 +452,7 @@ The explanation says:\space
     \begin{itemize}
       \item Surrogate CV fidelity band across the 6-seed sweep
       \item Top-5 SHAP overlap across 6 seeds
+      \item Runtime context: full stability sweep took about 119 minutes in the dated rerun
       \item The main robustness evidence
     \end{itemize}
   \end{block}
@@ -469,7 +473,7 @@ The explanation says:\space
   \begin{block}{Interpretation}
     \begin{itemize}
       \item Autoencoder baseline is the deep comparator
-      \item Latent space improves clustering in the quick test (silhouette 0.154 $\to$ 0.229)
+      \item Latest test\_deep rerun improves silhouette from 0.218 to 0.360
       \item Useful for the interpretability-gap story
     \end{itemize}
   \end{block}
@@ -486,7 +490,8 @@ The explanation says:\space
   \begin{block}{Interpretation}
     \begin{itemize}
       \item HDBSCAN broadens the baseline set beyond KMeans / ExKMC
-      \item Spatial density is now part of the benchmarking story, even though the quick test still favors KMeans
+      \item Latest test\_benchmark run still favors KMeans (silhouette 0.218, k=2)
+      \item HDBSCAN remains useful as the density/noise comparator in the matrix
       \item Final PICOPATT benchmark still pending real data
     \end{itemize}
   \end{block}
@@ -533,16 +538,16 @@ The explanation says:\space
 \end{block}
 \end{frame}
 
-% ── SLIDE 18 ────────────────────────────────────────────────────────────────
-\begin{frame}{Reserved Figure Space}
-\begin{block}{Future visuals}
-  \vspace{0.8em}
-  \centering
-  \figureplaceholder{0.82\linewidth}{2.2cm}
-\end{block}
-
-\vspace{0.6em}
-\footnotesize Suggested future figures: cluster profile heatmap, station map, sensor-unit explanation example, and a side-by-side comparison of stable vs unstable narratives.
-\end{frame}
+% ── SLIDE 18 (TEMPORARILY DISABLED) ─────────────────────────────────────────
+% \begin{frame}{Reserved Figure Space}
+% \begin{block}{Future visuals}
+%   \vspace{0.8em}
+%   \centering
+%   \figureplaceholder{0.82\linewidth}{2.2cm}
+% \end{block}
+%
+% \vspace{0.6em}
+% \footnotesize Suggested future figures: cluster profile heatmap, station map, sensor-unit explanation example, and a side-by-side comparison of stable vs unstable narratives.
+% \end{frame}
 
 \end{document}
