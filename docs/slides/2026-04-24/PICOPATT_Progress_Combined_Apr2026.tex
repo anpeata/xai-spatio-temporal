@@ -211,7 +211,7 @@
 \begin{columns}[T]
   \column{0.24\textwidth}\statcard{0.95/0.93}{Surrogate fidelity\\ (train / CV)}{Defends explanation\\ faithfulness}
   \column{0.24\textwidth}\statcard{+17.6\%}{Silhouette gain\\ mixed vs fixed shapelets}{Consistent across\\ all 3 datasets}
-   \column{0.24\textwidth}\statcard{6 seeds}{Explanation stability\\ quantified}{Top-5 feature overlap\\ 70--100\% across seeds}
+   \column{0.24\textwidth}\statcard{6 seeds}{Explanation stability\\ quantified}{Top-5 feature overlap\\ 67--100\% across datasets}
   \column{0.24\textwidth}\statcard{3 ablation datasets}{Cross-dataset\\ ablation table}{ECG200, ECG5000,\\ Roma taxi}
 \end{columns}
 \vspace{0.25cm}
@@ -421,6 +421,7 @@ The explanation says:\space
     \begin{itemize}
       \item Shapelet notebooks renamed and aligned under \texttt{shapelets\_}
       \item Cross-dataset stability run completed with 6 seeds
+      \item Raw-vs-shapelet sanity check completed: mixed results by dataset
       \item HDBSCAN added to the picoclimate benchmark script
       \item Autoencoder + KMeans baseline already available and runnable
     \end{itemize}
@@ -446,7 +447,7 @@ The explanation says:\space
   \column{0.38\textwidth}
   \begin{block}{What this slide should show}
     \begin{itemize}
-      \item Surrogate CV fidelity band
+      \item Surrogate CV fidelity band across the 6-seed sweep
       \item Top-5 SHAP overlap across 6 seeds
       \item The main robustness evidence
     \end{itemize}
@@ -468,7 +469,7 @@ The explanation says:\space
   \begin{block}{Interpretation}
     \begin{itemize}
       \item Autoencoder baseline is the deep comparator
-      \item Latent space improves clustering in the quick test
+      \item Latent space improves clustering in the quick test (silhouette 0.154 $\to$ 0.229)
       \item Useful for the interpretability-gap story
     \end{itemize}
   \end{block}
@@ -485,7 +486,7 @@ The explanation says:\space
   \begin{block}{Interpretation}
     \begin{itemize}
       \item HDBSCAN broadens the baseline set beyond KMeans / ExKMC
-      \item Spatial density is now part of the benchmarking story
+      \item Spatial density is now part of the benchmarking story, even though the quick test still favors KMeans
       \item Final PICOPATT benchmark still pending real data
     \end{itemize}
   \end{block}
@@ -501,6 +502,7 @@ The explanation says:\space
       \item Surrogate fidelity is high enough to defend model-faithful explanations.
       \item SHAP concentration already gives a compact narrative for the shapelet baseline.
       \item Stability is now measured rather than assumed.
+      \item Shapelets help on some datasets, but the raw-vs-shapelet result is dataset-dependent.
     \end{itemize}
   \end{block}
 

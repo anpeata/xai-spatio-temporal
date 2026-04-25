@@ -27,10 +27,12 @@ I lead with the strongest practical result: mixed-length shapelets outperform fi
 
 Then I separate that from the stability result. The 6-seed metric is about explanation stability, specifically top-feature overlap, and it is not the same as clustering quality. If I am asked about the dataset labels, I clarify that ECG200 and ECG5000 refer to the canonical time-series lengths used in those datasets, not sample counts.
 
-For Roma taxi, I note that the result uses engineered temporal features, which is why it is still a useful benchmark even though it is not raw spatial sensor data. The message is that the shapelet strategy seems robust across different time-series contexts.
+For Roma taxi, I note that the result uses engineered temporal features, which is why it is still a useful benchmark even though it is not raw spatial sensor data. The message is that the shapelet-length ablation is strong, but the later raw-vs-shapelet sanity check is dataset-dependent, so I should not oversell shapelets as universally better.
 
 ## Slide 6 - Validated vs Still Needed
 I use this slide as the boundary of what is actually solid today. The validated side is the complete proxy pipeline, the explanation stack, the 6-seed stability sweep, and the additional baselines that are already runnable. The still-needed side is the real PICOPATT data, a final explanation wording contract, and broader benchmarking before the paper claim is final.
+
+The newer stability refresh matters because it confirms the explanation signal is repeatable across datasets, but it also shows the raw-vs-shapelet comparison is not one-directional. That nuance is useful: it keeps the story credible without weakening the main shapelet-length ablation result.
 
 I explain that this is not a list of failures; it is a project control list. Everything on the validated side is evidence that the current direction is viable. Everything on the still-needed side is what must be resolved before the work can be framed as a final result rather than a development milestone.
 
@@ -60,29 +62,31 @@ I am explicit that the real PICOPATT data is still unavailable in this context. 
 This is an important clarification because it prevents over-reading the results. The current evidence supports the method and the workflow. It does not yet support any final claims about the real environment, since that data has not been integrated.
 
 If someone asks about the dataset labels, I clarify that ECG200 and ECG5000 refer to the canonical time-series lengths used in those datasets, not sample counts.
-I frame this as a short repository audit summary. The point is that the codebase now matches the deck: 6-seed stability is used consistently, HDBSCAN has been added as a spatial baseline, and the explanation format is treated as a contract rather than a throwaway notebook output.
 
-If the audience asks what changed most recently, I answer that the notebooks, scripts, and slides are being aligned so the evidence in the deck is backed by runnable artifacts. That alignment is more important than any one minor figure update.
+## Slide 12 - What Changed Recently
+I use this slide to make the repo audit concrete. The important updates are that the shapelet notebooks were renamed under the \texttt{shapelets\_} prefix, the cross-dataset stability run now uses 6 seeds, HDBSCAN is available in the picoclimate benchmark script, and the autoencoder + KMeans baseline is already runnable.
 
-When I need a concise spoken version, I say:
-When I present this slide, I say that it is the main robustness evidence. The figure is meant to show two things at once: the surrogate fidelity band and the top-feature overlap across 6 seeds.
+The newest item here is the raw-vs-shapelet sanity check. I explain that the result is mixed by dataset: shapelets are helpful in some settings, but raw features still compete well in others. That is a more defensible story than saying shapelets always win.
 
-The interpretation is simple. If the overlap remains strong across seeds, then the explanation is not just an artifact of a lucky initialization. That is the kind of robustness I want before making a paper claim about explanation stability.
+## Slide 13 - Evidence: Stability Across Datasets
+This is the main robustness slide. I point to the surrogate CV fidelity band and the top-5 SHAP overlap across 6 seeds.
 
-## Slide 14 - Deep Representation Baseline
-I use this slide to position the autoencoder as the neural comparator. I do not present it as universally better; I present it as the deep baseline that helps test whether a more expressive representation actually helps the clustering story.
+The line I want to land is that explanation stability is now measured rather than assumed. The 6-seed sweep makes the story auditable, and the feature-overlap signal is strong enough to support the shapelet baseline without pretending the ranking is identical on every dataset.
 
-The value of this comparator is that it lets me discuss the interpretability gap honestly. If the latent representation improves clustering but becomes harder to explain, that is a meaningful tradeoff rather than a simple win or loss.
+## Slide 14 - Evidence: Deep Representation Baseline
+I use this slide to position the autoencoder as the neural comparator. It is not presented as universally better; it is the deep baseline that tells me whether a more expressive representation actually helps the clustering story.
 
-## Slide 15 - Spatial Baseline Expansion
-I explain that HDBSCAN widens the benchmark beyond KMeans and ExKMC. The point is to prevent the evaluation from being too narrow. Spatial density methods matter because the final PICOPATT story should not depend on a single family of clustering algorithms.
+The quick validation run on the picoclimate fixture is useful because the latent space improved silhouette from 0.154 to 0.229. That gives me a real comparator for the interpretability-gap discussion instead of a hypothetical one.
 
-I keep the claim modest. This slide is about broadening the comparison set, not about saying HDBSCAN is the final answer. The value is in the coverage of the benchmark matrix.
+## Slide 15 - Evidence: Spatial Baseline Expansion
+I explain that HDBSCAN widens the benchmark beyond KMeans and ExKMC. The point is to prevent the evaluation from being too narrow and to keep spatial density methods in the PICOPATT story.
+
+I keep the claim modest. The quick benchmark still favors KMeans by silhouette, so HDBSCAN is a broadening baseline rather than the winner. That is still valuable because the goal here is coverage of the benchmark matrix.
 
 ## Slide 16 - Interpretation Layer
 I start with what is already defensible: the surrogate fidelity is high enough to support explanation, the SHAP output is compact enough to be readable, and stability is now measured instead of assumed.
 
-Then I state the remaining gaps. The explanation template still needs to be frozen in sensor-unit language, the spatial comparators still need real data, and if the paper becomes more methods-focused, a more explicit joint-optimization approach may be needed. This slide is the bridge between “it works” and “it is ready to publish.”
+Then I state the remaining gaps. The explanation template still needs to be frozen in sensor-unit language, the spatial comparators still need real data, and the raw-vs-shapelet sanity check tells me to keep the baseline claims dataset-aware. This slide is the bridge between “it works” and “it is ready to publish.”
 
 ## Slide 17 - Recommended Next Phase
 I summarize the recommendation as a sequence. First I freeze the output format. Then I keep ExKMC as the baseline. Then I extend the benchmark matrix with spatial methods. Finally, I treat the autoencoder path as the deep comparison line.
@@ -97,6 +101,6 @@ The safest way to describe it is as future figure space rather than unfinished c
 ## Short delivery version
 If I need a concise spoken version, I use this:
 - I am now in Phase 2, and the proxy pipeline is already validated end to end.
-- I see mixed-length shapelets as improving clustering quality, while explanation stability is tracked separately with cross-seed overlap.
+- I see mixed-length shapelets as a strong ablation result, while the broader raw-vs-shapelet comparison is dataset-dependent.
 - My main open decision is whether the paper should be framed as a methods contribution or an application contribution.
 - My immediate goal is to freeze the explanation format, broaden the benchmark matrix, and wait for real PICOPATT data before making final claims.
