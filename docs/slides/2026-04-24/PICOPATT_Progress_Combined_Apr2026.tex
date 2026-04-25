@@ -59,9 +59,9 @@
       colback=clight,colframe=cmid,
       top=3pt,bottom=3pt,left=3pt,right=3pt]
     \centering
-    {\color{cmid}\large\bfseries #1}\\[1pt]
-    {\color{ctext}\bfseries\tiny #2}\\[1pt]
-    {\color{cmuted}\tiny #3}
+    {\color{cmid}\large\bfseries\parbox[c][2.7em][c]{\linewidth}{\centering #1}}\\[1pt]
+    {\color{ctext}\bfseries\tiny\parbox[c][2.8em][c]{\linewidth}{\centering #2}}\\[1pt]
+    {\color{cmuted}\tiny\parbox[c][2.8em][c]{\linewidth}{\centering #3}}
   \end{tcolorbox}}
 
 \newcommand{\deccard}[3]{%
