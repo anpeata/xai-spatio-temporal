@@ -1,5 +1,5 @@
 {
-  "created_utc": "2026-04-24T08:21:51.792163+00:00",
+  "created_utc": "2026-04-27T14:00:04.471337+00:00",
   "files": {
     "raw_measurements.csv": {
       "description": "One row per location/day/slot. Exactly 4 slots per day.",
