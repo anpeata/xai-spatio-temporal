@@ -66,7 +66,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Simulated picoclimate transferability still requires validation once real PICOPATT data is available later.
 
 **Implementation details**
-- Notebooks: `scripts/notebooks/kmeans_test_temporal.ipynb`, `scripts/notebooks/kmeans_test_temporal_shapelets.ipynb`
+- Notebooks: `scripts/notebooks/kmeans_test_temporal.ipynb`, `scripts/notebooks/shapelets_ecg200.ipynb`
 
 **Next**
 - Package results into protocol-style per-cluster summaries and exportable tables.
@@ -163,7 +163,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Multi-seed evaluation: 3 seeds for stability
 - Haversine distance used for spatial feature engineering
 - Filtering: removed rows with invalid coordinates or null timestamps
-- Notebook paths after rename: `scripts/notebooks/kmeans_test_temporal.ipynb` and `scripts/notebooks/kmeans_test_temporal_shapelets.ipynb`
+- Notebook paths after rename: `scripts/notebooks/kmeans_test_temporal.ipynb` and `scripts/notebooks/shapelets_ecg200.ipynb`
 
 **Next**
 - Run full-dataset window table construction with production chunk size.
@@ -184,7 +184,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Ran the full EDA pipeline through loading, feature engineering, and KMeans k-selection.
 - Limited k-selection complexity via bounded search settings (`K_GRID`, `SEED_LIST`, `KMEANS_N_INIT`) and sampled silhouette evaluation.
 - Executed the ECG5000 extension workflow in `scripts/notebooks/exkmc_blobs_experiment.ipynb` end-to-end (unsupervised k-selection + KMeans vs ExKMC comparison).
-- Re-ran the shapelet clustering notebook explainability path in `scripts/notebooks/kmeans_test_temporal_shapelets.ipynb`, including surrogate and SHAP attribution cells.
+- Re-ran the shapelet clustering notebook explainability path in `scripts/notebooks/shapelets_ecg200.ipynb`, including surrogate and SHAP attribution cells.
 - Added and executed a practical ablation in the shapelet notebook to compare fixed-length (`(20,)`) vs mixed-length (`(10, 15, 20, 25, 30)`) shapelet dictionaries under the same adaptive selection routine.
 
 **Results (numbers, tables, plots)**
@@ -227,7 +227,7 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Added/used runtime controls: `K_SELECTION_MAX_WINDOWS=120000`, `SILHOUETTE_SAMPLE_SIZE=40000`.
 - KMeans selection cell now evaluates on `X_eval` for k search, then fits final model on full `X`.
 - ECG5000 execution notebook: `scripts/notebooks/exkmc_blobs_experiment.ipynb` (cells for dataset load, k-selection, model comparison, PCA view, tree export run).
-- Shapelet notebook updated/executed: `scripts/notebooks/kmeans_test_temporal_shapelets.ipynb` (surrogate, SHAP, and abductive explanation cells refreshed).
+- Shapelet notebook updated/executed: `scripts/notebooks/shapelets_ecg200.ipynb` (surrogate, SHAP, and abductive explanation cells refreshed).
 - Notebook now includes a fixed-vs-mixed shapelet-length comparison cell with recommendation output.
 
 **Next**
@@ -519,4 +519,33 @@ Ordering rule: keep entries in chronological order and append each new update at
 **Implementation details**
 - Timing logs were written to `outputs/timings/2026-04-24-*.csv` and `outputs/timings/2026-04-24-*.json`.
 - The slide figures now live in `outputs/2026-04-24/figures/` alongside the dated research outputs.
+
+### 2026-04-27 (Repository consistency audit and cleanup)
+
+**Experimentations**
+- Audited all modified and untracked notebook and slide artifacts before commit.
+- Cross-checked notebook result claims against stored notebook outputs.
+
+**Results (numbers, tables, plots)**
+- Confirmed `scripts/notebooks/kmeans_test_temporal.ipynb` outputs: unsupervised `k=3`, mapped accuracy `0.78`, silhouette `0.4069`.
+- Confirmed `scripts/notebooks/eda_roma_taxi.ipynb` outputs: selected `k=2`, silhouette mean `0.5173`, cluster counts `80632` and `4367`.
+- Confirmed `scripts/notebooks/shapelets_roma_taxi.ipynb` reduced-run output currently favors fixed-length `(3,)` over mixed-length `(2,3,4)`.
+
+**Insights**
+- The older path alias `kmeans_test_temporal_shapelets.ipynb` is stale and now maps to `scripts/notebooks/shapelets_ecg200.ipynb`.
+- A one-cell summary notebook with contradictory Roma claim should be treated as summary text only and aligned with notebook evidence when included.
+
+**Failures / issues / risks**
+- Root-level LaTeX byproducts (`.aux/.log/.out`) can appear during manual slide compiles and create avoidable git noise.
+
+**Implementation details**
+- Normalized stale notebook-path references in this log.
+- Added specific ignore rules for root-level slide byproducts and alternate local slide export name.
+
+**Next**
+- Keep notebook summary claims synchronized with executed outputs before slide export.
+- Continue using `scripts/figures/` or `outputs/YYYY-MM-DD/figures/` consistently for archived visuals.
+
+**Possible questions/concerns**
+- Should summary-only notebooks be kept in the repo, or should they be replaced by markdown docs linked to executed notebooks?
 

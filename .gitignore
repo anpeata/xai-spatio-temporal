@@ -25,6 +25,14 @@ docs/slides/**/*.toc
 docs/slides/**/*.xdv
 docs/slides/~$*.pptx
 
+# Root-level LaTeX byproducts from manual slide builds
+/PICOPATT_Progress_Combined_Apr2026.aux
+/PICOPATT_Progress_Combined_Apr2026.log
+/PICOPATT_Progress_Combined_Apr2026.out
+
+# Alternate local export name used during manual compiles
+/docs/slides/2026-04-24/picopatt_progress_april24.pdf
+
 # Local TeX tool cache
 .tools/
 

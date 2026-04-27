@@ -33,7 +33,7 @@ Main output variable:
 - `abductive_by_view`
 
 ### 4) Added abductive explanations for raw/original approach
-A matching abductive section was added to the raw ECG notebook (`kmeans_test_temporal_ecg200.ipynb`) so both approaches are covered.
+A matching abductive section was added to the raw ECG notebook (`kmeans_test_temporal.ipynb`) so both approaches are covered.
 
 Main output variable:
 - `raw_abductive_by_view`
@@ -81,7 +81,7 @@ File: `scripts/notebooks/shapelets_ecg200.ipynb`
 - Abductive explanations for shapelet views in Cells 20-21
 
 ### Raw notebook
-File: `scripts/notebooks/kmeans_test_temporal_ecg200.ipynb`
+File: `scripts/notebooks/kmeans_test_temporal.ipynb`
 - Abductive explanations for raw views in Cells 14-15
 
 ## How to run quickly
