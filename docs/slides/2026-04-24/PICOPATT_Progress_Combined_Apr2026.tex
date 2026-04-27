@@ -37,13 +37,23 @@
 \addtobeamertemplate{frametitle}{}{%
   \vspace{-4pt}\textcolor{cteal}{\hrule height 1.5pt}\vspace{3pt}}
 
+% \setbeamertemplate{footline}{%
+%   \leavevmode\hbox{%
+%     \begin{beamercolorbox}[wd=0.72\paperwidth,ht=2.2ex,dp=1ex,leftskip=4pt]{normal text}%
+%       \tiny\color{cmuted}An Pham \textbar{} LIRMM--ADVANSE \textbar{} Luc \& Reda%
+%     \end{beamercolorbox}%
+%     \begin{beamercolorbox}[wd=0.28\paperwidth,ht=2.2ex,dp=1ex,leftskip=10pt,left]{normal text}%
+%       \scriptsize\color{cmuted}\insertframenumber/\inserttotalframenumber%
+%     \end{beamercolorbox}}}
 \setbeamertemplate{footline}{%
   \leavevmode\hbox{%
-    \begin{beamercolorbox}[wd=0.65\paperwidth,ht=2.2ex,dp=1ex,leftskip=4pt]{normal text}%
+    % Increased width slightly for the name/info box
+    \begin{beamercolorbox}[wd=0.85\paperwidth,ht=2.2ex,dp=1ex,leftskip=4pt]{normal text}%
       \tiny\color{cmuted}An Pham \textbar{} LIRMM--ADVANSE \textbar{} Luc \& Reda%
     \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=0.35\paperwidth,ht=2.2ex,dp=1ex,rightskip=14pt,right]{normal text}%
-      \tiny\color{cmuted}\insertframenumber/\inserttotalframenumber%
+    % Decreased width and used 'right' alignment with 'rightskip'
+    \begin{beamercolorbox}[wd=0.15\paperwidth,ht=2.2ex,dp=1ex,right,rightskip=6pt]{normal text}%
+      \scriptsize\color{cmuted}\insertframenumber/\inserttotalframenumber%
     \end{beamercolorbox}}}
 
 \setbeamertemplate{itemize item}{\color{cteal}\textbullet}
@@ -335,7 +345,7 @@ The explanation says:\space
 \end{frame}
 
 % ── SLIDE 9 ──────────────────────────────────────────────────────────────────
-\begin{frame}{Decision Points for Today's Meeting}
+\begin{frame}{Decision Points for Meeting}
 \begin{columns}[T]
   \column{0.48\textwidth}
   \deccard{cmid}{01\quad Real PICOPATT data?}{%
