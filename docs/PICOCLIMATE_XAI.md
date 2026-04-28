@@ -22,10 +22,11 @@ Current issue: the pipeline still exposes internal indices such as `s_1` or `t_4
 
 ### 2. Multi-Method Benchmarking
 
-Current testing is limited to KMeans and ExKMC. The benchmark should expand to include:
+Benchmark coverage now includes:
 
-- Autoencoder + KMeans for latent-space clustering
-- ST-DBSCAN or HDBSCAN for spatially aware clustering
+- KMeans + ExKMC baselines
+- Autoencoder + KMeans for latent-space clustering (scripts/research/deep_representation_clustering.py)
+- HDBSCAN for spatially aware clustering (scripts/research/benchmark_clustering_pipeline.py)
 
 ### 3. Scientific Rigor and Output
 
