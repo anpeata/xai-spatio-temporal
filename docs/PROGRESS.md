@@ -1,6 +1,6 @@
 # Progress Log
 
-Last updated: 2026-04-23
+Last updated: 2026-04-28
 
 Use this file for weekly or milestone updates for supervisor meetings.
 Each entry should remain short, factual, and auditable.
@@ -575,4 +575,34 @@ Ordering rule: keep entries in chronological order and append each new update at
 
 **Possible questions/concerns**
 - Should summary-only notebooks be kept in the repo, or should they be replaced by markdown docs linked to executed notebooks?
+
+---
+
+### 2026-04-28 (Picoclimate benchmark scripts execution: AE+KMeans and (optional) HDBSCAN)
+
+**Experimentations**
+- Ran `benchmark_clustering_pipeline.py` on `data/picoclimate_test/window_features.csv` with `k=2` (from `true_regime` count).
+- Ran `deep_representation_clustering.py` (autoencoder latent + KMeans) on the same fixture with the same `k`.
+
+**Results (numbers, tables, plots)**
+- Benchmark best-by-silhouette: `agglomerative_ward` silhouette `0.2251`, ARI `-0.0856`, NMI `0.0432`, noise `0.0`.
+- Autoencoder+KMeans: raw silhouette `0.1740`, ARI `0.2492`, NMI `0.2523`; latent silhouette `0.3158`, ARI `-0.0102`, NMI `0.0005`.
+- Outputs archived under `outputs/2026-04-28/research/{benchmark_clustering_pipeline,deep_representation_clustering}/`.
+
+**Insights**
+- Autoencoder improves intrinsic cohesion (silhouette) but degrades agreement to `true_regime` on this fixture.
+
+**Failures / issues / risks**
+- None observed during execution; `HDBSCAN` runs only if the dependency is available.
+
+**Implementation details**
+- No new notebooks created; scripts are used for reproducible, headless runs.
+- The benchmark script treats `HDBSCAN` as optional and excludes `location_id`/`date` from clustering features.
+
+**Next**
+- Compare KMeans vs other methods on ARI/NMI (not only silhouette) for the picoclimate fixture.
+- Diagnose AE behavior (latent_dim/epochs/regularization) to preserve regime structure if external alignment matters.
+
+**Possible questions/concerns**
+- Should `k` be fixed to the fixture’s `true_regime` count (2) or treated fully unsupervised with a k-grid?
 
