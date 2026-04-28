@@ -46,7 +46,7 @@ def set_seed(seed: int) -> None:
 
 
 def prepare(df: pd.DataFrame) -> Tuple[np.ndarray, pd.Series | None, List[str]]:
-    id_cols = ["city", "device_id", "window_start"]
+    id_cols = ["city", "device_id", "window_start", "location_id", "date"]
     label_col = "true_regime" if "true_regime" in df.columns else None
 
     feature_cols = [

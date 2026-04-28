@@ -7,7 +7,7 @@ from typing import Dict, List
 
 import numpy as np
 import pandas as pd
-from sklearn.cluster import AgglomerativeClustering, DBSCAN, HDBSCAN, KMeans, SpectralClustering
+from sklearn.cluster import AgglomerativeClustering, DBSCAN, KMeans, SpectralClustering
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import (
     adjusted_rand_score,
@@ -19,6 +19,14 @@ from sklearn.metrics import (
 from sklearn.mixture import GaussianMixture
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+
+try:
+    from sklearn.cluster import HDBSCAN
+except Exception:
+    try:
+        from hdbscan import HDBSCAN
+    except Exception:
+        HDBSCAN = None
 
 
 def parse_args() -> argparse.Namespace:
@@ -33,7 +41,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def prepare_features(df: pd.DataFrame) -> tuple[np.ndarray, List[str], pd.Series | None]:
-    id_cols = ["city", "device_id", "window_start"]
+    id_cols = ["city", "device_id", "window_start", "location_id", "date"]
     label_col = "true_regime" if "true_regime" in df.columns else None
 
     feature_cols: List[str] = []
@@ -106,10 +114,11 @@ def run_methods(
 
     outputs["dbscan"] = DBSCAN(eps=0.9, min_samples=15).fit_predict(X)
 
-    outputs["hdbscan"] = HDBSCAN(
-        min_cluster_size=int(hdbscan_min_cluster_size),
-        min_samples=int(hdbscan_min_samples),
-    ).fit_predict(X)
+    if HDBSCAN is not None:
+        outputs["hdbscan"] = HDBSCAN(
+            min_cluster_size=int(hdbscan_min_cluster_size),
+            min_samples=int(hdbscan_min_samples),
+        ).fit_predict(X)
 
     return outputs
 
