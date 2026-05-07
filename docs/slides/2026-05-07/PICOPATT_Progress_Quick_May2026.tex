@@ -97,7 +97,6 @@
 \end{columns}
 \vspace{0.25cm}
 \begin{itemize}\footnotesize\setlength\itemsep{2pt}
-  \item Deck goal: less text, more evidence visuals.
   \item All numbers/figures sourced from archived runs under \texttt{outputs/}.
 \end{itemize}
 \end{frame}
@@ -119,7 +118,34 @@
 \begin{columns}[T,onlytextwidth]
   \column{0.52\textwidth}
   \centering
-  \includegraphics[width=0.98\linewidth]{figures/fig_xai_pipeline.png}\\[-2pt]
+  \resizebox{0.98\linewidth}{!}{%
+  \begin{tikzpicture}[
+      pipelinebox/.style={
+        draw=cmid,
+        rounded corners=2pt,
+        fill=white,
+        align=center,
+        inner xsep=4pt,
+        inner ysep=3pt,
+        minimum height=2.6em,
+        text width=1.55cm,
+        font=\scriptsize,
+      },
+      pipelinearrow/.style={->,>=Stealth,thick,draw=cmid},
+      node distance=2.2mm,
+    ]
+    \node[pipelinebox] (a) {Window\\features\\{\tiny (142 vars)}};
+    \node[pipelinebox, right=of a] (b) {K-Means\\pseudo-labels};
+    \node[pipelinebox, right=of b] (c) {Surrogate\\RF\\classifier};
+    \node[pipelinebox, right=of c] (d) {SHAP\\global\\importance};
+    \node[pipelinebox, right=of d] (e) {LIME\\local\\rationale};
+
+    \draw[pipelinearrow] (a.east) -- (b.west);
+    \draw[pipelinearrow] (b.east) -- (c.west);
+    \draw[pipelinearrow] (c.east) -- (d.west);
+    \draw[pipelinearrow] (d.east) -- (e.west);
+  \end{tikzpicture}%
+  }\\[-2pt]
   {\scriptsize\color{cmuted}Pipeline overview (SHAP + LIME).}
   \column{0.48\textwidth}
   \centering
@@ -163,7 +189,7 @@
   \centering
   \includegraphics[width=0.98\linewidth]{figures/benchmark_silhouette.png}
   \column{0.36\textwidth}
-  \begin{block}{Next (May)}
+  \begin{block}{Next}
     \begin{itemize}\footnotesize\setlength\itemsep{3pt}
       \item Freeze explanation schema (sensor-unit language).
       \item Expand benchmark matrix (spatial + deep baselines).
