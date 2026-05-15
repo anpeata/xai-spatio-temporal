@@ -8,3 +8,8 @@
 
 # Speaker notes are private (keep local, don't publish)
 *_speaker_notes.md
+
+# Local-only private slide fragments / exports
+*_private_*.tex
+*_private*.pdf
+*_PRIVATE*.pdf
