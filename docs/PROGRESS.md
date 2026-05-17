@@ -1,6 +1,6 @@
 # Progress Log
 
-Last updated: 2026-04-28
+Last updated: 2026-05-17
 
 Use this file for weekly or milestone updates for supervisor meetings.
 Each entry should remain short, factual, and auditable.
@@ -605,4 +605,34 @@ Ordering rule: keep entries in chronological order and append each new update at
 
 **Possible questions/concerns**
 - Should `k` be fixed to the fixture’s `true_regime` count (2) or treated fully unsupervised with a k-grid?
+
+---
+
+### 2026-05-17 (Picoclimate test fixture: add Montpellier and expand dataset)
+
+**Experimentations**
+- Regenerated the tracked synthetic picoclimate fixture to include **Montpellier** alongside **Nantes**.
+- Increased fixture size by doubling the number of locations while keeping the same 30-day horizon.
+
+**Results (numbers, tables, plots)**
+- Fixture now includes 2 cities, 24 locations (12 per city), 30 days, 4 slots/day.
+- `raw_measurements.csv`: 2,880 rows (24 × 30 × 4), `window_features.csv`: 720 rows (24 × 30).
+- Missingness: 9.69% overall across measured variables; 155 block-outage rows (5.38%).
+- Window completeness (`present_fraction` mean): Montpellier 0.9048, Nantes 0.9015.
+
+**Insights**
+- Balanced two-city coverage supports cross-city stability checks with low runtime overhead.
+
+**Failures / issues / risks**
+- Note: some research scripts can regenerate and overwrite `data/picoclimate_test/` if run with different parameters.
+
+**Implementation details**
+- Generator: `scripts/data/generate_picoclimate_data.py` with `--city "Nantes,Montpellier" --n-locations 24 --days 30 --seed 42`.
+- Added a fixture summary: `data/picoclimate_test/README.md`.
+
+**Next**
+- Re-run any notebook/script baselines that depend on the picoclimate fixture to ensure outputs remain comparable.
+
+**Possible questions/concerns**
+- Should research scripts write generated picoclimate artifacts under `outputs/` to avoid overwriting the tracked fixture?
 
