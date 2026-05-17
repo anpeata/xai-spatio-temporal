@@ -44,10 +44,10 @@ Window completeness (`present_fraction`) by city:
 To regenerate these artifacts deterministically:
 
 ```powershell
-D:\env\py128\python.exe scripts/data/generate_picoclimate_data.py \
-  --outdir data/picoclimate_test \
-  --seed 42 \
-  --city "Nantes,Montpellier" \
-  --n-locations 24 \
+D:\env\py128\python.exe scripts/data/generate_picoclimate_data.py `
+  --outdir data/picoclimate_test `
+  --seed 42 `
+  --city "Nantes,Montpellier" `
+  --n-locations 24 `
   --days 30
 ```
