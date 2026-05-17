@@ -636,3 +636,28 @@ Ordering rule: keep entries in chronological order and append each new update at
 **Possible questions/concerns**
 - Should research scripts write generated picoclimate artifacts under `outputs/` to avoid overwriting the tracked fixture?
 
+---
+
+### 2026-05-17 (Picoclimate test fixture: expand to ~1.5k daily windows)
+
+**Experimentations**
+- Regenerated the tracked picoclimate fixture to reach ~1.5k rows in `window_features.csv`.
+
+**Results (numbers, tables, plots)**
+- Fixture now includes 2 cities, 50 locations (25 per city), 30 days, 4 slots/day.
+- `raw_measurements.csv`: 6,000 rows (50 × 30 × 4), `window_features.csv`: 1,500 rows (50 × 30).
+- Missingness: 9.45% overall across measured variables; 359 block-outage rows (5.98%).
+- Window completeness (`present_fraction` mean): Montpellier 0.9006, Nantes 0.9104.
+
+**Insights**
+- This keeps the same 30-day horizon while increasing training volume for clustering/AE baselines.
+
+**Failures / issues / risks**
+- This supersedes the earlier 24-location fixture stats from the same day; refer to `data/picoclimate_test/README.md` for the current numbers.
+
+**Implementation details**
+- Generator: `scripts/data/generate_picoclimate_data.py` with `--city "Nantes,Montpellier" --n-locations 50 --days 30 --seed 42`.
+
+**Next**
+- Re-run any benchmark notebooks/scripts that assume the older fixture size.
+
