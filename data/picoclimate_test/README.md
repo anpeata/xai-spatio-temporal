@@ -15,29 +15,29 @@ This folder contains a **small, tracked synthetic** spatio-temporal dataset used
 Generated parameters (see `metadata.json`):
 
 - Cities: **Nantes**, **Montpellier**
-- Locations: **24 total** (12 per city)
+- Locations: **50 total** (25 per city)
 - Days: **30** (2025-09-01 → 2025-09-30)
 - Slots per day: **4** (`06:00`, `12:00`, `18:00`, `23:00`)
 
 Table sizes:
 
-- `raw_measurements.csv`: **2880 rows × 37 columns**
-- `window_features.csv`: **720 rows × 167 columns**
+- `raw_measurements.csv`: **6000 rows × 37 columns**
+- `window_features.csv`: **1500 rows × 167 columns**
 
 Breakdown by city:
 
-- Raw rows: **1440 Nantes**, **1440 Montpellier**
-- Window rows: **360 Nantes**, **360 Montpellier**
+- Raw rows: **3000 Nantes**, **3000 Montpellier**
+- Window rows: **750 Nantes**, **750 Montpellier**
 
 Missingness summary:
 
-- Overall missing fraction (measured variables): **0.0969**
-- Block-outage rows (`missing_block_flag=1`): **155** (**5.382%**)
+- Overall missing fraction (measured variables): **0.0945**
+- Block-outage rows (`missing_block_flag=1`): **359** (**5.983%**)
 
 Window completeness (`present_fraction`) by city:
 
-- Montpellier: mean **0.9048**, std **0.0436** (n=360)
-- Nantes: mean **0.9015**, std **0.0480** (n=360)
+- Montpellier: mean **0.9006**, std **0.0497** (n=750)
+- Nantes: mean **0.9104**, std **0.0475** (n=750)
 
 ## Regeneration
 
@@ -48,6 +48,6 @@ D:\env\py128\python.exe scripts/data/generate_picoclimate_data.py `
   --outdir data/picoclimate_test `
   --seed 42 `
   --city "Nantes,Montpellier" `
-  --n-locations 24 `
+  --n-locations 50 `
   --days 30
 ```
