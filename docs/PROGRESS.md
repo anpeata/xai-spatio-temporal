@@ -661,3 +661,39 @@ Ordering rule: keep entries in chronological order and append each new update at
 **Next**
 - Re-run any benchmark notebooks/scripts that assume the older fixture size.
 
+---
+
+### 2026-05-20 (Thesis report draft and template alignment)
+
+**Experimentations**
+- Aligned the thesis report draft with the `docs/thesis_m2` template and synced the latest PICOPATT report content.
+- Integrated derivative-feature augmentation (first/second/third differences) into the representation methodology.
+- Added synthetic picoclimatic distribution snapshots (raw slots + window features) for the report.
+
+**Results (numbers, tables, plots)**
+- Draft structure now follows the required outline (Introduction, Context, SOTA, Method, Results, Conclusion).
+- Distribution figures referenced from the picoclimatic fixture.
+- Derivative ablation on picoclimatic fixture (k=4): stats-only silhouette 0.224 vs stats+derivatives 0.159.
+- Meeting handout compiled (2 pages) with outline + 3 key tables.
+
+**Insights**
+- The SOTA section is now the strongest anchor; interim metrics are now filled for the meeting draft.
+- Derivative features are sensitive to missing slots and may need smoothing or feature selection.
+
+**Failures / issues / risks**
+- Current stability and raw-vs-shapelet numbers are bounded-run evidence (6 seeds); full sweeps still pending.
+- Derivative-feature ablation reduced clustering quality in the interim run.
+
+**Implementation details**
+- Report sources are staged locally under `docs/thesis_m2` and kept private via `.gitignore`.
+- Bibliography synchronized from the latest PICOPATT references file.
+
+**Next**
+- Re-run derivative ablation with smoothing or per-variable scaling.
+- Update results tables after the meeting if full-seed runs are requested.
+- Compile the report to `An-Pham-REPORT.pdf` and bring the handout PDF to the meeting.
+
+**Possible questions/concerns**
+- Should the derivative-feature ablation be positioned as a primary result or appendix material?
+- Is a bounded 6-seed stability run sufficient for the interim draft?
+

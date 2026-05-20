@@ -30,6 +30,23 @@ docs/slides/~$*.pptx
 /PICOPATT_Progress_Combined_Apr2026.log
 /PICOPATT_Progress_Combined_Apr2026.out
 
+# Private thesis report (local only)
+docs/thesis_m2/**
+docs/thesis_m2/An-Pham-REPORT.*
+docs/thesis_m2/references.bib
+docs/thesis_m2/*.aux
+docs/thesis_m2/*.log
+docs/thesis_m2/*.nav
+docs/thesis_m2/*.out
+docs/thesis_m2/*.snm
+docs/thesis_m2/*.toc
+docs/thesis_m2/*.xdv
+docs/thesis_m2/*.bbl
+docs/thesis_m2/*.blg
+docs/thesis_m2/*.synctex.gz
+docs/thesis_m2/*.fdb_latexmk
+docs/thesis_m2/*.fls
+
 # Alternate local export name used during manual compiles
 /docs/slides/2026-04-24/picopatt_progress_april24.pdf
 

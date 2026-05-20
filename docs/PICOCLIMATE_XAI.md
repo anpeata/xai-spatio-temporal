@@ -61,7 +61,8 @@ Example output:
 
 ### Direction B: Statistical Aggregation First
 
-Use Time2Feat-style summaries such as mean, variance, and quartiles.
+Use Time2Feat-style summaries such as mean, variance, and quartiles, plus
+first/second/third derivatives in sensor units.
 
 This gives a clean baseline with strong interpretability and keeps explanations in sensor units.
 
