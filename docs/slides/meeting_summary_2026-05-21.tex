@@ -1,81 +1,183 @@
 \documentclass[aspectratio=169]{beamer}
-\usetheme{Madrid}
-\usecolortheme{default}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{amsmath}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
 
-\title{Picoclimate XAI: Checkpoint and 1-Month Plan}
-\subtitle{M2 Internship Meeting}
+\definecolor{cdark}{HTML}{0D2137}
+\definecolor{cmid}{HTML}{065A82}
+\definecolor{cteal}{HTML}{02C39A}
+\definecolor{clight}{HTML}{E8F4F8}
+\definecolor{ctext}{HTML}{1A2E40}
+\definecolor{cmuted}{HTML}{607D8B}
+\definecolor{cwarn}{HTML}{F4A261}
+\definecolor{cgap}{HTML}{E63946}
+\definecolor{caccent}{HTML}{A0BFD0}
+\definecolor{cbg2}{HTML}{028090}
+
+\usetheme{default}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\usefonttheme{professionalfonts}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+\setbeamercolor{frametitle}{fg=cdark,bg=white}
+\setbeamercolor{normal text}{fg=ctext}
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{item}{fg=cteal}
+
+\addtobeamertemplate{frametitle}{}{%
+	\vspace{-4pt}\textcolor{cteal}{\hrule height 1.5pt}\vspace{3pt}}
+
+\setbeamertemplate{footline}{%
+	\leavevmode\hbox{%
+		\begin{beamercolorbox}[wd=0.85\paperwidth,ht=2.2ex,dp=1ex,leftskip=4pt]{normal text}%
+			\tiny\color{cmuted}An Pham \textbar{} LIRMM--ADVANSE \textbar{} Luc \& Reda%
+		\end{beamercolorbox}%
+		\begin{beamercolorbox}[wd=0.15\paperwidth,ht=2.2ex,dp=1ex,right,rightskip=6pt]{normal text}%
+			\scriptsize\color{cmuted}\insertframenumber/\inserttotalframenumber%
+		\end{beamercolorbox}}}
+
+\setbeamertemplate{itemize item}{\color{cteal}\textbullet}
+\setbeamertemplate{itemize subitem}{\color{cmid}--}
+\setlength{\leftmargini}{1em}
+
+\newcommand{\statcard}[3]{%
+	\begin{tcolorbox}[enhanced,boxrule=1pt,arc=2pt,
+			colback=clight,colframe=cmid,
+			top=3pt,bottom=3pt,left=3pt,right=3pt]
+		\centering
+		{\color{cmid}\large\bfseries\parbox[c][2.7em][c]{\linewidth}{\centering #1}}\\[1pt]
+		{\color{ctext}\bfseries\tiny\parbox[c][2.8em][c]{\linewidth}{\centering #2}}\\[1pt]
+		{\color{cmuted}\tiny\parbox[c][2.8em][c]{\linewidth}{\centering #3}}
+	\end{tcolorbox}}
+
+\title{\textbf{PICOPATT Internship}}
+\subtitle{Checkpoint + 1-Month Plan --- May 2026}
 \author{An Pham}
+\institute{LIRMM--ADVANSE, Universit\'e de Montpellier}
 \date{May 21, 2026}
 
 \begin{document}
 
-\frame{\titlepage}
+% ── SLIDE 1 ──────────────────────────────────────────────────────────────────
+{\setbeamercolor{background canvas}{bg=cdark}
+\begin{frame}[plain]
+\begin{tikzpicture}[remember picture,overlay]
+	\fill[cteal](current page.north west)rectangle([xshift=6pt]current page.south west);
+\end{tikzpicture}
+\vspace{1.1cm}
+{\color{white}\huge\bfseries PICOPATT Internship}\\[5pt]
+{\color{cteal}\large\itshape Checkpoint + 1-Month Plan --- May 2026}\\[8pt]
+{\color{caccent}\small Explainable Clustering for Spatio-Temporal Picoclimatic Data}\\[0.6cm]
+{\color{cmid}\rule{5.2cm}{0.8pt}}\\[5pt]
+{\color{caccent}\footnotesize\textbf{An Pham}\quad|\quad LIRMM--ADVANSE\quad|\quad Supervisors: Luc \& Reda}\\[2pt]
+{\color{caccent}\footnotesize May 21, 2026}
+\end{frame}}
 
-\begin{frame}{Goal and Alignment Gap}
-\begin{itemize}
-\item Goal: stable, sensor-unit explanations for spatio-temporal clustering.
-\item Alignment gap: representation, clustering, explanation optimized separately.
-\item Requirement: explanations in physical units for planners.
+% ── SLIDE 2 ──────────────────────────────────────────────────────────────────
+\begin{frame}{Snapshot}
+\begin{columns}[T,onlytextwidth]
+	\column{0.25\textwidth}
+	\statcard{4}{Proxy datasets}{ECG200, ECG5000, Synth. pico, Roma}
+	\column{0.25\textwidth}
+	\statcard{7}{Seeds used}{Stability + fidelity}
+	\column{0.25\textwidth}
+	\statcard{3 baselines}{Core methods}{KMeans, ExKMC, AE+KMeans}
+	\column{0.25\textwidth}
+	\statcard{EDA done}{Picoclimate}{Figures + CSV summary}
+\end{columns}
+\vspace{0.25cm}
+\begin{itemize}\footnotesize\setlength\itemsep{2pt}
+	\item All numbers and figures are from archived outputs and notebook runs.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Checkpoint: What Is Working}
-\begin{itemize}
-\item Mixed-length shapelet dictionaries improve clustering quality in several datasets.
-\item Stability protocol: multi-seed runs with top-k overlap and surrogate fidelity.
-\item Bounded sampling makes large traces feasible for repeated evaluation.
-\item EDA pipeline and report artifacts are reproducible and exportable.
-\end{itemize}
-\end{frame}
-
+% ── SLIDE 3 ──────────────────────────────────────────────────────────────────
 \begin{frame}{Novelty: Reality Check}
-\textbf{Standard techniques}
-\begin{itemize}
-\item Finite differences ($\Delta$, $\Delta^2$, $\Delta^3$).
-\item Multi-scale shapelets exist in literature.
-\item Jaccard overlap for attribution stability is known.
-\end{itemize}
-\vspace{4pt}
-\textbf{Defensible contributions}
-\begin{itemize}
-\item Stability-optimized mixed-length dictionary selection for clustering + XAI.
-\item Stable explanation protocol for unsupervised clustering in sensor units.
-\item Four-term joint objective with spatial + temporal penalties.
-\item Alignment gap taxonomy for planner-facing interpretability.
-\end{itemize}
+\begin{columns}[T,onlytextwidth]
+	\column{0.5\textwidth}
+	\begin{block}{Standard techniques}
+		\begin{itemize}\footnotesize\setlength\itemsep{3pt}
+			\item Finite differences ($\Delta$, $\Delta^2$, $\Delta^3$)
+			\item Multi-scale shapelets in literature
+			\item Jaccard overlap for attribution stability
+		\end{itemize}
+	\end{block}
+	\column{0.5\textwidth}
+	\begin{block}{Defensible contributions}
+		\begin{itemize}\footnotesize\setlength\itemsep{3pt}
+			\item Stability-optimized mixed-length dictionary selection
+			\item Sensor-unit explanation format as a fixed contract
+			\item Four-term objective with spatial + temporal penalties
+			\item Alignment-gap taxonomy for planner-facing XAI
+		\end{itemize}
+	\end{block}
+\end{columns}
 \end{frame}
 
+% ── SLIDE 4 ──────────────────────────────────────────────────────────────────
 \begin{frame}{Core Contribution Framing}
-\begin{itemize}
-\item Application-driven method: align representation, clustering, explanation.
-\item Sensor-unit output contract: consistent narrative across time windows.
-\item Stability as a first-class metric, not an afterthought.
+\begin{itemize}\footnotesize\setlength\itemsep{4pt}
+	\item Application-driven method to align representation, clustering, explanation.
+	\item Explanations must remain in physical units across data granularities.
+	\item Stability is reported explicitly, not inferred.
 \end{itemize}
+\vspace{0.2cm}
+\begin{block}{Joint objective (conceptual)}
+	\[
+		L = L_{km} + L_{sh} + L_{tc} + L_{stab}
+	\]
+	\vspace{-0.2cm}
+	{\scriptsize KMeans fit + spatial homogeneity + temporal coherence + stability penalty.}
+\end{block}
 \end{frame}
 
+% ── SLIDE 5 ──────────────────────────────────────────────────────────────────
 \begin{frame}{1-Month Plan (May 21 -- June 20)}
-\begin{itemize}
-\item Week 1: impute raw slots, rerun $\Delta/\Delta^2/\Delta^3$ baseline.
-\item Week 2: map indices to physical sensor units in explanations.
-\item Week 3: expand stability to 10 seeds; finalize tables.
-\item Week 4: manuscript polish; optional joint-objective prototype.
+\begin{itemize}\footnotesize\setlength\itemsep{4pt}
+	\item Week 1: impute raw slots, rerun $\Delta/\Delta^2/\Delta^3$ baseline.
+	\item Week 2: map feature indices to physical sensor units in explanations.
+	\item Week 3: expand stability to 10 seeds and finalize tables.
+	\item Week 4: manuscript polish; optional joint-objective prototype.
 \end{itemize}
 \end{frame}
 
+% ── SLIDE 6 ──────────────────────────────────────────────────────────────────
 \begin{frame}{Immediate Decision}
-\begin{itemize}
-\item Priority for this afternoon:
-\item A) derivative baseline with imputation
-\item B) sensor-unit mapping for explanations
-\end{itemize}
+\begin{columns}[T,onlytextwidth]
+	\column{0.5\textwidth}
+	\begin{block}{Option A}
+		\begin{itemize}\footnotesize\setlength\itemsep{3pt}
+			\item Fix derivative baseline with imputation
+			\item Re-run clustering metrics and stability
+		\end{itemize}
+	\end{block}
+	\column{0.5\textwidth}
+	\begin{block}{Option B}
+		\begin{itemize}\footnotesize\setlength\itemsep{3pt}
+			\item Sensor-unit mapping for explanations
+			\item Freeze the explanation contract
+		\end{itemize}
+	\end{block}
+\end{columns}
 \end{frame}
 
+% ── SLIDE 7 ──────────────────────────────────────────────────────────────────
 \begin{frame}{Risks and Mitigations}
-\begin{itemize}
-\item Risk: derivatives degrade clustering after imputation.
-\item Mitigation: report negative result and favor statistical summaries.
-\item Risk: runtime for 10-seed sweeps.
-\item Mitigation: keep bounded sampling and log costs.
+\begin{itemize}\footnotesize\setlength\itemsep{4pt}
+	\item Risk: derivatives degrade clustering after imputation.
+	\item Mitigation: report negative result; favor statistical summaries.
+	\item Risk: 10-seed sweeps are slow on Windows + MKL.
+	\item Mitigation: keep bounded sampling and log runtime.
 \end{itemize}
 \end{frame}
 
