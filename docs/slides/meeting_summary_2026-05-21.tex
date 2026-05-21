@@ -1,0 +1,82 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\title{Picoclimate XAI: Checkpoint and 1-Month Plan}
+\subtitle{M2 Internship Meeting}
+\author{An Pham}
+\date{May 21, 2026}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Goal and Alignment Gap}
+\begin{itemize}
+\item Goal: stable, sensor-unit explanations for spatio-temporal clustering.
+\item Alignment gap: representation, clustering, explanation optimized separately.
+\item Requirement: explanations in physical units for planners.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Checkpoint: What Is Working}
+\begin{itemize}
+\item Mixed-length shapelet dictionaries improve clustering quality in several datasets.
+\item Stability protocol: multi-seed runs with top-k overlap and surrogate fidelity.
+\item Bounded sampling makes large traces feasible for repeated evaluation.
+\item EDA pipeline and report artifacts are reproducible and exportable.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Novelty: Reality Check}
+\textbf{Standard techniques}
+\begin{itemize}
+\item Finite differences ($\Delta$, $\Delta^2$, $\Delta^3$).
+\item Multi-scale shapelets exist in literature.
+\item Jaccard overlap for attribution stability is known.
+\end{itemize}
+\vspace{4pt}
+\textbf{Defensible contributions}
+\begin{itemize}
+\item Stability-optimized mixed-length dictionary selection for clustering + XAI.
+\item Stable explanation protocol for unsupervised clustering in sensor units.
+\item Four-term joint objective with spatial + temporal penalties.
+\item Alignment gap taxonomy for planner-facing interpretability.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Core Contribution Framing}
+\begin{itemize}
+\item Application-driven method: align representation, clustering, explanation.
+\item Sensor-unit output contract: consistent narrative across time windows.
+\item Stability as a first-class metric, not an afterthought.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{1-Month Plan (May 21 -- June 20)}
+\begin{itemize}
+\item Week 1: impute raw slots, rerun $\Delta/\Delta^2/\Delta^3$ baseline.
+\item Week 2: map indices to physical sensor units in explanations.
+\item Week 3: expand stability to 10 seeds; finalize tables.
+\item Week 4: manuscript polish; optional joint-objective prototype.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Immediate Decision}
+\begin{itemize}
+\item Priority for this afternoon:
+\item A) derivative baseline with imputation
+\item B) sensor-unit mapping for explanations
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Risks and Mitigations}
+\begin{itemize}
+\item Risk: derivatives degrade clustering after imputation.
+\item Mitigation: report negative result and favor statistical summaries.
+\item Risk: runtime for 10-seed sweeps.
+\item Mitigation: keep bounded sampling and log costs.
+\end{itemize}
+\end{frame}
+
+\end{document}
