@@ -1,0 +1,2 @@
+raw_rows,window_rows,locations,cities,days,slots_per_day,variables,missing_pct,missing_block_rows,missing_block_pct,present_fraction_mean,present_fraction_std
+6000,1500,50,2,30,4,23,0.0944927536231884,359,0.059833333333333336,0.9055072463768117,0.04881156897579699
