@@ -31,6 +31,7 @@ docs/slides/~$*.pptx
 /PICOPATT_Progress_Combined_Apr2026.out
 
 # Private thesis report (local only)
+docs/thesis/**
 docs/thesis_m2/**
 docs/thesis_m2/An-Pham-REPORT.*
 docs/thesis_m2/references.bib
