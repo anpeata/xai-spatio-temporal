@@ -707,18 +707,24 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Built a supervisor-ready slide deck explaining the mixed-length shapelet pipeline end-to-end.
 - Built a picoclimate example slide deck showing raw measurements to KMeans input.
 - Documented three representation options for T=4 picoclimate windows in the thesis.
+- Implemented a slot-wise picoclimate shapelet pipeline with semi-exhaustive + pruning.
+- Ran a fast picoclimate pipeline check with short lengths (2--6).
 
 **Results (numbers, tables, plots)**
 - No new progress entries are recorded after 2026-05-20.
 - Mixed-length pipeline summary recorded in `docs/SHAPELETS_WORK_NOTES.md`.
 - Slides generated: `docs/slides/2026-05-27/shapelets_mixed_length_kmeans.pdf`.
 - Slides generated: `docs/slides/2026-05-27/shapelets_picoclimate_example.pdf`.
+- Picoclimate quick run: 1500 rows, 87 slot columns, 500 candidates, 80 shapelets selected.
+- KMeans best k=2 (silhouette 0.0466); Ward silhouette 0.0267; HDBSCAN unavailable.
+- Summary saved to `outputs/picoclimate_shapelets/picoclimate_shapelet_summary.json`.
 
 **Insights**
 - Any work completed after 2026-05-20 still needs to be logged here.
 - Mixed-length shapelets feed KMeans via fixed-width distance vectors.
 - With T=4 slots, shapelets act more like local feature combinations than long temporal motifs.
 - Recommended compromise: keep flattened mixed-variable shapelets and add mean/std/trend descriptors.
+- Slot-wise ordering avoids cross-slot artifacts (e.g., temp_s4 next to humidity_s1).
 
 **Failures / issues / risks**
 - Potential missing progress coverage for 2026-05-21 to 2026-05-27.
@@ -728,6 +734,8 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Slide source: `docs/slides/2026-05-27/shapelets_mixed_length_kmeans.tex`.
 - Slide source: `docs/slides/2026-05-27/shapelets_picoclimate_example.tex`.
 - Thesis update: `docs/thesis/An-Pham-REPORT.tex` (short-window representation options).
+- Script: `scripts/research/picoclimate_shapelet_pipeline.py`.
+- Fast config: max_rows=40, eval_rows=30, max_pool=500, target_shapelets=80.
 
 **Next**
 - Add missing updates for 2026-05-21 to 2026-05-27 with references to outputs.

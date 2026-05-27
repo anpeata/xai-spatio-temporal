@@ -134,6 +134,17 @@ File: `scripts/notebooks/kmeans_test_temporal.ipynb`
 - This builds one flattened 1D vector per window, not a single-variable series.
 - Distances to mixed-length shapelets become the fixed-width KMeans input.
 
+## Picoclimate recommended pipeline (slot-wise)
+- Use only slot columns for shapelet input; exclude mean/std/trend and `true_regime`.
+- Reorder features by slot (slot1 all vars, slot2 all vars, slot3, slot4).
+- Standardize all slot variables before shapelet extraction.
+- Transform wind direction to sin/cos per slot; drop near-constant variables.
+- Use short lengths (2--6) and semi-exhaustive candidates with pruning:
+  low variance, duplicates, and high correlation.
+- Cluster on shapelet-distance matrix only; use mean/std/trend for explanations.
+- Primary clustering: HDBSCAN; secondary: Ward; KMeans as baseline.
+- Script: `scripts/research/picoclimate_shapelet_pipeline.py`.
+
 ## Picoclimate example deck
 - `docs/slides/2026-05-27/shapelets_picoclimate_example.tex`
 - `docs/slides/2026-05-27/shapelets_picoclimate_example.pdf`
