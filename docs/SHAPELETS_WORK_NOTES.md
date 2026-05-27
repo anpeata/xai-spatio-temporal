@@ -116,3 +116,17 @@ File: `scripts/notebooks/kmeans_test_temporal.ipynb`
 - `docs/SHAPELET_COMPARISON_REPORT.md` (mixed vs fixed length sets and outcomes)
 - `docs/PROGRESS.md` (mixed-length ablation logged in dated entries)
 - `scripts/notebooks/shapelets_picoclimate.ipynb` (mixed vs fixed header note; pipeline not fully wired yet)
+
+## Mixed-length to KMeans pipeline (step-by-step)
+1) Input series/windows `x` (optionally z-normalized per window).
+2) Sample candidates with mixed lengths: `extract_random_shapelets(x, lengths=...)`.
+3) Compute distances: `min_distance_to_shapelet` and `compute_shapelet_distances`.
+4) Build fixed-width matrix `X_shapelet` and standardize with `StandardScaler`.
+5) Select `k` using `search_best_k` (silhouette + stability ARI across seeds).
+6) Fit final `KMeans` on `X_shapelet`.
+7) Train surrogate tree on `X_shapelet` for explanations and fidelity checks.
+8) Produce SHAP attributions and abductive edits (notebook pipelines).
+
+## Slide deck (pipeline visuals)
+- `docs/slides/2026-05-27/shapelets_mixed_length_kmeans.tex`
+- `docs/slides/2026-05-27/shapelets_mixed_length_kmeans.pdf`
