@@ -127,6 +127,17 @@ File: `scripts/notebooks/kmeans_test_temporal.ipynb`
 7) Train surrogate tree on `X_shapelet` for explanations and fidelity checks.
 8) Produce SHAP attributions and abductive edits (notebook pipelines).
 
+## Picoclimate input clarification (raw vs window features)
+- `raw_measurements.csv` is slot-level data (one row per location and time slot).
+- `window_features.csv` aggregates four slots into one daily window per location.
+- Shapelet inputs use only the slot columns (e.g., `air_temp_c__slot_1` ... `slot_4`).
+- This builds one flattened 1D vector per window, not a single-variable series.
+- Distances to mixed-length shapelets become the fixed-width KMeans input.
+
+## Picoclimate example deck
+- `docs/slides/2026-05-27/shapelets_picoclimate_example.tex`
+- `docs/slides/2026-05-27/shapelets_picoclimate_example.pdf`
+
 ## Slide deck (pipeline visuals)
 - `docs/slides/2026-05-27/shapelets_mixed_length_kmeans.tex`
 - `docs/slides/2026-05-27/shapelets_mixed_length_kmeans.pdf`

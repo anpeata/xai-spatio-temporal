@@ -705,15 +705,20 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Reviewed this progress log for entries after 2026-05-20.
 - Consolidated mixed-length shapelet to KMeans pipeline notes and repo location map.
 - Built a supervisor-ready slide deck explaining the mixed-length shapelet pipeline end-to-end.
+- Built a picoclimate example slide deck showing raw measurements to KMeans input.
+- Documented three representation options for T=4 picoclimate windows in the thesis.
 
 **Results (numbers, tables, plots)**
 - No new progress entries are recorded after 2026-05-20.
 - Mixed-length pipeline summary recorded in `docs/SHAPELETS_WORK_NOTES.md`.
 - Slides generated: `docs/slides/2026-05-27/shapelets_mixed_length_kmeans.pdf`.
+- Slides generated: `docs/slides/2026-05-27/shapelets_picoclimate_example.pdf`.
 
 **Insights**
 - Any work completed after 2026-05-20 still needs to be logged here.
 - Mixed-length shapelets feed KMeans via fixed-width distance vectors.
+- With T=4 slots, shapelets act more like local feature combinations than long temporal motifs.
+- Recommended compromise: keep flattened mixed-variable shapelets and add mean/std/trend descriptors.
 
 **Failures / issues / risks**
 - Potential missing progress coverage for 2026-05-21 to 2026-05-27.
@@ -721,6 +726,8 @@ Ordering rule: keep entries in chronological order and append each new update at
 **Implementation details**
 - Audit scope covered `docs/PROGRESS.md` and shapelet pipeline notes in `docs/SHAPELETS_WORK_NOTES.md`.
 - Slide source: `docs/slides/2026-05-27/shapelets_mixed_length_kmeans.tex`.
+- Slide source: `docs/slides/2026-05-27/shapelets_picoclimate_example.tex`.
+- Thesis update: `docs/thesis/An-Pham-REPORT.tex` (short-window representation options).
 
 **Next**
 - Add missing updates for 2026-05-21 to 2026-05-27 with references to outputs.
