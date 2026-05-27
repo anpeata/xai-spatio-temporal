@@ -1,0 +1,60 @@
+{
+  "config": {
+    "lengths": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "max_rows": 120,
+    "eval_rows": 40,
+    "max_pool": 1000,
+    "target_shapelets": 200,
+    "min_std": 0.001,
+    "corr_threshold": 0.95,
+    "k_min": 2,
+    "k_max": 6,
+    "top_n": 6,
+    "output_dir": "docs\\reports"
+  },
+  "summary": {
+    "rows": 1500,
+    "slot_columns": 87,
+    "lengths": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "candidates": 1000,
+    "selected_shapelets": 188,
+    "kmeans_best_k": 3,
+    "kmeans_scores": [
+      [
+        2,
+        0.03740245928851421
+      ],
+      [
+        3,
+        0.03908941478763328
+      ],
+      [
+        4,
+        0.034226486660568566
+      ],
+      [
+        5,
+        0.032185621121425353
+      ],
+      [
+        6,
+        0.02570558314037847
+      ]
+    ],
+    "ward_silhouette": 0.02915047554297857,
+    "hdbscan": null,
+    "metrics_csv": "docs\\reports\\picoclimate_shapelet_metrics.csv"
+  }
+}

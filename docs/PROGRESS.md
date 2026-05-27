@@ -1,6 +1,6 @@
 # Progress Log
 
-Last updated: 2026-05-17
+Last updated: 2026-05-27
 
 Use this file for weekly or milestone updates for supervisor meetings.
 Each entry should remain short, factual, and auditable.
@@ -397,6 +397,37 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Updated notebook names to the `shapelets_*.ipynb` convention.
 - Added runtime logging to the stability script.
 - Updated the Roma loader to aggregate by driver and 15-minute window.
+
+---
+
+### 2026-05-27 (Picoclimate shapelet summary run)
+
+**Experimentations**
+- Ran stats-only picoclimate shapelet summary with slot-wise ordering and candidate pruning (max_rows=120, eval_rows=40, max_pool=1000, target_shapelets=200).
+- Added a plotting helper to visualize silhouette scores from the metrics table.
+
+**Results (numbers, tables, plots)**
+- 1,500 windows; 87 slot columns; 1,000 candidates; 188 selected shapelets.
+- KMeans best k=3 (silhouette 0.0391); Ward silhouette 0.0292 at k=3.
+- Outputs: docs/reports/picoclimate_shapelet_metrics.csv, docs/reports/picoclimate_cluster_summary.json.
+- Figure: scripts/figures/picoclimate_shapelet_results_2026-05-27.png.
+
+**Insights**
+- Slot-wise shapelet clustering yields weak separation at this budget (silhouette < 0.04).
+
+**Failures / issues / risks**
+- HDBSCAN not available in the current Python 3.12 environment (conda-forge install stalled).
+
+**Implementation details**
+- Script: scripts/research/picoclimate_cluster_summary.py
+- Plot helper: scripts/figures/picoclimate_shapelet_results_plot.py
+
+**Next**
+- Resolve HDBSCAN install (conda-forge or Python 3.11) and rerun summary.
+- Insert the new summary plot into the picoclimate example slide deck.
+
+**Possible questions/concerns**
+- Should we increase the candidate/shapelet budget or adjust normalization to improve silhouette?
 
 **Next**
 - Use the new `shapelet_stability.py` output to refresh the report if a higher-budget run is completed later.

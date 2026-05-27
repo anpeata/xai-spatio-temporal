@@ -145,6 +145,15 @@ File: `scripts/notebooks/kmeans_test_temporal.ipynb`
 - Primary clustering: HDBSCAN; secondary: Ward; KMeans as baseline.
 - Script: `scripts/research/picoclimate_shapelet_pipeline.py`.
 
+## Picoclimate summary run (2026-05-27)
+- Config: max_rows=120, eval_rows=40, max_pool=1000, target_shapelets=200, lengths=(2, 3, 4, 5, 6).
+- Data: 1,500 windows; 87 slot columns; 1,000 candidates; 188 selected shapelets.
+- KMeans best k=3 (silhouette 0.0391); Ward silhouette 0.0292 at k=3.
+- Outputs: docs/reports/picoclimate_shapelet_metrics.csv, docs/reports/picoclimate_cluster_summary.json.
+- Cluster summaries: docs/reports/picoclimate_cluster_means_kmeans.csv, docs/reports/picoclimate_cluster_means_ward.csv, and matching top-feature JSON files.
+- Figure: scripts/figures/picoclimate_shapelet_results_2026-05-27.png.
+- HDBSCAN is still unavailable in the Python 3.12 environment (conda-forge install stalled).
+
 ## Picoclimate example deck
 - `docs/slides/2026-05-27/shapelets_picoclimate_example.tex`
 - `docs/slides/2026-05-27/shapelets_picoclimate_example.pdf`

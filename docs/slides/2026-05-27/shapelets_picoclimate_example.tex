@@ -223,6 +223,24 @@ loc\_049 & 2025-09-24 & 0.9348 & 50.0 & 12.516 & 50.0 & 12.045 & traffic\_peak \
 \end{frame}
 
 % --- Slide 10 ---
+\begin{frame}{Picoclimate Summary (May 27, 2026)}
+\begin{columns}[T,onlytextwidth]
+  \column{0.48\textwidth}
+  \begin{itemize}\footnotesize\setlength\itemsep{4pt}
+    \item Config: max\_rows=120, eval\_rows=40, max\_pool=1000, target\_shapelets=200
+    \item 1,500 windows; 87 slot columns; 188 shapelets
+    \item KMeans best k=3 (silhouette 0.0391)
+    \item Ward silhouette 0.0292 at k=3
+    \item HDBSCAN unavailable in current env (install pending)
+  \end{itemize}
+  \column{0.52\textwidth}
+  \begin{center}
+    \includegraphics[width=\textwidth]{../../../scripts/figures/picoclimate_shapelet_results_2026-05-27.png}
+  \end{center}
+\end{columns}
+\end{frame}
+
+% --- Slide 11 ---
 \begin{frame}{Explanation Stage (Transparent)}
 \begin{columns}[T,onlytextwidth]
   \column{0.52\textwidth}
@@ -246,7 +264,7 @@ loc\_049 & 2025-09-24 & 0.9348 & 50.0 & 12.516 & 50.0 & 12.045 & traffic\_peak \
 \end{columns}
 \end{frame}
 
-% --- Slide 11 ---
+% --- Slide 12 ---
 \begin{frame}{Interpretation for T=4 Slots}
 \begin{itemize}\footnotesize\setlength\itemsep{4pt}
   \item Shapelets act as local multivariate motifs, not long temporal patterns.
