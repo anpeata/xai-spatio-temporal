@@ -703,22 +703,27 @@ Ordering rule: keep entries in chronological order and append each new update at
 
 **Experimentations**
 - Reviewed this progress log for entries after 2026-05-20.
+- Consolidated mixed-length shapelet to KMeans pipeline notes and repo location map.
 
 **Results (numbers, tables, plots)**
 - No new progress entries are recorded after 2026-05-20.
+- Mixed-length pipeline summary recorded in `docs/SHAPELETS_WORK_NOTES.md`.
 
 **Insights**
 - Any work completed after 2026-05-20 still needs to be logged here.
+- Mixed-length shapelets feed KMeans via fixed-width distance vectors.
 
 **Failures / issues / risks**
 - Potential missing progress coverage for 2026-05-21 to 2026-05-27.
 
 **Implementation details**
-- Audit scope limited to `docs/PROGRESS.md`.
+- Audit scope covered `docs/PROGRESS.md` and shapelet pipeline notes in `docs/SHAPELETS_WORK_NOTES.md`.
 
 **Next**
 - Add missing updates for 2026-05-21 to 2026-05-27 with references to outputs.
+- Confirm any corrections to the mixed-length pipeline map if needed.
 
 **Possible questions/concerns**
 - Which runs, notebooks, or documents after 2026-05-20 should be recorded?
+- Any pipeline corrections or missing files to include in the mixed-length map?
 

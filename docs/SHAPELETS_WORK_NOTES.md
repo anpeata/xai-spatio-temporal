@@ -100,3 +100,19 @@ File: `scripts/notebooks/kmeans_test_temporal.ipynb`
 - Abductive results are surrogate-model explanations, not direct optimization on KMeans objective.
 - They are faithful to the learned surrogate rules; fidelity quality depends on surrogate performance.
 - Sampling is intentionally limited for readability and speed.
+
+## Mixed-length shapelets as KMeans input (repo map)
+- Mixed-length dictionary is built by sampling candidate shapelets with lengths drawn from a list (e.g., `(10, 15, 20, 25, 30)`).
+- Each series or window is represented as a fixed-width vector of minimum distances to each shapelet.
+- The standardized shapelet-distance matrix is passed directly into KMeans for k-selection and clustering.
+
+**Primary implementations**
+- `scripts/research/shapelet_stability.py` (shared mixed-length pipeline and KMeans on shapelet distances)
+- `scripts/notebooks/shapelets_ecg200.ipynb` (mixed-length lengths list, shapelet transform, KMeans scoring)
+- `scripts/notebooks/shapelets_ecg5000.ipynb` (same pipeline as ECG200)
+- `scripts/notebooks/shapelets_roma_taxi.ipynb` (fixed vs mixed comparison, KMeans on `X_shapelets`)
+
+**Documentation and summaries**
+- `docs/SHAPELET_COMPARISON_REPORT.md` (mixed vs fixed length sets and outcomes)
+- `docs/PROGRESS.md` (mixed-length ablation logged in dated entries)
+- `scripts/notebooks/shapelets_picoclimate.ipynb` (mixed vs fixed header note; pipeline not fully wired yet)
