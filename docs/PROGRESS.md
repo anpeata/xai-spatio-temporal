@@ -697,3 +697,28 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Should the derivative-feature ablation be positioned as a primary result or appendix material?
 - Is a bounded 6-seed stability run sufficient for the interim draft?
 
+---
+
+### 2026-05-27 (Progress log audit and gap flag)
+
+**Experimentations**
+- Reviewed this progress log for entries after 2026-05-20.
+
+**Results (numbers, tables, plots)**
+- No new progress entries are recorded after 2026-05-20.
+
+**Insights**
+- Any work completed after 2026-05-20 still needs to be logged here.
+
+**Failures / issues / risks**
+- Potential missing progress coverage for 2026-05-21 to 2026-05-27.
+
+**Implementation details**
+- Audit scope limited to `docs/PROGRESS.md`.
+
+**Next**
+- Add missing updates for 2026-05-21 to 2026-05-27 with references to outputs.
+
+**Possible questions/concerns**
+- Which runs, notebooks, or documents after 2026-05-20 should be recorded?
+
