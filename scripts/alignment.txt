@@ -1,0 +1,123 @@
+```python
+def extend_points(a:np.ndarray):
+    r:list = np.copy(a).tolist()
+    l = len(r)
+    if l <= 0:
+        raise ValueError("List of points cannot be extended from 0 point")
+    if len(r) < 2:
+        r.append(r[0])
+    p_1 = r[1]
+    p_2 = r[0]
+    v_1 = p_2 - p_1
+    p_3 = p_2 + v_1
+    r.insert(0, p_3)    
+    p1 = r[-2]
+    p2 = r[-1]
+    v = p2 - p1
+    p3 = p2 + v
+    p4 = p3 + v
+    r.append(p3)
+    r.append(p4)
+    return np.asarray(r)
+
+
+def extend_points_2d(a: np.ndarray) -> np.ndarray:
+    """
+    Extends the endpoints of a 2D or ND sequence of points
+    for Catmull–Rom spline interpolation.
+    """
+    if len(a) == 0:
+        raise ValueError("List of points cannot be extended from 0 point")
+
+    r = np.copy(a).tolist()
+    if len(r) < 2:
+        r.append(r[0])
+
+    p_1 = np.array(r[1])
+    p_2 = np.array(r[0])
+    v_1 = p_2 - p_1
+    p_3 = p_2 + v_1
+    r.insert(0, p_3.tolist())
+
+    p1 = np.array(r[-2])
+    p2 = np.array(r[-1])
+    v = p2 - p1
+    p3 = p2 + v
+    p4 = p3 + v
+    r.append(p3.tolist())
+    r.append(p4.tolist())
+
+    return np.asarray(r)
+
+
+def spline_4p(t:float, p_1:int, p0:int, p1:int, p2:int) -> float:
+    # wikipedia Catmull-Rom -> Cubic_Hermite_spline
+    return (
+        t * ((2 - t) * t - 1) * p_1
+        + (t * t * (3 * t - 5) + 2) * p0
+        + t * ((4 - 3 * t) * t + 1) * p1
+        + (t - 1) * t * t * p2
+    ) / 2
+
+
+def spline_4p_2d(t: float, p_1: np.ndarray, p0: np.ndarray, p1: np.ndarray, p2: np.ndarray) -> np.ndarray:
+    """
+    Vector version of Catmull–Rom spline interpolation.
+    Works for 1D, 2D, or ND points.
+    """
+    t2 = t * t
+    t3 = t2 * t
+    return 0.5 * (
+        (2 * p0)
+        + (-p_1 + p1) * t
+        + (2*p_1 - 5*p0 + 4*p1 - p2) * t2
+        + (-p_1 + 3*p0 - 3*p1 + p2) * t3
+    )
+
+
+def rescale_and_smooth(vect:np.ndarray, nb_desired_vals:int):
+    # Smooth using catmull splines
+    P = extend_points(vect)
+    r = np.full(nb_desired_vals, np.nan)
+    for i in range(0, nb_desired_vals - 1):
+        j = i * (len(vect) - 1) / (nb_desired_vals - 1)
+        p_1 = P[int(j)]
+        p = P[int(j)+1]
+        p1 = P[int(j) + 2]
+        p2 = P[int(j) + 3]
+        frac = j - int(j)
+        r[i] = spline_4p(frac, p_1, p, p1, p2)
+    r[-1] = vect[-1]
+    return r
+
+
+def rescale_and_smooth_2d(vect: np.ndarray, nb_desired_vals: int) -> np.ndarray:
+    """
+    Smooth and resample a vector of N×D points using Catmull–Rom splines.
+    """
+    P = extend_points_2d(vect)
+    r = np.full((nb_desired_vals, vect.shape[1]), np.nan)
+
+    for i in range(nb_desired_vals - 1):
+        j = i * (len(vect) - 1) / (nb_desired_vals - 1)
+        j_int = int(j)
+        frac = j - j_int
+
+        p_1 = P[j_int]
+        p0  = P[j_int + 1]
+        p1  = P[j_int + 2]
+        p2  = P[j_int + 3]
+
+        r[i] = spline_4p_2d(frac, p_1, p0, p1, p2)
+
+    r[-1] = vect[-1]
+    return r
+
+
+def format_clustering_data_smooth(df_section:DataFrame, indicators:qa.MEASURES, nb_pts_per_section:qa.NB_PTS_PER_SECTION):
+    size = (nb_pts_per_section, len(indicators))
+    formatted_data = np.empty(size, dtype=np.float32)
+    for i_indic, indic in enumerate(indicators):
+        formatted_data[:, i_indic] = rescale_and_smooth(np.asarray(df_section[indic]), nb_pts_per_section) # Homogenize number of points per section
+    return formatted_data
+```
