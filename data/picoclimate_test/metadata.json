@@ -1,26 +1,23 @@
 {
-  "created_utc": "2026-05-17T12:22:01.011112+00:00",
+  "created_utc": "2026-05-28T00:00:00+00:00",
   "generation_notes": {
-    "points_per_day": 4,
     "measured_variable_count": 23,
-    "model": "X = bias + A_s*s + A_t*t + c*(s1*t1) + eps",
-    "spatial_latent_factors": [
-      "urbanity",
-      "vegetation",
-      "water_proximity"
-    ],
-    "temporal_latent_factors": [
-      "diurnal_temperature",
-      "diurnal_radiation",
-      "seasonal",
-      "weekend"
-    ],
-    "missingness": "cell-level MAR + block outages"
+    "sequence_model": "track-based with variable-length loc_id sequences",
+    "slots_per_day": "1-4",
+    "missingness": "row-level missing locations + cell-level NaNs"
   },
   "parameters": {
-    "seed": 42,
-    "n_locations": 50,
-    "days": 30,
+    "seed": 20260528,
+    "n_tracks_per_city": 30,
+    "loc_id_range": [
+      100,
+      200
+    ],
+    "days_total": 21,
+    "days_per_track_range": [
+      6,
+      14
+    ],
     "cities": [
       "Nantes",
       "Montpellier"
@@ -28,25 +25,22 @@
     "slot_hours": [
       6,
       12,
-      18,
-      23
-    ]
+      16,
+      22
+    ],
+    "step_minutes": 10,
+    "missing_loc_fraction": 0.08,
+    "value_nan_fraction": 0.05
   },
   "tables": {
-    "raw_measurements.csv": {
-      "rows": 6000,
-      "columns": 37,
+    "tracks_measurements.csv": {
+      "rows": 205056,
+      "columns": 32,
       "primary_key": [
-        "timestamp",
-        "location_id"
-      ]
-    },
-    "window_features.csv": {
-      "rows": 1500,
-      "columns": 167,
-      "primary_key": [
+        "track_id",
         "date",
-        "location_id"
+        "time_slot",
+        "loc_id"
       ]
     }
   },
@@ -214,8 +208,8 @@
     }
   ],
   "representation_guidance": {
-    "flat_4x23": "Use columns ending in __slot_1..__slot_4 for direct clustering.",
-    "summary": "Use __mean/__std/__trend columns for compact clustering inputs.",
-    "missing_values": "Use imputation that preserves temporal ordering (per-variable, per-location)."
+    "track_sequence": "Treat loc_index order as time steps within a track and slot.",
+    "windowing": "Aggregate by track_id, date, and time_slot to build daily windows.",
+    "missing_values": "Impute per track and variable while preserving loc_index ordering."
   }
 }

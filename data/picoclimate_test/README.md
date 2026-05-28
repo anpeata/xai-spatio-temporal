@@ -1,53 +1,34 @@
 # Picoclimate Test Fixture (Synthetic)
 
-This folder contains a **small, tracked synthetic** spatio-temporal dataset used as a stable fixture for notebooks and scripts.
+This folder contains a **track-based synthetic** spatio-temporal dataset used as a stable fixture for notebooks and scripts.
 
 ## Contents
 
-- `raw_measurements.csv` — point-level table (one row per location × day × slot)
-- `window_features.csv` — daily window representations (one row per location × day)
+- `tracks_measurements.csv` — track-level table (one row per track × loc_id × day × slot)
 - `metadata.json` — generation parameters and variable specs
-- `csv_fields_explained.json` — schema dictionary for both CSVs
-- `raw_samples.png`, `window_samples.png` — small visual samples of the tables
+- `csv_fields_explained.json` — schema dictionary for the CSV
 
 ## Current dataset stats
 
 Generated parameters (see `metadata.json`):
 
 - Cities: **Nantes**, **Montpellier**
-- Locations: **50 total** (25 per city)
-- Days: **30** (2025-09-01 → 2025-09-30)
-- Slots per day: **4** (`06:00`, `12:00`, `18:00`, `23:00`)
+- Tracks: **60 total** (30 per city)
+- Track length: **100-200 loc_id** per track
+- Days: **21 total** (each track appears on 6-14 days)
+- Slots per day: **1-4** (`morning`, `noon`, `afternoon`, `night`)
+- Step spacing: **10 minutes** between loc_id entries within a slot
 
-Table sizes:
+Table size:
 
-- `raw_measurements.csv`: **6000 rows × 37 columns**
-- `window_features.csv`: **1500 rows × 167 columns**
-
-Breakdown by city:
-
-- Raw rows: **3000 Nantes**, **3000 Montpellier**
-- Window rows: **750 Nantes**, **750 Montpellier**
+- `tracks_measurements.csv`: **205056 rows × 32 columns**
 
 Missingness summary:
 
-- Overall missing fraction (measured variables): **0.0945**
-- Block-outage rows (`missing_block_flag=1`): **359** (**5.983%**)
-
-Window completeness (`present_fraction`) by city:
-
-- Montpellier: mean **0.9006**, std **0.0497** (n=750)
-- Nantes: mean **0.9104**, std **0.0475** (n=750)
+- Randomly missing loc_id rows per slot (~8%)
+- Random NaNs in measured variables (~5%)
 
 ## Regeneration
 
-To regenerate these artifacts deterministically:
-
-```powershell
-D:\env\py128\python.exe scripts/data/generate_picoclimate_data.py `
-  --outdir data/picoclimate_test `
-  --seed 42 `
-  --city "Nantes,Montpellier" `
-  --n-locations 50 `
-  --days 30
-```
+The track-based generator is not scripted yet. If you need a reusable script,
+ask and we can add one based on the current parameters in `metadata.json`.

@@ -57,6 +57,12 @@ Example output:
 
 "Cluster 2 is defined by high humidity variance and low wind speed in building canyons."
 
+## Track-Based Fixture Guidance
+
+The current synthetic fixture is track-based with variable-length loc_id sequences.
+Treat loc_index ordering as pseudo-time and aggregate by track_id + date + time_slot
+when you need daily windows or slot-level summaries.
+
 ## Method Roadmap
 
 ### Direction B: Statistical Aggregation First
