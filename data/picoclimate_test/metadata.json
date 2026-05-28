@@ -8,7 +8,10 @@
   },
   "parameters": {
     "seed": 20260528,
-    "n_tracks_per_city": 30,
+    "n_tracks_per_city": {
+      "Nantes": 10,
+      "Montpellier": 6
+    },
     "loc_id_range": [
       100,
       200
@@ -32,10 +35,21 @@
     "missing_loc_fraction": 0.08,
     "value_nan_fraction": 0.05
   },
-  "tables": {
+    "tables": {
     "tracks_measurements.csv": {
       "rows": 205056,
       "columns": 32,
+      "primary_key": [
+        "track_id",
+        "date",
+        "time_slot",
+        "loc_id"
+      ]
+    },
+    "tracks_measurements_reduced.csv": {
+      "rows": 53054,
+      "columns": 32,
+      "derived_from": "tracks_measurements.csv",
       "primary_key": [
         "track_id",
         "date",
