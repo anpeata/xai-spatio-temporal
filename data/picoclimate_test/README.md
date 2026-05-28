@@ -14,7 +14,7 @@ This folder contains a **track-based synthetic** spatio-temporal dataset used as
 Generated parameters (see `metadata.json`):
 
 - Cities: **Nantes**, **Montpellier**
--- Tracks: **16 total** (Nantes: 10, Montpellier: 6) — reduced sample preserved in `tracks_measurements_reduced.csv`
+- Tracks: **60 total** (30 per city)
 - Track length: **100-200 loc_id** per track
 - Days: **21 total** (each track appears on 6-14 days)
 - Slots per day: **1-4** (`morning`, `noon`, `afternoon`, `night`)
@@ -23,7 +23,6 @@ Generated parameters (see `metadata.json`):
 Table size:
 
 - `tracks_measurements.csv`: **205056 rows × 32 columns**
-- `tracks_measurements_reduced.csv`: **53054 rows × 32 columns** (includes header)
 
 Missingness summary:
 

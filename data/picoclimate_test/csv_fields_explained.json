@@ -45,17 +45,5 @@
         "heat_index_c": "Apparent temperature proxy"
       }
     }
-    ,
-    "tracks_measurements_reduced.csv": {
-      "description": "Reduced sample of `tracks_measurements.csv` with Nantes=10 tracks and Montpellier=6 tracks.",
-      "primary_key": [
-        "track_id",
-        "date",
-        "time_slot",
-        "loc_id"
-      ],
-      "column_count": 32,
-      "notes": "Created 2026-05-28 by sampling per-city tracks for lighter EDA and examples. Rows: 53054."
-    }
   }
 }
