@@ -61,11 +61,10 @@
       }
     },
     "cities": {
-      "description": "City/track hierarchy stored under variable_slices/cities/.",
-      "pattern": "variable_slices/cities/<city>/<track_id>/tracks_measurements.csv",
+      "description": "City split stored under variable_slices/cities/ with one CSV per track.",
+      "pattern": "variable_slices/cities/<city>/<track_id>.csv",
       "track_files": [
-        "tracks_measurements.csv",
-        "window_features.csv"
+        "<track_id>.csv"
       ]
     }
   }

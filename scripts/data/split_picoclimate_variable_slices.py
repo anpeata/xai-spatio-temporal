@@ -1,15 +1,13 @@
-"""Split Picoclimate variable slices into per-city and per-track folders.
+"""Split Picoclimate variable slices into per-city and per-track CSVs.
 
 The source of truth for this split is data/picoclimate_test/variable_slices/.
 The script reconstructs a wide track table from the long-form variable slices,
-then writes the city/track hierarchy under data/picoclimate_test/variable_slices/cities/.
+then writes flat per-track CSVs under data/picoclimate_test/variable_slices/cities/.
 """
 
 from __future__ import annotations
 
 import argparse
-import importlib.util
-from functools import reduce
 from pathlib import Path
 from typing import List
 
@@ -51,18 +49,6 @@ def _parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _load_window_builder(repo_root: Path):
-    script_path = repo_root / "scripts" / "data" / "build_window_features_from_tracks.py"
-    spec = importlib.util.spec_from_file_location("build_window_features_from_tracks", script_path)
-    if spec is None or spec.loader is None:
-        raise RuntimeError(f"Cannot import window builder from {script_path}")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    if not hasattr(module, "_build_window_features"):
-        raise RuntimeError("build_window_features_from_tracks.py must expose _build_window_features")
-    return module
-
-
 def _load_variable_table(variable_dir: Path, variable: str) -> pd.DataFrame:
     frames: List[pd.DataFrame] = []
     for csv_path in sorted(variable_dir.glob("day_*.csv")):
@@ -92,14 +78,11 @@ def _reconstruct_wide_table(variable_root: Path) -> pd.DataFrame:
     return wide
 
 
-def _write_track_bundle(track_df: pd.DataFrame, track_dir: Path, builder) -> None:
-    track_dir.mkdir(parents=True, exist_ok=True)
+def _write_track_csv(track_df: pd.DataFrame, track_csv: Path) -> None:
+    track_csv.parent.mkdir(parents=True, exist_ok=True)
 
     track_df = track_df.copy().sort_values(["date", "slot_index", "loc_index"], kind="mergesort").reset_index(drop=True)
-    track_features = builder._build_window_features(track_df)
-
-    track_df.to_csv(track_dir / "tracks_measurements.csv", index=False)
-    track_features.to_csv(track_dir / "window_features.csv", index=False)
+    track_df.to_csv(track_csv, index=False)
 
 
 def main() -> None:
@@ -109,23 +92,17 @@ def main() -> None:
     if not source_root.exists():
         raise SystemExit(f"Missing input folder: {source_root}")
 
-    repo_root = data_dir.parent.parent
-    builder = _load_window_builder(repo_root)
     wide = _reconstruct_wide_table(source_root)
 
     city_root = source_root / "cities"
     city_root.mkdir(parents=True, exist_ok=True)
 
     for city, city_df in wide.groupby("city", sort=True):
-        city_dir = city_root / city
-        city_dir.mkdir(parents=True, exist_ok=True)
-
         city_tracks = sorted(city_df["track_id"].unique().tolist())
 
         for track_id in city_tracks:
-            track_dir = city_dir / track_id
             track_df = city_df[city_df["track_id"] == track_id].copy()
-            _write_track_bundle(track_df, track_dir, builder)
+            _write_track_csv(track_df, city_root / city / f"{track_id}.csv")
 
     print(f"Wrote city hierarchy under: {city_root}")
 

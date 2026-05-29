@@ -47,8 +47,8 @@ This folder contains synthetic data regenerated to match the latest track-based 
 ## 4) `cities/` (Per-city and per-track hierarchy)
 
 - **Grain:** one folder per city, then one folder per track
-- **Pattern:** `variable_slices/cities/<city>/<track_id>/tracks_measurements.csv`
-- **Files inside each track folder:** `tracks_measurements.csv`, `window_features.csv`
+- **Pattern:** `variable_slices/cities/<city>/<track_id>.csv`
+- **Files inside each city folder:** one CSV per track
 - **Use cases:**
   - browse a single city or track without opening the master tables
   - keep a lightweight, hierarchical fixture layout for demos and notebooks
@@ -58,7 +58,7 @@ This folder contains synthetic data regenerated to match the latest track-based 
 
 For now, use `variable_slices/` as the main data source when running the current workflow. The root master tables remain available for regeneration, but they are not the primary slice used in the analysis path.
 
-The `variable_slices/cities/` hierarchy is rebuilt from `variable_slices/` and provides a per-city/per-track view of the same fixture.
+The `variable_slices/cities/` hierarchy is rebuilt from `variable_slices/` and provides a per-city/per-track CSV view of the same fixture.
 
 ## Labels
 
