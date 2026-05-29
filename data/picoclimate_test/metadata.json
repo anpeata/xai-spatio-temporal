@@ -12,7 +12,7 @@
       "Montpellier": 6
     },
     "slice_layout": "variable_slices/<variable>/day_<YYYY-MM-DD>_slot_<slot>.csv",
-    "track_hierarchy_layout": "variable_slices/cities/<city>/<track_id>.csv"
+    "track_hierarchy_layout": "variable_slices/cities/<city>/<YYYY-MM-DD>.csv"
   },
   "parameters": {
     "seed": 20260529,
@@ -96,6 +96,6 @@
     "track_sequence": "Treat loc_index order as pseudo-time along each track.",
     "windowing": "Aggregate by track_id and date to build daily windows.",
     "slice_layout": "Use variable_slices/<variable>/day_<YYYY-MM-DD>_slot_<slot>.csv for one-variable daily exports.",
-    "track_hierarchy": "Use variable_slices/cities/<city>/<track_id>.csv for per-city and per-track copies of the fixture."
+    "track_hierarchy": "Use variable_slices/cities/<city>/<YYYY-MM-DD>.csv for per-city and per-date copies of the fixture."
   }
 }

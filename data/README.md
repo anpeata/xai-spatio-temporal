@@ -46,19 +46,19 @@ This folder contains synthetic data regenerated to match the latest track-based 
 
 ## 4) `cities/` (Per-city and per-track hierarchy)
 
-- **Grain:** one folder per city, then one folder per track
-- **Pattern:** `variable_slices/cities/<city>/<track_id>.csv`
-- **Files inside each city folder:** one CSV per track
+- **Grain:** one folder per city, then one CSV per date
+- **Pattern:** `variable_slices/cities/<city>/<YYYY-MM-DD>.csv`
+- **Files inside each city folder:** one CSV per date
 - **Use cases:**
   - browse a single city or track without opening the master tables
   - keep a lightweight, hierarchical fixture layout for demos and notebooks
-  - compare per-track daily windows side by side
+  - compare daily coverage and missing dates side by side
 
 ## Current Working Set
 
 For now, use `variable_slices/` as the main data source when running the current workflow. The root master tables remain available for regeneration, but they are not the primary slice used in the analysis path.
 
-The `variable_slices/cities/` hierarchy is rebuilt from `variable_slices/` and provides a per-city/per-track CSV view of the same fixture.
+The `variable_slices/cities/` hierarchy is rebuilt from `variable_slices/` and provides a per-city/per-date CSV view of the same fixture.
 
 ## Labels
 

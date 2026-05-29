@@ -1,13 +1,14 @@
-"""Split Picoclimate variable slices into per-city and per-track CSVs.
+"""Split Picoclimate variable slices into per-city and per-date CSVs.
 
 The source of truth for this split is data/picoclimate_test/variable_slices/.
 The script reconstructs a wide track table from the long-form variable slices,
-then writes flat per-track CSVs under data/picoclimate_test/variable_slices/cities/.
+then writes flat per-date CSVs under data/picoclimate_test/variable_slices/cities/.
 """
 
 from __future__ import annotations
 
 import argparse
+import shutil
 from pathlib import Path
 from typing import List
 
@@ -78,11 +79,11 @@ def _reconstruct_wide_table(variable_root: Path) -> pd.DataFrame:
     return wide
 
 
-def _write_track_csv(track_df: pd.DataFrame, track_csv: Path) -> None:
-    track_csv.parent.mkdir(parents=True, exist_ok=True)
+def _write_date_csv(date_df: pd.DataFrame, date_csv: Path) -> None:
+    date_csv.parent.mkdir(parents=True, exist_ok=True)
 
-    track_df = track_df.copy().sort_values(["date", "slot_index", "loc_index"], kind="mergesort").reset_index(drop=True)
-    track_df.to_csv(track_csv, index=False)
+    date_df = date_df.copy().sort_values(["track_id", "slot_index", "loc_index"], kind="mergesort").reset_index(drop=True)
+    date_df.to_csv(date_csv, index=False)
 
 
 def main() -> None:
@@ -95,14 +96,13 @@ def main() -> None:
     wide = _reconstruct_wide_table(source_root)
 
     city_root = source_root / "cities"
+    if city_root.exists():
+        shutil.rmtree(city_root)
     city_root.mkdir(parents=True, exist_ok=True)
 
     for city, city_df in wide.groupby("city", sort=True):
-        city_tracks = sorted(city_df["track_id"].unique().tolist())
-
-        for track_id in city_tracks:
-            track_df = city_df[city_df["track_id"] == track_id].copy()
-            _write_track_csv(track_df, city_root / city / f"{track_id}.csv")
+        for date, date_df in city_df.groupby("date", sort=True):
+            _write_date_csv(date_df, city_root / city / f"{date}.csv")
 
     print(f"Wrote city hierarchy under: {city_root}")
 

@@ -61,10 +61,10 @@
       }
     },
     "cities": {
-      "description": "City split stored under variable_slices/cities/ with one CSV per track.",
-      "pattern": "variable_slices/cities/<city>/<track_id>.csv",
+      "description": "City split stored under variable_slices/cities/ with one CSV per date.",
+      "pattern": "variable_slices/cities/<city>/<YYYY-MM-DD>.csv",
       "track_files": [
-        "<track_id>.csv"
+        "<date>.csv"
       ]
     }
   }

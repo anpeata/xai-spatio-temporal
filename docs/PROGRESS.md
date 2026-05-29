@@ -258,6 +258,32 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Notebook updated: `scripts/notebooks/eda_roma_taxi.ipynb`.
 - Added/used runtime controls: `K_SELECTION_MAX_WINDOWS=120000`, `SILHOUETTE_SAMPLE_SIZE=40000`.
 - KMeans selection cell now evaluates on `X_eval` for k search, then fits final model on full `X`.
+
+### 2026-05-29 (Picoclimate city date split)
+
+**Experimentations**
+- Rebuilt `data/picoclimate_test/variable_slices/` from the current track table and reshaped the city browser split to per-date CSVs.
+- Regenerated `data/picoclimate_test/variable_slices/cities/<city>/<YYYY-MM-DD>.csv` so each city folder shows date coverage directly.
+
+**Results (numbers, tables, plots)**
+- City folders now contain one CSV per available date for Nantes and Montpellier.
+- Sample date file keeps the full wide row set for that city/day, including track_id, slot index, and all measured variables.
+
+**Insights**
+- Date-level files make missing days and uneven sampling easier to inspect than the previous per-track layout.
+
+**Failures / issues / risks**
+- Root scratch files `tracks_measurements.csv` and `window_features.csv` remain local untracked inputs for regeneration.
+
+**Implementation details**
+- Updated the city split script to group by `city` and `date` and write `YYYY-MM-DD.csv` files under each city folder.
+- Updated fixture docs and schema metadata to describe the new city/date hierarchy.
+
+**Next**
+- Keep the date split in sync if the variable slice source is regenerated again.
+
+**Possible questions/concerns**
+- Should the root scratch CSVs stay untracked, or should they be removed once the fixture is finalized?
 - ECG5000 execution notebook: `scripts/notebooks/exkmc_blobs_experiment.ipynb` (cells for dataset load, k-selection, model comparison, PCA view, tree export run).
 - Shapelet notebook updated/executed: `scripts/notebooks/shapelets_ecg200.ipynb` (surrogate, SHAP, and abductive explanation cells refreshed).
 - Notebook now includes a fixed-vs-mixed shapelet-length comparison cell with recommendation output.
