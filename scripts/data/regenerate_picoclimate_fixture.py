@@ -116,7 +116,85 @@ def _export_variable_slices(raw: pd.DataFrame, data_dir: Path) -> Dict[str, int]
     return counts
 
 
-def _write_metadata(data_dir: Path, raw: pd.DataFrame, win: pd.DataFrame, slice_counts: Dict[str, int], seed: int, min_loc: int, max_loc: int) -> None:
+def _export_city_track_hierarchy(raw: pd.DataFrame, win: pd.DataFrame, data_dir: Path) -> Dict[str, Dict[str, int]]:
+    hierarchy_root = data_dir / "cities"
+    hierarchy_root.mkdir(parents=True, exist_ok=True)
+
+    hierarchy_stats: Dict[str, Dict[str, int]] = {}
+    for city, city_group in raw.groupby("city", sort=True):
+        city_dir = hierarchy_root / city
+        city_dir.mkdir(parents=True, exist_ok=True)
+
+        city_tracks = city_group["track_id"].drop_duplicates().tolist()
+        city_track_lengths = city_group.groupby("track_id")["loc_index"].max().add(1)
+        city_days = city_group.groupby("track_id")["date"].nunique()
+
+        city_readme = [
+            f"# {city} Fixture",
+            "",
+            f"Tracks: {len(city_tracks)}",
+            f"Track length range: {int(city_track_lengths.min())}-{int(city_track_lengths.max())} loc_id",
+            f"Days per track: {int(city_days.min())}-{int(city_days.max())}",
+            "",
+            "## Tracks",
+        ]
+
+        city_stats = {
+            "track_count": len(city_tracks),
+            "min_track_length": int(city_track_lengths.min()),
+            "max_track_length": int(city_track_lengths.max()),
+            "min_days": int(city_days.min()),
+            "max_days": int(city_days.max()),
+        }
+
+        for track_id in city_tracks:
+            track_dir = city_dir / track_id
+            track_dir.mkdir(parents=True, exist_ok=True)
+
+            track_raw = raw[raw["track_id"] == track_id].copy().sort_values(["date", "slot_index", "loc_index"], kind="mergesort")
+            track_win = win[win["track_id"] == track_id].copy().sort_values(["date"], kind="mergesort")
+
+            track_raw.to_csv(track_dir / "tracks_measurements.csv", index=False)
+            track_win.to_csv(track_dir / "window_features.csv", index=False)
+
+            track_stats = {
+                "track_id": track_id,
+                "city": city,
+                "rows": int(track_raw.shape[0]),
+                "days": int(track_raw["date"].nunique()),
+                "track_length": int(track_raw["loc_index"].max() + 1),
+                "daily_windows": int(track_win.shape[0]),
+            }
+            (track_dir / "metadata.json").write_text(json.dumps(track_stats, indent=2, ensure_ascii=False), encoding="utf-8")
+            (track_dir / "README.md").write_text(
+                "\n".join(
+                    [
+                        f"# {track_id}",
+                        "",
+                        f"City: {city}",
+                        f"Rows: {track_stats['rows']}",
+                        f"Track length: {track_stats['track_length']}",
+                        f"Days recorded: {track_stats['days']}",
+                        f"Daily windows: {track_stats['daily_windows']}",
+                        "",
+                        "Files:",
+                        "- tracks_measurements.csv",
+                        "- window_features.csv",
+                        "- metadata.json",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            city_readme.append(f"- {track_id}: {track_stats['rows']} rows, {track_stats['days']} days, {track_stats['track_length']} loc_id")
+
+        (city_dir / "README.md").write_text("\n".join(city_readme), encoding="utf-8")
+        (city_dir / "metadata.json").write_text(json.dumps(city_stats, indent=2, ensure_ascii=False), encoding="utf-8")
+        hierarchy_stats[city] = city_stats
+
+    return hierarchy_stats
+
+
+def _write_metadata(data_dir: Path, raw: pd.DataFrame, win: pd.DataFrame, slice_counts: Dict[str, int], hierarchy_counts: Dict[str, Dict[str, int]], seed: int, min_loc: int, max_loc: int) -> None:
     track_lengths = raw.groupby("track_id")["loc_index"].max().add(1)
     days_per_track = raw.groupby("track_id")["date"].nunique()
 
@@ -159,10 +237,12 @@ def _write_metadata(data_dir: Path, raw: pd.DataFrame, win: pd.DataFrame, slice_
             "mean": float(days_per_track.mean()),
         },
         "slice_counts": slice_counts,
+        "hierarchy_counts": hierarchy_counts,
         "representation_guidance": {
             "track_sequence": "Treat loc_index order as pseudo-time along each track.",
             "windowing": "Aggregate by track_id and date to build daily windows.",
             "slice_layout": "Use variable_slices/<variable>/day_<YYYY-MM-DD>_slot_<slot>.csv for one-variable daily exports.",
+            "track_hierarchy": "Use cities/<city>/<track_id>/ for per-city and per-track copies of the master fixture.",
         },
     }
 
@@ -222,6 +302,11 @@ def _write_metadata(data_dir: Path, raw: pd.DataFrame, win: pd.DataFrame, slice_
                     "value": "Selected variable value.",
                 },
             },
+            "cities": {
+                "description": "City/track hierarchy containing per-city and per-track copies of the master fixture.",
+                "pattern": "cities/<city>/<track_id>/tracks_measurements.csv",
+                "track_files": ["tracks_measurements.csv", "window_features.csv", "metadata.json", "README.md"],
+            },
         },
     }
 
@@ -254,10 +339,12 @@ def main() -> None:
     if args.export_variable_slices:
         slice_counts = _export_variable_slices(trimmed, data_dir)
 
-    _write_metadata(data_dir, trimmed, window, slice_counts, args.seed, args.min_loc, args.max_loc)
+    hierarchy_counts = _export_city_track_hierarchy(trimmed, window, data_dir)
+    _write_metadata(data_dir, trimmed, window, slice_counts, hierarchy_counts, args.seed, args.min_loc, args.max_loc)
 
     print(f"Wrote trimmed tracks: {raw_path}")
     print(f"Wrote window features: {win_path}")
+    print(f"Wrote city hierarchy under: {data_dir / 'cities'}")
     if args.export_variable_slices:
         print(f"Wrote variable slices under: {data_dir / 'variable_slices'}")
 

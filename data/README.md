@@ -18,7 +18,7 @@ This folder contains synthetic data regenerated to match the latest track-based 
 
 - **Grain:** one record per (`track_id`, `date`, `time_slot`, `loc_id`)
 - **Expected pattern:** each track has ordered `loc_index` values that act as pseudo-time along the path
-- **Includes:** location metadata, temporal tags, 23 measured variables, `true_regime`, and `missing_block_flag`
+- **Includes:** location metadata, temporal tags, 23 measured variables, and `true_regime`
 - **Use cases:**
   - inspect missingness realism
   - test imputation strategies
@@ -42,6 +42,16 @@ This folder contains synthetic data regenerated to match the latest track-based 
   - inspect a single variable on a specific day and slot
   - feed sequence-aware methods that expect one variable at a time
   - mirror the long-form example discussed in the alignment notes
+
+## 4) `cities/` (Per-city and per-track hierarchy)
+
+- **Grain:** one folder per city, then one folder per track
+- **Pattern:** `cities/<city>/<track_id>/tracks_measurements.csv`
+- **Files inside each track folder:** `tracks_measurements.csv`, `window_features.csv`, `metadata.json`, `README.md`
+- **Use cases:**
+  - browse a single city or track without opening the master tables
+  - keep a lightweight, hierarchical fixture layout for demos and notebooks
+  - compare per-track daily windows side by side
 
 ## Labels
 

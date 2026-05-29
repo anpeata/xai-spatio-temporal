@@ -1,5 +1,5 @@
 {
-  "created_utc": "2026-05-29T13:10:06.301473+00:00",
+  "created_utc": "2026-05-29T13:27:55.048440+00:00",
   "files": {
     "tracks_measurements.csv": {
       "description": "Master track table with one row per track x date x slot x loc_id.",
@@ -59,6 +59,16 @@
         "timestamp": "UTC timestamp for the slice.",
         "value": "Selected variable value."
       }
+    },
+    "cities": {
+      "description": "City/track hierarchy containing per-city and per-track copies of the master fixture.",
+      "pattern": "cities/<city>/<track_id>/tracks_measurements.csv",
+      "track_files": [
+        "tracks_measurements.csv",
+        "window_features.csv",
+        "metadata.json",
+        "README.md"
+      ]
     }
   }
 }

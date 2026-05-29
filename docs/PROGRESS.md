@@ -46,6 +46,32 @@ Ordering rule: keep entries in chronological order and append each new update at
 
 ## Entries
 
+### 2026-05-29 (Picoclimate hierarchy refresh)
+
+**Experimentations**
+- Regenerated the Picoclimate test fixture with a new city/track hierarchy under `data/picoclimate_test/cities/`.
+- Kept the root-level master CSVs as canonical regeneration inputs while adding per-city/per-track copies for browsing.
+
+**Results (numbers, tables, plots)**
+- Fixture now includes 2 city folders and 16 track folders total.
+- Master table remains `38,703 x 32`; daily windows remain `165 x 196`.
+
+**Insights**
+- The track-level copies make the fixture easier to inspect without changing the master-generation workflow.
+
+**Failures / issues / risks**
+- Root-level `tracks_measurements.csv` and `window_features.csv` are still retained for compatibility; they were not removed.
+
+**Implementation details**
+- Updated the regen script to emit `cities/<city>/<track_id>/tracks_measurements.csv`, `window_features.csv`, `metadata.json`, and `README.md`.
+- Updated fixture docs and the Picoclimate strategy note to describe the hierarchy.
+
+**Next**
+- Decide whether to keep `variable_slices/` as a long-form analysis aid or trim it down further.
+
+**Possible questions/concerns**
+- Should the hierarchy become the only supported browsing layout, or should the root master tables stay permanently alongside it?
+
 ### 2026-04-17 (ECG200 KMeans and XAI workflow)
 
 **Experimentations**

@@ -1,5 +1,5 @@
 {
-  "created_utc": "2026-05-29T13:10:06.299476+00:00",
+  "created_utc": "2026-05-29T13:27:55.045694+00:00",
   "generation_notes": {
     "sequence_model": "track-based with variable-length loc_id sequences",
     "loc_id_range_per_track": [
@@ -75,9 +75,26 @@
     "water_proximity": 84,
     "heat_index_c": 84
   },
+  "hierarchy_counts": {
+    "Montpellier": {
+      "track_count": 6,
+      "min_track_length": 103,
+      "max_track_length": 115,
+      "min_days": 6,
+      "max_days": 14
+    },
+    "Nantes": {
+      "track_count": 10,
+      "min_track_length": 102,
+      "max_track_length": 137,
+      "min_days": 6,
+      "max_days": 14
+    }
+  },
   "representation_guidance": {
     "track_sequence": "Treat loc_index order as pseudo-time along each track.",
     "windowing": "Aggregate by track_id and date to build daily windows.",
-    "slice_layout": "Use variable_slices/<variable>/day_<YYYY-MM-DD>_slot_<slot>.csv for one-variable daily exports."
+    "slice_layout": "Use variable_slices/<variable>/day_<YYYY-MM-DD>_slot_<slot>.csv for one-variable daily exports.",
+    "track_hierarchy": "Use cities/<city>/<track_id>/ for per-city and per-track copies of the master fixture."
   }
 }
