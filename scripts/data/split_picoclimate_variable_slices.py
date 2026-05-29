@@ -1,14 +1,13 @@
-"""Split Picoclimate variable slices into per-city and per-date CSVs.
+"""Split Picoclimate tracks into a city/date/slot/track hierarchy.
 
-The source of truth for this split is data/picoclimate_test/variable_slices/.
-The script reconstructs a wide track table from the long-form variable slices,
-then writes flat per-date CSVs under data/picoclimate_test/variable_slices/cities/.
+The source of truth for this split is data/picoclimate_test/tracks_measurements.csv.
+The script writes one wide matrix per track under data/picoclimate_test/cities/
+with rows as variables and columns as location_id values.
 """
 
 from __future__ import annotations
 
 import argparse
-import shutil
 from pathlib import Path
 from typing import List
 
@@ -41,7 +40,7 @@ VALUE_COLUMNS = [
     "heat_index_c",
 ]
 
-BASE_KEYS = ["track_id", "city", "date", "time_slot", "slot_index", "loc_index", "timestamp"]
+ID_COLUMNS = ["track_id", "city", "date", "time_slot", "slot_index", "loc_id", "loc_index", "timestamp"]
 
 
 def _parse_args() -> argparse.Namespace:
@@ -50,59 +49,48 @@ def _parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _load_variable_table(variable_dir: Path, variable: str) -> pd.DataFrame:
-    frames: List[pd.DataFrame] = []
-    for csv_path in sorted(variable_dir.glob("day_*.csv")):
-        frame = pd.read_csv(csv_path, low_memory=False)
-        frame = frame.rename(columns={"value": variable})
-        frames.append(frame)
-    if not frames:
-        raise RuntimeError(f"No slice files found for {variable} in {variable_dir}")
-    return pd.concat(frames, ignore_index=True)
+def _load_tracks(data_dir: Path) -> pd.DataFrame:
+    tracks_path = data_dir / "tracks_measurements.csv"
+    if not tracks_path.exists():
+        raise SystemExit(f"Missing input file: {tracks_path}")
+
+    raw = pd.read_csv(tracks_path, low_memory=False)
+    missing = set(ID_COLUMNS) - set(raw.columns)
+    if missing:
+        raise SystemExit(f"tracks_measurements.csv is missing required columns: {sorted(missing)}")
+
+    raw = raw.sort_values(["city", "date", "slot_index", "track_id", "loc_index"], kind="mergesort").reset_index(drop=True)
+    return raw
 
 
-def _reconstruct_wide_table(variable_root: Path) -> pd.DataFrame:
-    long_frames: List[pd.DataFrame] = []
-    for variable in VALUE_COLUMNS:
-        variable_dir = variable_root / variable
-        frame = _load_variable_table(variable_dir, variable)
-        frame = frame[BASE_KEYS + [variable]].copy()
-        frame["loc_index"] = pd.to_numeric(frame["loc_index"], errors="coerce")
-        long_frames.append(frame)
+def _write_track_matrix(track_df: pd.DataFrame, track_csv: Path) -> None:
+    track_csv.parent.mkdir(parents=True, exist_ok=True)
 
-    long_df = pd.concat(long_frames, ignore_index=True)
-    wide = long_df.pivot_table(index=BASE_KEYS, values=VALUE_COLUMNS, aggfunc="first").reset_index()
-    wide.insert(5, "loc_id", pd.NA)
-    wide["true_regime"] = pd.NA
-    wide["timestamp"] = pd.to_numeric(wide["timestamp"], errors="coerce")
-    wide = wide.sort_values(["track_id", "date", "slot_index", "loc_index"], kind="mergesort").reset_index(drop=True)
-    return wide
+    numeric = track_df.copy()
+    for column in VALUE_COLUMNS:
+        numeric[column] = pd.to_numeric(numeric[column], errors="coerce")
+    numeric["loc_index"] = pd.to_numeric(numeric["loc_index"], errors="coerce")
 
+    loc_order = numeric[["loc_index", "loc_id"]].drop_duplicates(subset=["loc_index"], keep="first").sort_values("loc_index", kind="mergesort")
+    loc_ids = loc_order["loc_id"].tolist()
 
-def _write_date_csv(date_df: pd.DataFrame, date_csv: Path) -> None:
-    date_csv.parent.mkdir(parents=True, exist_ok=True)
-
-    date_df = date_df.copy().sort_values(["track_id", "slot_index", "loc_index"], kind="mergesort").reset_index(drop=True)
-    date_df.to_csv(date_csv, index=False)
+    matrix = numeric[["loc_id"] + VALUE_COLUMNS].copy().set_index("loc_id")
+    matrix = matrix.reindex(loc_ids)
+    matrix = matrix.T
+    matrix.index.name = "variable"
+    matrix.reset_index().to_csv(track_csv, index=False)
 
 
 def main() -> None:
     args = _parse_args()
     data_dir = args.data_dir
-    source_root = data_dir / "variable_slices"
-    if not source_root.exists():
-        raise SystemExit(f"Missing input folder: {source_root}")
+    wide = _load_tracks(data_dir)
 
-    wide = _reconstruct_wide_table(source_root)
-
-    city_root = source_root / "cities"
-    if city_root.exists():
-        shutil.rmtree(city_root)
+    city_root = data_dir / "cities"
     city_root.mkdir(parents=True, exist_ok=True)
 
-    for city, city_df in wide.groupby("city", sort=True):
-        for date, date_df in city_df.groupby("date", sort=True):
-            _write_date_csv(date_df, city_root / city / f"{date}.csv")
+    for (city, date, time_slot, track_id), track_df in wide.groupby(["city", "date", "time_slot", "track_id"], sort=True):
+        _write_track_matrix(track_df, city_root / city / date / time_slot / f"{track_id}.csv")
 
     print(f"Wrote city hierarchy under: {city_root}")
 

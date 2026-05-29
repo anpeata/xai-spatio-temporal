@@ -44,21 +44,21 @@ This folder contains synthetic data regenerated to match the latest track-based 
   - feed sequence-aware methods that expect one variable at a time
   - mirror the long-form example discussed in the alignment notes
 
-## 4) `cities/` (Per-city and per-track hierarchy)
+## 4) `cities/` (Per-city, per-date, per-slot, per-track hierarchy)
 
-- **Grain:** one folder per city, then one CSV per date
-- **Pattern:** `variable_slices/cities/<city>/<YYYY-MM-DD>.csv`
-- **Files inside each city folder:** one CSV per date
+- **Grain:** one folder per city, then date, then slot, then track
+- **Pattern:** `cities/<city>/<YYYY-MM-DD>/<time_slot>/<track_id>.csv`
+- **Files inside each track folder:** one CSV matrix per track
 - **Use cases:**
-  - browse a single city or track without opening the master tables
-  - keep a lightweight, hierarchical fixture layout for demos and notebooks
-  - compare daily coverage and missing dates side by side
+  - browse a single city, day, slot, or track without opening the master tables
+  - compare daily and slot coverage side by side
+  - inspect each track as a variable-by-location matrix
 
 ## Current Working Set
 
 For now, use `variable_slices/` as the main data source when running the current workflow. The root master tables remain available for regeneration, but they are not the primary slice used in the analysis path.
 
-The `variable_slices/cities/` hierarchy is rebuilt from `variable_slices/` and provides a per-city/per-date CSV view of the same fixture.
+The `cities/` hierarchy is rebuilt from `tracks_measurements.csv` and provides a per-city/per-date/per-slot/per-track matrix view of the same fixture.
 
 ## Labels
 

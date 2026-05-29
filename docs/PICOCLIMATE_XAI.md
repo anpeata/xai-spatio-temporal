@@ -68,11 +68,10 @@ Current fixture shape:
 - 10 Nantes tracks and 6 Montpellier tracks
 - track length roughly 100-150 loc_id per track
 - 0-4 observed slots per day, with missing days allowed
-- optional `variable_slices/<variable>/day_<YYYY-MM-DD>_slot_<slot>.csv` exports for one-variable daily analysis
-- per-city/per-date CSVs under `variable_slices/cities/<city>/<YYYY-MM-DD>.csv` for browsing city coverage by day
+- per-city/per-date/per-slot/per-track CSVs under `cities/<city>/<YYYY-MM-DD>/<time_slot>/<track_id>.csv` for browsing one track matrix at a time
 - root-level `tracks_measurements.csv` and `window_features.csv` remain the canonical regeneration inputs
-- current working analysis data is `variable_slices/`
-- the `variable_slices/cities/` CSV split is reconstructed from `variable_slices/` and does not depend on the root master tables
+- current working analysis data is `tracks_measurements.csv`
+- the `cities/` CSV hierarchy is reconstructed from `tracks_measurements.csv` and does not depend on the long-form slice exports
 
 ## Method Roadmap
 

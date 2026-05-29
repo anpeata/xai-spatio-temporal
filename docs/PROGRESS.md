@@ -284,6 +284,31 @@ Ordering rule: keep entries in chronological order and append each new update at
 
 **Possible questions/concerns**
 - Should the root scratch CSVs stay untracked, or should they be removed once the fixture is finalized?
+
+### 2026-05-29 (Picoclimate track matrix hierarchy)
+
+**Experimentations**
+- Switched the Picoclimate browseable fixture away from `variable_slices/` date files and toward a city/date/slot/track hierarchy.
+- Chose a per-track matrix layout so each track file shows variables as rows and `location_id` values as columns.
+
+**Results (numbers, tables, plots)**
+- The target hierarchy is now `cities/<city>/<YYYY-MM-DD>/<time_slot>/<track_id>.csv`.
+
+**Insights**
+- A variable-by-location track matrix matches the requested emphasis on all possible `location_id` columns more closely than the earlier date-only CSVs.
+
+**Failures / issues / risks**
+- The city/date/slot/track layout still needs to be regenerated on disk after the script change.
+
+**Implementation details**
+- Updated the split script to read `tracks_measurements.csv` directly and emit one matrix CSV per track leaf.
+- Updated fixture docs and metadata to describe the new browseable hierarchy.
+
+**Next**
+- Regenerate `data/picoclimate_test/cities/` with the new hierarchy and validate the track matrices.
+
+**Possible questions/concerns**
+- Should the old `variable_slices/` browse outputs be removed entirely once the new hierarchy is validated?
 - ECG5000 execution notebook: `scripts/notebooks/exkmc_blobs_experiment.ipynb` (cells for dataset load, k-selection, model comparison, PCA view, tree export run).
 - Shapelet notebook updated/executed: `scripts/notebooks/shapelets_ecg200.ipynb` (surrogate, SHAP, and abductive explanation cells refreshed).
 - Notebook now includes a fixed-vs-mixed shapelet-length comparison cell with recommendation output.
