@@ -27,7 +27,7 @@ def _trend_four_points(values: pd.Series) -> float:
 
 
 def _build_window_features(df: pd.DataFrame) -> pd.DataFrame:
-    id_cols = ['track_id', 'city', 'date', 'time_slot', 'slot_index']
+    id_cols = ['track_id', 'city', 'date', 'time_slot', 'slot_index', 'loc_id', 'loc_index', 'timestamp']
     for c in df.columns:
         if c in id_cols:
             continue
@@ -57,12 +57,15 @@ def _build_window_features(df: pd.DataFrame) -> pd.DataFrame:
             row[f'{col}__std'] = float(g[col].std(skipna=True))
             row[f'{col}__trend'] = _trend_four_points(ordered[col])
 
-        mode = g['true_regime'].mode(dropna=True)
-        row['true_regime'] = mode.iloc[0] if not mode.empty else None
+        if 'true_regime' in g.columns:
+            mode = g['true_regime'].mode(dropna=True)
+            row['true_regime'] = mode.iloc[0] if not mode.empty else None
         groups.append(row)
 
     out = pd.DataFrame(groups)
-    cols = ['track_id', 'date', 'city', 'time_slot', 'n_points', 'present_fraction', 'true_regime']
+    cols = ['track_id', 'date', 'city', 'time_slot', 'n_points', 'present_fraction']
+    if 'true_regime' in out.columns:
+        cols.append('true_regime')
     cols += [c for c in out.columns if c not in cols]
     return out[cols]
 

@@ -1,8 +1,8 @@
 # nan_track_004
 
 City: Nantes
-Rows: 3547
-Track length: 137
+Source: variable_slices/
+Rows: 3367
 Days recorded: 13
 Daily windows: 13
 

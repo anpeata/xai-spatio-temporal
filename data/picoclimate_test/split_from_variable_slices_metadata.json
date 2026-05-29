@@ -1,0 +1,19 @@
+{
+  "created_utc": "2026-05-29T13:57:29.736103+00:00",
+  "source_root": "d:\\repositories\\personal\\xai-spatio-temporal\\data\\picoclimate_test\\variable_slices",
+  "cities": {
+    "Montpellier": {
+      "track_count": 6,
+      "rows": 12043,
+      "days": 20,
+      "source": "data/picoclimate_test/variable_slices/"
+    },
+    "Nantes": {
+      "track_count": 10,
+      "rows": 24675,
+      "days": 21,
+      "source": "data/picoclimate_test/variable_slices/"
+    }
+  },
+  "note": "City/track split reconstructed from variable_slices/ only."
+}

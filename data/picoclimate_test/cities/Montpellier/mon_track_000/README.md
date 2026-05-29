@@ -1,8 +1,8 @@
 # mon_track_000
 
 City: Montpellier
-Rows: 2082
-Track length: 108
+Source: variable_slices/
+Rows: 1978
 Days recorded: 7
 Daily windows: 7
 

@@ -69,6 +69,9 @@ Ordering rule: keep entries in chronological order and append each new update at
 **Addendum**
 - Current working data for the next analysis pass is `variable_slices/`; the root CSVs stay as regeneration inputs.
 
+**Follow-up**
+- Rebuilt the `cities/` hierarchy from `variable_slices/` so each city/track folder is now sourced directly from the long-form slice files.
+
 **Next**
 - Decide whether to keep `variable_slices/` as a long-form analysis aid or trim it down further.
 

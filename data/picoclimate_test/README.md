@@ -15,6 +15,7 @@ Current working input:
 
 - use `variable_slices/` for the present analysis workflow
 - keep the root-level CSVs as regeneration inputs and compatibility artifacts
+- `cities/` is reconstructed from `variable_slices/` and now stores per-city/per-track copies of the data
 
 ## Current dataset stats
 

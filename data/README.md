@@ -58,6 +58,8 @@ This folder contains synthetic data regenerated to match the latest track-based 
 
 For now, use `variable_slices/` as the main data source when running the current workflow. The root master tables remain available for regeneration, but they are not the primary slice used in the analysis path.
 
+The `cities/` hierarchy is rebuilt from `variable_slices/` and provides a per-city/per-track view of the same fixture.
+
 ## Labels
 
 - `true_regime` exists in the master table and daily windows and can be used for controlled evaluation of clustering quality.
