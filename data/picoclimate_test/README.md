@@ -11,6 +11,11 @@ This folder contains the regenerated **track-based synthetic** picoclimate fixtu
 - `metadata.json` - generation parameters, table counts, and slice layout
 - `csv_fields_explained.json` - schema dictionary for the CSV outputs
 
+Current working input:
+
+- use `variable_slices/` for the present analysis workflow
+- keep the root-level CSVs as regeneration inputs and compatibility artifacts
+
 ## Current dataset stats
 
 Generated parameters (see `metadata.json`):

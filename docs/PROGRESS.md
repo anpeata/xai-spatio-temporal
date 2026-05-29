@@ -66,6 +66,9 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Updated the regen script to emit `cities/<city>/<track_id>/tracks_measurements.csv`, `window_features.csv`, `metadata.json`, and `README.md`.
 - Updated fixture docs and the Picoclimate strategy note to describe the hierarchy.
 
+**Addendum**
+- Current working data for the next analysis pass is `variable_slices/`; the root CSVs stay as regeneration inputs.
+
 **Next**
 - Decide whether to keep `variable_slices/` as a long-form analysis aid or trim it down further.
 

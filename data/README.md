@@ -38,6 +38,7 @@ This folder contains synthetic data regenerated to match the latest track-based 
 
 - **Grain:** one record per track/location point inside a single variable slice
 - **Pattern:** `variable_slices/<variable>/day_<YYYY-MM-DD>_slot_<slot>.csv`
+- **Current use:** primary working input for the present analysis flow
 - **Use cases:**
   - inspect a single variable on a specific day and slot
   - feed sequence-aware methods that expect one variable at a time
@@ -52,6 +53,10 @@ This folder contains synthetic data regenerated to match the latest track-based 
   - browse a single city or track without opening the master tables
   - keep a lightweight, hierarchical fixture layout for demos and notebooks
   - compare per-track daily windows side by side
+
+## Current Working Set
+
+For now, use `variable_slices/` as the main data source when running the current workflow. The root master tables remain available for regeneration, but they are not the primary slice used in the analysis path.
 
 ## Labels
 
