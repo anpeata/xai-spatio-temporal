@@ -69,10 +69,10 @@ Current fixture shape:
 - track length roughly 100-150 loc_id per track
 - 0-4 observed slots per day, with missing days allowed
 - optional `variable_slices/<variable>/day_<YYYY-MM-DD>_slot_<slot>.csv` exports for one-variable daily analysis
-- per-city/per-track copies under `cities/<city>/<track_id>/` for browsing a single track at a time
+- per-city/per-track copies under `variable_slices/cities/<city>/<track_id>/` for browsing a single track at a time
 - root-level `tracks_measurements.csv` and `window_features.csv` remain the canonical regeneration inputs
 - current working analysis data is `variable_slices/`
-- the `cities/` hierarchy is reconstructed from `variable_slices/` and does not depend on the root master tables
+- the `variable_slices/cities/` hierarchy is reconstructed from `variable_slices/` and does not depend on the root master tables
 
 ## Method Roadmap
 

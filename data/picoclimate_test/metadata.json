@@ -11,7 +11,8 @@
       "Nantes": 10,
       "Montpellier": 6
     },
-    "slice_layout": "variable_slices/<variable>/day_<YYYY-MM-DD>_slot_<slot>.csv"
+    "slice_layout": "variable_slices/<variable>/day_<YYYY-MM-DD>_slot_<slot>.csv",
+    "track_hierarchy_layout": "variable_slices/cities/<city>/<track_id>/"
   },
   "parameters": {
     "seed": 20260529,
@@ -95,6 +96,6 @@
     "track_sequence": "Treat loc_index order as pseudo-time along each track.",
     "windowing": "Aggregate by track_id and date to build daily windows.",
     "slice_layout": "Use variable_slices/<variable>/day_<YYYY-MM-DD>_slot_<slot>.csv for one-variable daily exports.",
-    "track_hierarchy": "Use cities/<city>/<track_id>/ for per-city and per-track copies of the master fixture."
+    "track_hierarchy": "Use variable_slices/cities/<city>/<track_id>/ for per-city and per-track copies of the fixture."
   }
 }

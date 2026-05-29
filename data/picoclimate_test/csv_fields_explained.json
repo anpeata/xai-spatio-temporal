@@ -61,13 +61,11 @@
       }
     },
     "cities": {
-      "description": "City/track hierarchy containing per-city and per-track copies of the master fixture.",
-      "pattern": "cities/<city>/<track_id>/tracks_measurements.csv",
+      "description": "City/track hierarchy stored under variable_slices/cities/.",
+      "pattern": "variable_slices/cities/<city>/<track_id>/tracks_measurements.csv",
       "track_files": [
         "tracks_measurements.csv",
-        "window_features.csv",
-        "metadata.json",
-        "README.md"
+        "window_features.csv"
       ]
     }
   }

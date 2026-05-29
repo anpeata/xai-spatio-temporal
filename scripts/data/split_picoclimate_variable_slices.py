@@ -2,18 +2,16 @@
 
 The source of truth for this split is data/picoclimate_test/variable_slices/.
 The script reconstructs a wide track table from the long-form variable slices,
-then writes per-city and per-track copies under data/picoclimate_test/cities/.
+then writes the city/track hierarchy under data/picoclimate_test/variable_slices/cities/.
 """
 
 from __future__ import annotations
 
 import argparse
 import importlib.util
-import json
-from datetime import datetime, timezone
 from functools import reduce
 from pathlib import Path
-from typing import Dict, Iterable, List
+from typing import List
 
 import pandas as pd
 
@@ -94,7 +92,7 @@ def _reconstruct_wide_table(variable_root: Path) -> pd.DataFrame:
     return wide
 
 
-def _write_track_bundle(track_df: pd.DataFrame, city: str, track_id: str, track_dir: Path, builder) -> Dict[str, int]:
+def _write_track_bundle(track_df: pd.DataFrame, track_dir: Path, builder) -> None:
     track_dir.mkdir(parents=True, exist_ok=True)
 
     track_df = track_df.copy().sort_values(["date", "slot_index", "loc_index"], kind="mergesort").reset_index(drop=True)
@@ -102,37 +100,6 @@ def _write_track_bundle(track_df: pd.DataFrame, city: str, track_id: str, track_
 
     track_df.to_csv(track_dir / "tracks_measurements.csv", index=False)
     track_features.to_csv(track_dir / "window_features.csv", index=False)
-
-    track_stats = {
-        "track_id": track_id,
-        "city": city,
-        "rows": int(track_df.shape[0]),
-        "days": int(track_df["date"].nunique()),
-        "daily_windows": int(track_features.shape[0]),
-        "source": "data/picoclimate_test/variable_slices/",
-        "source_columns": ["track_id", "city", "date", "time_slot", "slot_index", "loc_index", "timestamp", *VALUE_COLUMNS],
-    }
-    (track_dir / "metadata.json").write_text(json.dumps(track_stats, indent=2, ensure_ascii=False), encoding="utf-8")
-    (track_dir / "README.md").write_text(
-        "\n".join(
-            [
-                f"# {track_id}",
-                "",
-                f"City: {city}",
-                "Source: variable_slices/",
-                f"Rows: {track_stats['rows']}",
-                f"Days recorded: {track_stats['days']}",
-                f"Daily windows: {track_stats['daily_windows']}",
-                "",
-                "Files:",
-                "- tracks_measurements.csv",
-                "- window_features.csv",
-                "- metadata.json",
-            ]
-        ),
-        encoding="utf-8",
-    )
-    return track_stats
 
 
 def main() -> None:
@@ -146,59 +113,21 @@ def main() -> None:
     builder = _load_window_builder(repo_root)
     wide = _reconstruct_wide_table(source_root)
 
-    city_root = data_dir / "cities"
+    city_root = source_root / "cities"
     city_root.mkdir(parents=True, exist_ok=True)
 
-    hierarchy_counts: Dict[str, Dict[str, int]] = {}
     for city, city_df in wide.groupby("city", sort=True):
         city_dir = city_root / city
         city_dir.mkdir(parents=True, exist_ok=True)
 
         city_tracks = sorted(city_df["track_id"].unique().tolist())
-        city_stats = {
-            "track_count": len(city_tracks),
-            "rows": int(city_df.shape[0]),
-            "days": int(city_df["date"].nunique()),
-            "source": "data/picoclimate_test/variable_slices/",
-        }
-
-        city_readme_lines = [
-            f"# {city} Fixture",
-            "",
-            f"Source: variable_slices/",
-            f"Tracks: {len(city_tracks)}",
-            f"Rows: {city_stats['rows']}",
-            f"Days: {city_stats['days']}",
-            "",
-            "## Tracks",
-        ]
 
         for track_id in city_tracks:
             track_dir = city_dir / track_id
             track_df = city_df[city_df["track_id"] == track_id].copy()
-            track_stats = _write_track_bundle(track_df, city, track_id, track_dir, builder)
-            city_readme_lines.append(f"- {track_id}: {track_stats['rows']} rows, {track_stats['days']} days")
-
-        (city_dir / "README.md").write_text("\n".join(city_readme_lines), encoding="utf-8")
-        (city_dir / "metadata.json").write_text(json.dumps(city_stats, indent=2, ensure_ascii=False), encoding="utf-8")
-        hierarchy_counts[city] = city_stats
-
-    (data_dir / "split_from_variable_slices_metadata.json").write_text(
-        json.dumps(
-            {
-                "created_utc": datetime.now(timezone.utc).isoformat(),
-                "source_root": str(source_root),
-                "cities": hierarchy_counts,
-                "note": "City/track split reconstructed from variable_slices/ only.",
-            },
-            indent=2,
-            ensure_ascii=False,
-        ),
-        encoding="utf-8",
-    )
+            _write_track_bundle(track_df, track_dir, builder)
 
     print(f"Wrote city hierarchy under: {city_root}")
-    print(f"Wrote split metadata: {data_dir / 'split_from_variable_slices_metadata.json'}")
 
 
 if __name__ == "__main__":
