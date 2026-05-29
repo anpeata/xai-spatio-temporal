@@ -60,8 +60,15 @@ Example output:
 ## Track-Based Fixture Guidance
 
 The current synthetic fixture is track-based with variable-length loc_id sequences.
-Treat loc_index ordering as pseudo-time and aggregate by track_id + date + time_slot
+Treat `loc_index` ordering as pseudo-time and aggregate by `track_id + date`
 when you need daily windows or slot-level summaries.
+
+Current fixture shape:
+
+- 10 Nantes tracks and 6 Montpellier tracks
+- track length roughly 100-150 loc_id per track
+- 0-4 observed slots per day, with missing days allowed
+- optional `variable_slices/<variable>/day_<YYYY-MM-DD>_slot_<slot>.csv` exports for one-variable daily analysis
 
 ## Method Roadmap
 

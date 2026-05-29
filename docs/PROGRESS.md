@@ -776,3 +776,28 @@ Ordering rule: keep entries in chronological order and append each new update at
 - Which runs, notebooks, or documents after 2026-05-20 should be recorded?
 - Any pipeline corrections or missing files to include in the mixed-length map?
 
+---
+
+### 2026-05-29 (Picoclimate fixture regeneration)
+
+**Experimentations**
+- Regenerated the local `data/picoclimate_test` fixture to match the latest track-based description.
+- Added a dedicated regeneration script for the fixture and a reusable window-feature helper.
+- Exported per-variable day/slot slices under `data/picoclimate_test/variable_slices/`.
+
+**Results (numbers, tables, plots)**
+- `tracks_measurements.csv`: 38,703 rows × 32 columns.
+- `window_features.csv`: 165 rows × 196 columns.
+- Track lengths now fall in the 102-137 loc_id range.
+- Fixture still covers 10 Nantes tracks and 6 Montpellier tracks.
+
+**Insights**
+- The new fixture better matches the track-length range discussed in the latest note while preserving the existing track/day/slot structure.
+
+**Implementation details**
+- New script: `scripts/data/regenerate_picoclimate_fixture.py`.
+- Updated helper: `scripts/data/build_window_features_from_tracks.py`.
+
+**Next**
+- Refresh any downstream figures or reports that reference the old fixture size if they need to reflect the new counts.
+

@@ -1,40 +1,28 @@
 {
-  "created_utc": "2026-05-28T00:00:00+00:00",
+  "created_utc": "2026-05-29T13:10:06.299476+00:00",
   "generation_notes": {
-    "measured_variable_count": 23,
     "sequence_model": "track-based with variable-length loc_id sequences",
-    "slots_per_day": "1-4",
-    "missingness": "row-level missing locations + cell-level NaNs"
+    "loc_id_range_per_track": [
+      100,
+      150
+    ],
+    "slots_per_day": "0-4 available recordings/day (missing days and missing slots allowed)",
+    "cities": {
+      "Nantes": 10,
+      "Montpellier": 6
+    },
+    "slice_layout": "variable_slices/<variable>/day_<YYYY-MM-DD>_slot_<slot>.csv"
   },
   "parameters": {
-    "seed": 20260528,
-    "n_tracks_per_city": 30,
-    "loc_id_range": [
-      100,
-      200
-    ],
-    "days_total": 21,
-    "days_per_track_range": [
-      6,
-      14
-    ],
-    "cities": [
-      "Nantes",
-      "Montpellier"
-    ],
-    "slot_hours": [
-      6,
-      12,
-      16,
-      22
-    ],
-    "step_minutes": 10,
-    "missing_loc_fraction": 0.08,
-    "value_nan_fraction": 0.05
+    "seed": 20260529,
+    "min_loc": 100,
+    "max_loc": 150,
+    "n_tracks_nantes": 10,
+    "n_tracks_montpellier": 6
   },
-    "tables": {
+  "tables": {
     "tracks_measurements.csv": {
-      "rows": 205056,
+      "rows": 38703,
       "columns": 32,
       "primary_key": [
         "track_id",
@@ -42,174 +30,54 @@
         "time_slot",
         "loc_id"
       ]
+    },
+    "window_features.csv": {
+      "rows": 165,
+      "columns": 196,
+      "primary_key": [
+        "track_id",
+        "date"
+      ]
     }
   },
-  "measured_variables": [
-    {
-      "name": "air_temp_c",
-      "unit": "degC",
-      "description": "Near-surface air temperature",
-      "min_value": -15.0,
-      "max_value": 50.0
-    },
-    {
-      "name": "rel_humidity_pct",
-      "unit": "pct",
-      "description": "Relative humidity",
-      "min_value": 5.0,
-      "max_value": 100.0
-    },
-    {
-      "name": "wind_speed_ms",
-      "unit": "m_s",
-      "description": "Wind speed",
-      "min_value": 0.0,
-      "max_value": 25.0
-    },
-    {
-      "name": "wind_dir_deg",
-      "unit": "deg",
-      "description": "Wind direction",
-      "min_value": 0.0,
-      "max_value": 360.0
-    },
-    {
-      "name": "pressure_hpa",
-      "unit": "hPa",
-      "description": "Air pressure",
-      "min_value": 960.0,
-      "max_value": 1045.0
-    },
-    {
-      "name": "precipitation_mm",
-      "unit": "mm",
-      "description": "Precipitation amount per slot",
-      "min_value": 0.0,
-      "max_value": 50.0
-    },
-    {
-      "name": "solar_wm2",
-      "unit": "W_m2",
-      "description": "Shortwave solar irradiance",
-      "min_value": 0.0,
-      "max_value": 1200.0
-    },
-    {
-      "name": "longwave_wm2",
-      "unit": "W_m2",
-      "description": "Longwave radiation",
-      "min_value": 200.0,
-      "max_value": 700.0
-    },
-    {
-      "name": "surface_temp_c",
-      "unit": "degC",
-      "description": "Surface temperature",
-      "min_value": -10.0,
-      "max_value": 75.0
-    },
-    {
-      "name": "soil_moisture_pct",
-      "unit": "pct",
-      "description": "Top-soil moisture",
-      "min_value": 1.0,
-      "max_value": 70.0
-    },
-    {
-      "name": "ndvi",
-      "unit": "index",
-      "description": "Vegetation greenness proxy",
-      "min_value": 0.0,
-      "max_value": 1.0
-    },
-    {
-      "name": "pm25_ugm3",
-      "unit": "ug_m3",
-      "description": "PM2.5 concentration",
-      "min_value": 0.0,
-      "max_value": 220.0
-    },
-    {
-      "name": "pm10_ugm3",
-      "unit": "ug_m3",
-      "description": "PM10 concentration",
-      "min_value": 0.0,
-      "max_value": 320.0
-    },
-    {
-      "name": "co2_ppm",
-      "unit": "ppm",
-      "description": "CO2 concentration",
-      "min_value": 350.0,
-      "max_value": 3000.0
-    },
-    {
-      "name": "no2_ppb",
-      "unit": "ppb",
-      "description": "NO2 concentration",
-      "min_value": 0.0,
-      "max_value": 220.0
-    },
-    {
-      "name": "o3_ppb",
-      "unit": "ppb",
-      "description": "O3 concentration",
-      "min_value": 0.0,
-      "max_value": 180.0
-    },
-    {
-      "name": "noise_db",
-      "unit": "dB",
-      "description": "Ambient sound pressure level",
-      "min_value": 20.0,
-      "max_value": 110.0
-    },
-    {
-      "name": "traffic_index",
-      "unit": "index",
-      "description": "Traffic intensity proxy",
-      "min_value": 0.0,
-      "max_value": 1.0
-    },
-    {
-      "name": "pedestrian_index",
-      "unit": "index",
-      "description": "Pedestrian activity proxy",
-      "min_value": 0.0,
-      "max_value": 1.0
-    },
-    {
-      "name": "sky_view_factor",
-      "unit": "index",
-      "description": "Visible sky fraction",
-      "min_value": 0.05,
-      "max_value": 1.0
-    },
-    {
-      "name": "impervious_fraction",
-      "unit": "index",
-      "description": "Impervious surface fraction",
-      "min_value": 0.0,
-      "max_value": 1.0
-    },
-    {
-      "name": "water_proximity",
-      "unit": "index",
-      "description": "Relative proximity to water body",
-      "min_value": 0.0,
-      "max_value": 1.0
-    },
-    {
-      "name": "heat_index_c",
-      "unit": "degC",
-      "description": "Apparent temperature proxy",
-      "min_value": -20.0,
-      "max_value": 65.0
-    }
-  ],
+  "track_length_summary": {
+    "min": 102,
+    "max": 137,
+    "mean": 108.625
+  },
+  "days_per_track_summary": {
+    "min": 6,
+    "max": 14,
+    "mean": 10.3125
+  },
+  "slice_counts": {
+    "air_temp_c": 84,
+    "rel_humidity_pct": 84,
+    "wind_speed_ms": 84,
+    "wind_dir_deg": 84,
+    "pressure_hpa": 84,
+    "precipitation_mm": 84,
+    "solar_wm2": 84,
+    "longwave_wm2": 84,
+    "surface_temp_c": 84,
+    "soil_moisture_pct": 84,
+    "ndvi": 84,
+    "pm25_ugm3": 84,
+    "pm10_ugm3": 84,
+    "co2_ppm": 84,
+    "no2_ppb": 84,
+    "o3_ppb": 84,
+    "noise_db": 84,
+    "traffic_index": 84,
+    "pedestrian_index": 84,
+    "sky_view_factor": 84,
+    "impervious_fraction": 84,
+    "water_proximity": 84,
+    "heat_index_c": 84
+  },
   "representation_guidance": {
-    "track_sequence": "Treat loc_index order as time steps within a track and slot.",
-    "windowing": "Aggregate by track_id, date, and time_slot to build daily windows.",
-    "missing_values": "Impute per track and variable while preserving loc_index ordering."
+    "track_sequence": "Treat loc_index order as pseudo-time along each track.",
+    "windowing": "Aggregate by track_id and date to build daily windows.",
+    "slice_layout": "Use variable_slices/<variable>/day_<YYYY-MM-DD>_slot_<slot>.csv for one-variable daily exports."
   }
 }
