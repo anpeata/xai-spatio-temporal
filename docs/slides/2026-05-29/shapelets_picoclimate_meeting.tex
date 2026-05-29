@@ -99,6 +99,51 @@
 \end{center}
 \end{frame}
 
+% EDA: track length distribution
+\begin{frame}{EDA — Track length distribution}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{../../../scripts/figures/picoclimate_track_length_dist.png}
+\end{center}
+\end{frame}
+
+% EDA: numeric histograms
+\begin{frame}{EDA — Numeric histograms (top variables)}
+\begin{center}
+\includegraphics[width=0.9\textwidth]{../../../scripts/figures/picoclimate_numeric_hist_topvars.png}
+\end{center}
+\end{frame}
+
+% EDA: sample time-series
+\begin{frame}{EDA — Sample time-series}
+\begin{center}
+\includegraphics[width=0.9\textwidth]{../../../scripts/figures/picoclimate_sample_timeseries.png}
+\end{center}
+\end{frame}
+
+% Statistics slide
+\begin{frame}{Shapelet run statistics}
+\begin{itemize}
+  \item Selected shapelets: 74
+  \item Candidate pool: 1000; rows (windows): 165; slot-columns: 100
+\end{itemize}
+\vspace{6pt}
+\begin{block}{KMeans silhouette by k (selected)}
+\begin{tabular}{lr}
+\toprule
+k & silhouette \\
+\midrule
+2 & 0.3133 \\
+3 & 0.1493 \\
+4 & 0.1586 \\
+5 & 0.1374 \\
+6 & 0.1280 \\
+\bottomrule
+\end{tabular}
+\end{block}
+\vspace{6pt}
+\footnotesize Detailed outputs: docs/reports/picoclimate_2026-05-29/
+\end{frame}
+
 % Alignment slide
 \begin{frame}{Alignment / Resampling (notes)}
 \begin{block}{Key approach}
