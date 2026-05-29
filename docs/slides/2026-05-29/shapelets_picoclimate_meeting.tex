@@ -92,6 +92,29 @@
 \end{itemize}
 \end{frame}
 
+% Data structure
+\begin{frame}{Data structure and daily windows}
+\begin{itemize}
+  \item Raw fixture is track-based: each \texttt{track\_id} is an ordered sequence of measurements.
+  \item If \texttt{loc\_id} follows the visit order, it can be treated as a pseudo-time slot axis for a track.
+  \item For daily summaries, group by \texttt{track\_id + date + time\_slot} and keep a fixed slot order.
+  \item If the raw order is irregular, align first, then resample to a common length before extracting shapelets.
+\end{itemize}
+\begin{block}{Practical rule}
+Use the real time columns when available; use \texttt{loc\_id} ordering only as a fallback pseudo-time index.
+\end{block}
+\end{frame}
+
+% Why window features
+\begin{frame}{Why \texttt{window\_features.csv} still matters}
+\begin{itemize}
+  \item It is a fixed-width table built from the track fixture, so clustering and EDA are reproducible and cheap.
+  \item It lets us compare shapelet-distance clustering against a simpler baseline on the same windows.
+  \item It decouples two questions: representation quality and clustering quality.
+  \item For today\textquotesingle s meeting, it is the stable input that feeds the current shapelet pipeline and slide figures.
+\end{itemize}
+\end{frame}
+
 % Silhouette figure
 \begin{frame}{Silhouette by method}
 \begin{center}
