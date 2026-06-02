@@ -15,6 +15,9 @@ venv/
 # Generated experiment outputs
 outputs/
 
+# Slides (kept local only)
+docs/slides/**
+
 # Slide build artifacts
 docs/slides/**/*.aux
 docs/slides/**/*.log
