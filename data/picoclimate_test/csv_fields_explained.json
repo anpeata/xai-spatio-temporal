@@ -3,6 +3,7 @@
   "files": {
     "tracks_measurements.csv": {
       "description": "Master track table with one row per track x date x slot x loc_id.",
+      "row_count": 38703,
       "primary_key": [
         "track_id",
         "date",
@@ -24,6 +25,7 @@
     },
     "window_features.csv": {
       "description": "One row per track x date with flattened slot columns and summary statistics.",
+      "row_count": 165,
       "primary_key": [
         "track_id",
         "date"
@@ -61,11 +63,39 @@
       }
     },
     "cities": {
-      "description": "City split stored under variable_slices/cities/ with one CSV per date.",
-      "pattern": "variable_slices/cities/<city>/<YYYY-MM-DD>.csv",
-      "track_files": [
-        "<date>.csv"
-      ]
+      "description": "Browseable city hierarchy stored under cities/ with one CSV per track in date/slot folders.",
+      "pattern": "cities/<city>/<season>/<YYYY-MM-DD>/<time_slot>/<track_id>.csv",
+      "counts": {
+        "total_track_files": 490,
+        "total_date_folders": 51,
+        "total_slot_folders": 187,
+        "by_city_and_season": {
+          "Montpellier": {
+            "summer": {
+              "date_folders": 20,
+              "slot_folders": 68,
+              "track_files": 127
+            },
+            "winter": {
+              "date_folders": 5,
+              "slot_folders": 18,
+              "track_files": 28
+            }
+          },
+          "Nantes": {
+            "summer": {
+              "date_folders": 21,
+              "slot_folders": 82,
+              "track_files": 259
+            },
+            "winter": {
+              "date_folders": 5,
+              "slot_folders": 19,
+              "track_files": 76
+            }
+          }
+        }
+      }
     }
   }
 }

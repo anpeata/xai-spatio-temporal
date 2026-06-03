@@ -11,7 +11,7 @@
       "Nantes": 10,
       "Montpellier": 6
     },
-    "track_hierarchy_layout": "cities/<city>/<YYYY-MM-DD>/<time_slot>/<track_id>.csv",
+    "track_hierarchy_layout": "cities/<city>/<season>/<YYYY-MM-DD>/<time_slot>/<track_id>.csv",
     "track_matrix_layout": "rows are variables, columns are location_id values"
   },
   "parameters": {
@@ -39,6 +39,43 @@
         "track_id",
         "date"
       ]
+    }
+  },
+  "record_and_file_counts": {
+    "table_records": {
+      "tracks_measurements.csv": 38703,
+      "window_features.csv": 165
+    },
+    "cities_hierarchy": {
+      "total_track_files": 490,
+      "total_date_folders": 51,
+      "total_slot_folders": 187,
+      "by_city_and_season": {
+        "Montpellier": {
+          "summer": {
+            "date_folders": 20,
+            "slot_folders": 68,
+            "track_files": 127
+          },
+          "winter": {
+            "date_folders": 5,
+            "slot_folders": 18,
+            "track_files": 28
+          }
+        },
+        "Nantes": {
+          "summer": {
+            "date_folders": 21,
+            "slot_folders": 82,
+            "track_files": 259
+          },
+          "winter": {
+            "date_folders": 5,
+            "slot_folders": 19,
+            "track_files": 76
+          }
+        }
+      }
     }
   },
   "track_length_summary": {
@@ -95,7 +132,7 @@
   "representation_guidance": {
     "track_sequence": "Treat loc_index order as pseudo-time along each track.",
     "windowing": "Aggregate by track_id and date to build daily windows.",
-    "track_hierarchy": "Use cities/<city>/<YYYY-MM-DD>/<time_slot>/<track_id>.csv for the browseable fixture hierarchy.",
+    "track_hierarchy": "Use cities/<city>/<season>/<YYYY-MM-DD>/<time_slot>/<track_id>.csv for the browseable fixture hierarchy.",
     "track_matrix": "Each track file is a variable-by-location matrix with one column per location_id."
   }
 }
