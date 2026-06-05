@@ -1,0 +1,64 @@
+{
+  "created_utc": "2026-06-05T10:24:00.000000+00:00",
+  "generation_notes": {
+    "sequence_model": "long continuous sequential measurement streams (route-based)",
+    "point_id_range_per_track": [
+      4247,
+      5351
+    ],
+    "track_hierarchy_layout": "cities/<city>/<season>/<YYYY-MM-DD>/<time_slot>/<track_id>.csv",
+    "track_matrix_layout": "rows represent thousands of continuous sequential spatial observations, columns are variables"
+  },
+  "parameters": {
+    "seed": 20260529,
+    "min_sequential_points": 4000,
+    "max_sequential_points": 6000,
+    "target_cities": [
+      "Montpellier"
+    ],
+    "observation_mode": "geo-sequential mobile tracking"
+  },
+  "tables": {
+    "ecusson_12-12-24_1425.csv": {
+      "rows": 5351,
+      "columns": 38,
+      "primary_key": [
+        "project_id",
+        "track_id",
+        "point_id"
+      ]
+    },
+    "picopatt_montpellier_antigone_20250626_1224_geo-seq.csv": {
+      "rows": 4247,
+      "columns": 34,
+      "primary_key": [
+        "project_id",
+        "track_id",
+        "point_id"
+      ]
+    }
+  },
+  "environmental_variable_registry": [
+    "tair_thermohygro",
+    "tair_tc1",
+    "tair_tc2",
+    "tair_anemo",
+    "rh_thermohygro",
+    "ws",
+    "wdir",
+    "sw_up",
+    "sw_down",
+    "sw_front",
+    "sw_back",
+    "sw_left",
+    "sw_right",
+    "lw_up",
+    "lw_down",
+    "lw_front",
+    "lw_back",
+    "lw_left",
+    "lw_right",
+    "tmrt",
+    "pet"
+  ]
+}
