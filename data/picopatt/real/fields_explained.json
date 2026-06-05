@@ -1,0 +1,55 @@
+{
+  "created_utc": "2026-06-05T10:24:00.000000+00:00",
+  "files": {
+    "real_route_measurement_streams": {
+      "description": "Continuous environmental tracks consisting of thousands of sequential observation rows mapped across target cities.",
+      "primary_keys": [
+        "project_id",
+        "track_id",
+        "point_id"
+      ],
+      "route_metadata_columns": {
+        "project_id": "Identifier for the master field study (e.g., picopatt_montpellier).",
+        "track_id": "Identifier for the selected route segment profile (e.g., ecusson, antigone).",
+        "section_id": "Current macro route segment number.",
+        "segment_id": "Micro sub-segment routing identifier.",
+        "point_id": "Continuous, sequential point identifier indicating spatial order along the track.",
+        "section_duration": "Time duration of the section (populated exclusively at section boundary points).",
+        "section_speed": "Planned or recorded average pacing speed within the section.",
+        "section_warning": "Flag indicating sensor issues or route anomalies.",
+        "gnss_accuracy": "GPS/GNSS localization horizontal accuracy threshold value.",
+        "section_weather": "Qualitative ambient metadata notation (e.g., sun).",
+        "timestamp": "Precise continuous observation wall-clock timestamp.",
+        "lon_ontrack": "Projected longitude position matched directly to the urban tracking route.",
+        "lat_ontrack": "Projected latitude position matched directly to the urban tracking route.",
+        "lon_rtk": "Raw RTK corrected longitude coordinate stream.",
+        "lat_rtk": "Raw RTK corrected latitude coordinate stream.",
+        "sun_azimuth": "Calculated geometric solar azimuth angle for radiation adjustments.",
+        "sun_height": "Calculated geometric solar elevation angle relative to the horizon."
+      },
+      "environmental_variable_columns": {
+        "tair_thermohygro": "Ambient air temperature recorded via standard thermohygrometer probe (°C).",
+        "tair_tc1": "Fast-response air temperature recorded via fine-wire thermocouple Channel 1 (°C).",
+        "tair_tc2": "Fast-response air temperature recorded via fine-wire thermocouple Channel 2 (°C).",
+        "tair_anemo": "Ambient air temperature recorded directly at the ultrasonic anemometer sensor (°C).",
+        "rh_thermohygro": "Relative humidity percentage recorded via standard probe (%).",
+        "ws": "Ambient wind speed vector magnitude (m/s).",
+        "wdir": "Calculated localized wind direction angle degrees (0-360°).",
+        "sw_up": "Incoming vertical shortwave solar radiation flux ($W/m^2$).",
+        "sw_down": "Reflected ground shortwave radiation flux ($W/m^2$).",
+        "sw_front": "Directional shortwave solar radiation arriving from the front hemisphere ($W/m^2$).",
+        "sw_back": "Directional shortwave solar radiation arriving from the rear hemisphere ($W/m^2$).",
+        "sw_left": "Directional shortwave solar radiation arriving from the left hemisphere ($W/m^2$).",
+        "sw_right": "Directional shortwave solar radiation arriving from the right hemisphere ($W/m^2$).",
+        "lw_up": "Downwelling longwave thermal atmospheric radiation flux ($W/m^2$).",
+        "lw_down": "Upwelling longwave thermal radiation emitted from the ground plane ($W/m^2$).",
+        "lw_front": "Directional longwave thermal radiation tracking front hemisphere fields ($W/m^2$).",
+        "lw_back": "Directional longwave thermal radiation tracking rear hemisphere fields ($W/m^2$).",
+        "lw_left": "Directional longwave thermal radiation tracking left hemisphere fields ($W/m^2$).",
+        "lw_right": "Directional longwave thermal radiation tracking right hemisphere fields ($W/m^2$).",
+        "tmrt": "Mean Radiant Temperature calculated across the six directional radiation axes (°C).",
+        "pet": "Physiological Equivalent Temperature index measuring composite thermal comfort (°C)."
+      }
+    }
+  }
+}
