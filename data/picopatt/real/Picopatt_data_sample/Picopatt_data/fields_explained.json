@@ -22,8 +22,8 @@
         "timestamp": "Precise continuous observation wall-clock timestamp.",
         "lon_ontrack": "Projected longitude position matched directly to the urban tracking route.",
         "lat_ontrack": "Projected latitude position matched directly to the urban tracking route.",
-        "lon_rtk": "Raw RTK corrected longitude coordinate stream.",
-        "lat_rtk": "Raw RTK corrected latitude coordinate stream.",
+        "lon_rtk": "Raw RTK (Real-Time Kinematic) corrected longitude coordinate stream.",
+        "lat_rtk": "Raw RTK (Real-Time Kinematic) corrected latitude coordinate stream.",
         "sun_azimuth": "Calculated geometric solar azimuth angle for radiation adjustments.",
         "sun_height": "Calculated geometric solar elevation angle relative to the horizon."
       },
