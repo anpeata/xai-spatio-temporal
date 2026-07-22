@@ -15,9 +15,14 @@ Focus: explainable clustering for spatio-temporal picoclimatic data, with reprod
 ## Repository Layout
 
 - `docs/`: consolidated governance and progress tracking documents
+- `data/`: lightweight dataset documentation, metadata, and small fixtures
 - `scripts/data/`: synthetic data generation and reduction utilities
+- `scripts/notebooks/`: exploratory notebooks, pipeline notebooks, and notebook-specific helpers
 - `scripts/research/`: clustering and XAI experiment pipelines
-- `data/`: lightweight dataset documentation and metadata
+- `scripts/figures/`: curated figure archive used by scripts and reports
+- `figures/`: legacy root-level figure archive kept for older notebook exports
+- `outputs/`: generated experiment artifacts and dated run archives
+- `archive/`: historical material kept separate from the active workflow
 
 ## Documentation Map
 
@@ -29,9 +34,9 @@ Focus: explainable clustering for spatio-temporal picoclimatic data, with reprod
 ## Core Workflow
 
 1. Generate synthetic data into `data/`.
-2. Run clustering baselines and save outputs in `outputs/benchmark/`.
+2. Run clustering baselines and save outputs under `outputs/`.
 3. Run surrogate explainability and advanced SHAP/LIME analyses.
-4. Run latent-space clustering (autoencoder + K-Means).
+4. Run latent-space clustering and notebook-based investigations from `scripts/notebooks/`.
 5. Report results following `docs/GAP_ANALYSIS.md` and log updates in `docs/PROGRESS.md`.
 
 ## Quick Start
@@ -89,3 +94,4 @@ git config --global commit.template "/absolute/path/to/this/repo/.gitmessage"
 - Use `docs/GAP_ANALYSIS.md` as the standard for protocol, internship-readiness coverage, and reporting quality.
 - Use `docs/PROGRESS.md` to track insights, failures, experimentations, results, and implementation details.
 - Keep generated outputs under `outputs/` locally unless explicitly needed in version control.
+- Prefer `scripts/figures/` for new exported figures; keep `figures/` only for older archived exports that are already in use.
