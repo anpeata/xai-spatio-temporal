@@ -109,3 +109,6 @@ data/window_features.csv
 /data/roma-taxi/taxi_february.tar.gz
 /data/roma-taxi/extracted/
 /data/roma-taxi/roma-taxi-readme.txt
+
+# PICOPATT test fixture kept local only
+/data/picopatt/test/
