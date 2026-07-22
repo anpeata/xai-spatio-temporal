@@ -132,9 +132,9 @@ The adaptive selection keeps overhead minimal while capturing multi-scale patter
 - No significant computational overhead vs fixed-length
 
 ### Notebook Locations
-- **ECG200**: [scripts/notebooks/shapelets_ecg200.ipynb](scripts/notebooks/shapelets_ecg200.ipynb)
-- **ECG5000**: [scripts/notebooks/shapelets_ecg5000.ipynb](scripts/notebooks/shapelets_ecg5000.ipynb)
-- **Roma-Taxi**: [scripts/notebooks/shapelets_roma_taxi.ipynb](scripts/notebooks/shapelets_roma_taxi.ipynb)
+- **ECG200**: [scripts/notebooks/shapelets/shapelets_ecg200.ipynb](scripts/notebooks/shapelets/shapelets_ecg200.ipynb)
+- **ECG5000**: [scripts/notebooks/shapelets/shapelets_ecg5000.ipynb](scripts/notebooks/shapelets/shapelets_ecg5000.ipynb)
+- **Roma-Taxi**: [scripts/notebooks/shapelets/shapelets_roma_taxi.ipynb](scripts/notebooks/shapelets/shapelets_roma_taxi.ipynb)
 
 ---
 

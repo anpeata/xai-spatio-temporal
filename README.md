@@ -17,7 +17,12 @@ Focus: explainable clustering for spatio-temporal picoclimatic data, with reprod
 - `docs/`: consolidated governance and progress tracking documents
 - `data/`: lightweight dataset documentation, metadata, and small fixtures
 - `scripts/data/`: synthetic data generation and reduction utilities
-- `scripts/notebooks/`: exploratory notebooks, pipeline notebooks, and notebook-specific helpers
+- `scripts/notebooks/`: notebook workspace, organized by topic
+- `scripts/notebooks/eda/`: exploratory data analysis notebooks
+- `scripts/notebooks/experiments/`: experiment and workflow notebooks
+- `scripts/notebooks/shapelets/`: shapelet-focused notebooks
+- `scripts/notebooks/pipelines/`: clustering pipeline notebooks and small cached artifacts
+- `scripts/notebooks/examples/`: compact demo notebooks
 - `scripts/research/`: clustering and XAI experiment pipelines
 - `scripts/figures/`: curated figure archive used by scripts and reports
 - `figures/`: legacy root-level figure archive kept for older notebook exports
@@ -95,3 +100,4 @@ git config --global commit.template "/absolute/path/to/this/repo/.gitmessage"
 - Use `docs/PROGRESS.md` to track insights, failures, experimentations, results, and implementation details.
 - Keep generated outputs under `outputs/` locally unless explicitly needed in version control.
 - Prefer `scripts/figures/` for new exported figures; keep `figures/` only for older archived exports that are already in use.
+- Prefer the topic folders under `scripts/notebooks/` when adding or moving notebooks.
