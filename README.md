@@ -25,7 +25,6 @@ Focus: explainable clustering for spatio-temporal picoclimatic data, with reprod
 - `scripts/notebooks/examples/`: compact demo notebooks
 - `scripts/research/`: clustering and XAI experiment pipelines
 - `scripts/figures/`: curated figure archive used by scripts and reports
-- `figures/`: legacy root-level figure archive kept for older notebook exports
 - `outputs/`: generated experiment artifacts and dated run archives
 - `archive/`: historical material kept separate from the active workflow
 
@@ -99,5 +98,5 @@ git config --global commit.template "/absolute/path/to/this/repo/.gitmessage"
 - Use `docs/GAP_ANALYSIS.md` as the standard for protocol, internship-readiness coverage, and reporting quality.
 - Use `docs/PROGRESS.md` to track insights, failures, experimentations, results, and implementation details.
 - Keep generated outputs under `outputs/` locally unless explicitly needed in version control.
-- Prefer `scripts/figures/` for new exported figures; keep `figures/` only for older archived exports that are already in use.
+- Prefer `scripts/figures/` for new exported figures.
 - Prefer the topic folders under `scripts/notebooks/` when adding or moving notebooks.

@@ -11,4 +11,4 @@ Naming convention:
 Notes:
 - Archive only useful outputs that are likely to be reused in reports, slides, or investigation notes.
 - Keep large one-off artifacts out of git unless they are part of the documented workflow.
-- Prefer this folder for new exports; treat the root-level `figures/` archive as legacy unless a notebook or slide still depends on it.
+- Prefer this folder for new exports.
